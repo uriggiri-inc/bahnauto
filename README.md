@@ -1,13 +1,18 @@
 # bahnauto.kr
 
-(주)우리끼리 공식 홈페이지. 정적 HTML로 작성되어 GitHub Pages로 배포됩니다.
+**반오토(BahnAuto) 서비스 공식 홈페이지.** (주)우리끼리가 운영하는 서비스입니다.
+
+정적 HTML로 작성되어 GitHub Pages로 배포됩니다.
+
+> 이 저장소는 **회사(우리끼리) 홈페이지가 아니라 반오토 서비스 홈페이지**입니다.
+> 브랜드 표기는 **반오토 / BahnAuto**, 운영사 **(주)우리끼리**는 푸터에만 표기합니다.
 
 ## 구조
 
 ```
 index.html            /            홈
-about.html            /about       회사소개
-service.html          /service     사업영역
+about.html            /about       서비스 소개
+service.html          /service     이용 안내
 contact.html          /contact     문의
 404.html                           없는 경로일 때
 
