@@ -59,27 +59,45 @@ git config user.email "본인@이메일"
 ## 4. 로컬에서 띄워보기
 
 ```bash
-python3 -m http.server 8000
+python3 serve.py
 ```
 
 브라우저에서 http://localhost:8000 을 엽니다. 파일을 수정하고 새로고침하면 바로 반영됩니다.
 
-> `index.html`을 파일 탐색기에서 더블클릭해 열어도 보이긴 하지만,
-> 절대경로(`/assets/style.css`)가 깨지므로 **반드시 위 명령으로 서버를 띄워서** 확인하세요.
+> `python3 -m http.server` 를 쓰면 `/about` 같은 확장자 없는 경로가 404가 납니다.
+> `serve.py` 는 GitHub Pages와 같은 규칙으로 경로를 해석하니 **반드시 이걸로** 확인하세요.
+> 파일을 더블클릭해서 여는 것도 절대경로가 깨져서 안 됩니다.
 
 ## 5. 프로젝트 구조
 
 ```
-index.html              단일 랜딩 페이지 — 대부분의 작업이 여기서 일어납니다
+index.html              /            홈
+about.html              /about       회사소개
+service.html            /service     사업영역
+contact.html            /contact     문의
+404.html                             없는 경로일 때
+
 assets/
   style.css             전체 스타일 (라이트·다크 모드 대응)
+  site.js               공통 스크립트
   favicon.svg           파비콘
+
+serve.py                로컬 미리보기 서버
+tools/check-links.py    내부 링크 검사 (CI에서도 실행)
 docs/                   이 문서들
 .github/workflows/      PR 자동 검사 설정
+
 CNAME                   커스텀 도메인 — 건드리지 마세요
 .nojekyll               Jekyll 비활성화 — 건드리지 마세요
 robots.txt / sitemap.xml   검색엔진용
 ```
+
+**파일명이 곧 URL입니다.** `service.html` → `/service` 로 접속됩니다 (확장자 없이).
+페이지를 추가하려면 루트에 `.html` 파일을 만들고, 각 페이지의 헤더/푸터 메뉴와
+`sitemap.xml` 에 링크를 함께 추가하세요.
+
+> 헤더와 푸터는 페이지마다 복제돼 있습니다. 정적 HTML의 한계라, **메뉴를 고치면
+> 전 페이지를 같이 고쳐야 합니다.** 빠뜨리면 CI 링크 검사에서 잡힙니다.
 
 ## 6. 첫 PR 만들어보기
 

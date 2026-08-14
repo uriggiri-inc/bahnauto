@@ -23,13 +23,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 깨진 링크 확인
-        uses: lycheeverse/lychee-action@v2
-        with:
-          args: >-
-            --no-progress
-            --accept 200,204,206,429
-            --exclude-path .github
-            --exclude '^https://bahnauto\.kr'
-            .
-          fail: true
+      - name: 내부 링크 확인
+        run: python3 tools/check-links.py
+
+      - name: 필수 파일 확인
+        run: |
+          for f in CNAME .nojekyll 404.html; do
+            if [ ! -e "$f" ]; then
+              echo "::error::필수 파일 $f 가 없습니다. 삭제하면 사이트가 정상 동작하지 않습니다."
+              exit 1
+            fi
+          done
+          if [ "$(cat CNAME)" != "bahnauto.kr" ]; then
+            echo "::error::CNAME 내용이 bahnauto.kr 가 아닙니다. 도메인 연결이 끊깁니다."
+            exit 1
+          fi
+          echo "필수 파일 정상"

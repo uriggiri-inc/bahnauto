@@ -21,7 +21,7 @@ git checkout main && git pull
 git checkout -b content/company-intro
 
 # ... 수정 ...
-python3 -m http.server 8000          # http://localhost:8000 에서 확인
+python3 serve.py          # http://localhost:8000 에서 확인
 
 git add -A
 git commit -m "회사소개 문구 실제 내용으로 교체"
@@ -162,6 +162,18 @@ index.html 통째로, 혼자     → 패턴 B      ← 지금 상황
 | `.nojekyll` | 지우면 Jekyll이 개입해 일부 경로가 404가 됩니다 |
 | `.github/workflows/` | CI 설정. 바꿔야 하면 별도 PR로 |
 
+### 페이지를 추가·삭제할 때
+
+루트의 `.html` 파일 하나가 URL 하나입니다 (`service.html` → `/service`).
+추가하면 아래 세 곳을 **함께** 고쳐야 합니다. 빠뜨리면 CI 링크 검사에서 걸립니다.
+
+1. 전 페이지의 헤더 `<nav class="nav">` 메뉴
+2. 전 페이지의 푸터 `<nav class="footer-nav">` 메뉴
+3. `sitemap.xml`
+
+헤더·푸터가 페이지마다 복제돼 있는 건 정적 HTML이라 어쩔 수 없습니다.
+페이지가 6~7개를 넘어가면 그때 정적 사이트 생성기(Astro, Eleventy) 도입을 검토하세요.
+
 ### 이미지·에셋
 
 `assets/` 아래에 넣고, 커밋 전에 용량을 확인하세요.
@@ -201,11 +213,12 @@ git commit
 
 병합 전에 확인합니다. PR 템플릿에도 같은 항목이 들어 있습니다.
 
-- [ ] 로컬에서 확인 (`python3 -m http.server 8000`)
+- [ ] 로컬에서 확인 (`python3 serve.py`)
 - [ ] 모바일 폭 375px에서 레이아웃 정상
 - [ ] 라이트 / 다크 모드 양쪽 확인
 - [ ] 회사 정보(상호·연락처·사업자번호) 오타 없음
-- [ ] `CNAME`, `.nojekyll` 파일 그대로 있음
+- [ ] `CNAME`, `.nojekyll`, `404.html` 파일 그대로 있음
+- [ ] 메뉴를 바꿨다면 전 페이지 헤더·푸터에 모두 반영
 - [ ] before / after 스크린샷 첨부 (큰 변경일 때)
 
 ---
