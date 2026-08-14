@@ -4,6 +4,7 @@
 
 | 상황 | 읽을 문서 |
 |---|---|
+| **개발은 잘 모르는데 페이지를 올려야 합니다** | [docs/adding-pages.md](docs/adding-pages.md) |
 | 처음 참여합니다 | [docs/onboarding.md](docs/onboarding.md) |
 | 어느 브랜치에 어떻게 올릴지 모르겠습니다 | [docs/git-flow.md](docs/git-flow.md) |
 | 배포·롤백·도메인이 궁금합니다 | [docs/deploy.md](docs/deploy.md) |
