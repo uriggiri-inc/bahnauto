@@ -4,6 +4,8 @@
 
 | 문서 | 내용 |
 |---|---|
+| [adding-pages.md](adding-pages.md) | **페이지 추가하기 — 개발 경험 없어도 됩니다** |
+| [page-template.html](page-template.html) | 새 페이지용 복사 템플릿 |
 | [onboarding.md](onboarding.md) | 새 팀원 시작 가이드 — 권한 받기부터 첫 PR까지 |
 | [git-flow.md](git-flow.md) | 브랜치 전략 — 작은 수정부터 전면 개편까지 |
 | [deploy.md](deploy.md) | 배포·롤백·도메인·HTTPS 운영 정보 |

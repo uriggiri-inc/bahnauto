@@ -83,7 +83,7 @@ assets/
   favicon.svg           파비콘
 
 serve.py                로컬 미리보기 서버
-tools/check-links.py    내부 링크 검사 (CI에서도 실행)
+tools/check-pages.py    페이지 검사 (CI에서도 실행)
 docs/                   이 문서들
 .github/workflows/      PR 자동 검사 설정
 

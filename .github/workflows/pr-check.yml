@@ -17,25 +17,11 @@ jobs:
       - name: HTMLHint 실행
         run: npx --yes htmlhint "**/*.html"
 
-  links:
-    name: 링크 검사
+  pages:
+    name: 페이지 검사
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: 내부 링크 확인
-        run: python3 tools/check-links.py
-
-      - name: 필수 파일 확인
-        run: |
-          for f in CNAME .nojekyll 404.html; do
-            if [ ! -e "$f" ]; then
-              echo "::error::필수 파일 $f 가 없습니다. 삭제하면 사이트가 정상 동작하지 않습니다."
-              exit 1
-            fi
-          done
-          if [ "$(cat CNAME)" != "bahnauto.kr" ]; then
-            echo "::error::CNAME 내용이 bahnauto.kr 가 아닙니다. 도메인 연결이 끊깁니다."
-            exit 1
-          fi
-          echo "필수 파일 정상"
+      - name: 인코딩 · 파일명 · 링크 · 필수파일 확인
+        run: python3 tools/check-pages.py

@@ -16,7 +16,7 @@ assets/site.js        공통 스크립트
 assets/favicon.svg    파비콘
 
 serve.py              로컬 미리보기 서버
-tools/check-links.py  내부 링크 검사 (CI에서도 실행)
+tools/check-pages.py  페이지 검사 (CI에서도 실행)
 
 CNAME                 커스텀 도메인 (bahnauto.kr) — 삭제 금지
 .nojekyll             Jekyll 빌드 비활성화 — 삭제 금지
