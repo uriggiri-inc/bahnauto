@@ -1,5 +1,7 @@
 # 브랜치 전략
 
+**반오토(BahnAuto)** 서비스 홈페이지 저장소의 브랜치 규칙입니다.
+
 ## 원칙
 
 | 브랜치 | 역할 | 규칙 |
@@ -18,14 +20,14 @@
 
 ```bash
 git checkout main && git pull
-git checkout -b content/company-intro
+git checkout -b content/service-intro
 
 # ... 수정 ...
 python3 serve.py          # http://localhost:8000 에서 확인
 
 git add -A
-git commit -m "회사소개 문구 실제 내용으로 교체"
-git push -u origin content/company-intro
+git commit -m "서비스 소개 문구 실제 내용으로 교체"
+git push -u origin content/service-intro
 gh pr create --fill
 ```
 
@@ -35,7 +37,7 @@ gh pr create --fill
 |---|---|---|
 | `feat/` | 새 섹션·기능 | `feat/contact-form` |
 | `fix/` | 버그 수정 | `fix/mobile-nav-overflow` |
-| `content/` | 문구·이미지 | `content/company-intro` |
+| `content/` | 문구·이미지 | `content/service-intro` |
 | `chore/` | 설정·문서 | `chore/update-readme` |
 
 ---
@@ -57,8 +59,8 @@ git checkout -b redesign/2026-08        # redesign/<연-월> 형식
 ```bash
 git commit -m "새 헤더·네비게이션 마크업 교체"
 git commit -m "히어로 섹션 레이아웃 개편"
-git commit -m "사업영역 카드 그리드 재작성"
-git commit -m "푸터 법정 표기사항 정리"
+git commit -m "주요 기능 카드 그리드 재작성"
+git commit -m "푸터 운영사 표기사항 정리"
 ```
 
 ### 작업 중에도 수시로 push
@@ -216,7 +218,7 @@ git commit
 - [ ] 로컬에서 확인 (`python3 serve.py`)
 - [ ] 모바일 폭 375px에서 레이아웃 정상
 - [ ] 라이트 / 다크 모드 양쪽 확인
-- [ ] 회사 정보(상호·연락처·사업자번호) 오타 없음
+- [ ] 서비스명(반오토)·운영사((주)우리끼리)·연락처 표기 오타 없음
 - [ ] `CNAME`, `.nojekyll`, `404.html` 파일 그대로 있음
 - [ ] 메뉴를 바꿨다면 전 페이지 헤더·푸터에 모두 반영
 - [ ] before / after 스크린샷 첨부 (큰 변경일 때)
@@ -228,9 +230,9 @@ git commit
 한국어로 **무엇을 왜 바꿨는지** 한 줄. 필요하면 빈 줄 뒤에 상세 설명.
 
 ```
-사업영역 카드를 3개에서 4개로 확장
+주요 기능 카드를 3개에서 4개로 확장
 
-물류 부문이 신설되어 별도 카드로 분리했습니다.
+기능이 추가되어 별도 카드로 분리했습니다.
 ```
 
 `feat:` 같은 접두사는 강제하지 않습니다. 붙일 거면 브랜치 접두사와 맞춰주세요.

@@ -1,26 +1,35 @@
 # 페이지 추가하기 (개발 경험 없어도 됩니다)
 
+**반오토(BahnAuto)** 서비스 홈페이지에 새 페이지를 올리는 방법입니다.
+
 git이나 터미널 없이, **GitHub 웹사이트에서만** 페이지를 추가할 수 있습니다.
 브라우저에서 파일을 올리면 검사와 배포는 자동으로 돌아갑니다.
 
 ---
 
-## 먼저 알아둘 것 3가지
+## 먼저 알아둘 것
+
+**0. 이 사이트는 '반오토' 서비스 홈페이지입니다.**
+
+운영사는 (주)우리끼리지만, **화면에 보이는 브랜드는 '반오토'** 입니다.
+페이지를 만들 때 회사 이름이 아니라 서비스 이름을 쓰세요.
+운영사 표기는 푸터에만 들어가며, 템플릿에 이미 들어 있으니 그대로 두면 됩니다.
+
 
 **1. 파일 이름이 곧 주소입니다.**
 
 ```
-history.html   →  https://bahnauto.kr/history
-product.html   →  https://bahnauto.kr/product
+faq.html     →  https://bahnauto.kr/faq
+notice.html  →  https://bahnauto.kr/notice
 ```
 
 그래서 파일 이름은 **영문 소문자·숫자·하이픈(-)만** 씁니다.
-`회사 연혁.html` 처럼 한글이나 공백이 들어가면 주소가 깨집니다.
+`자주 묻는 질문.html` 처럼 한글이나 공백이 들어가면 주소가 깨집니다.
 
 | 이렇게 | 이러지 말고 |
 |---|---|
-| `history.html` | `회사 연혁.html` |
-| `product-list.html` | `Product List.html` |
+| `faq.html` | `자주 묻는 질문.html` |
+| `price-guide.html` | `Price Guide.html` |
 | `notice.html` | `공지사항.html` |
 
 **2. 저장할 때 인코딩은 UTF-8 입니다.**
@@ -42,7 +51,7 @@ product.html   →  https://bahnauto.kr/product
 
 1. GitHub에서 [`docs/page-template.html`](https://github.com/uriggiri-inc/bahnauto/blob/main/docs/page-template.html) 을 엽니다
 2. 우측 상단 **`Raw`** 버튼 → 전체 선택(`Ctrl+A`) → 복사(`Ctrl+C`)
-3. 메모장이나 VS Code에 붙여넣고, 원하는 이름으로 저장 (예: `history.html`)
+3. 메모장이나 VS Code에 붙여넣고, 원하는 이름으로 저장 (예: `faq.html`)
    - **저장할 때 인코딩 UTF-8 확인**
 
 템플릿 안에 이런 표시가 있습니다.
@@ -62,7 +71,7 @@ product.html   →  https://bahnauto.kr/product
    - 이미지도 함께 쓴다면 `assets/` 폴더로 들어가서 따로 올려주세요
 4. 아래로 내려가서 **커밋 메시지**를 씁니다
    ```
-   회사 연혁 페이지 추가
+   자주 묻는 질문 페이지 추가
    ```
 5. 그 아래 **`Create a new branch for this commit and start a pull request`** 를 선택합니다
    > ⚠️ 위쪽 `Commit directly to the main branch` 는 선택할 수 없습니다. 아래쪽을 고르세요.
@@ -80,7 +89,7 @@ PR 화면 아래쪽에 검사 결과가 나타납니다. 1분 정도 걸립니�
 **빨간색 X ❌** — 고칠 것이 있습니다. `Details` 를 누르면 이렇게 나옵니다.
 
 ```
-  [history.html]
+  [faq.html]
     문제: charset 선언이 없습니다
     해결: <head> 안 맨 위에 <meta charset="UTF-8"> 을 넣어주세요.
           없으면 한글이 깨질 수 있습니다.
@@ -109,17 +118,17 @@ PR 화면 아래쪽에 검사 결과가 나타납니다. 1분 정도 걸립니�
 ```html
 <!-- 상단 메뉴 -->
 <nav class="nav" aria-label="주요 메뉴">
-  <a href="/about">회사소개</a>
-  <a href="/service">사업영역</a>
-  <a href="/history">회사 연혁</a>   ← 이 줄 추가
+  <a href="/about">서비스 소개</a>
+  <a href="/service">이용 안내</a>
+  <a href="/faq">자주 묻는 질문</a>   ← 이 줄 추가
   <a href="/contact">문의</a>
 </nav>
 
 <!-- 아래쪽 푸터 메뉴 -->
 <nav class="footer-nav" aria-label="푸터 메뉴">
-  <a href="/about">회사소개</a>
-  <a href="/service">사업영역</a>
-  <a href="/history">회사 연혁</a>   ← 이 줄 추가
+  <a href="/about">서비스 소개</a>
+  <a href="/service">이용 안내</a>
+  <a href="/faq">자주 묻는 질문</a>   ← 이 줄 추가
   <a href="/contact">문의</a>
 </nav>
 ```
@@ -128,7 +137,7 @@ PR 화면 아래쪽에 검사 결과가 나타납니다. 1분 정도 걸립니�
 
 ```xml
   <url>
-    <loc>https://bahnauto.kr/history</loc>
+    <loc>https://bahnauto.kr/faq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

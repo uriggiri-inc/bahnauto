@@ -98,7 +98,7 @@ def check_basics(source, content):
 
     if "<title>" not in head:
         fail(rel(source), "<title> 이 없습니다",
-             "<head> 안에 <title>페이지 이름 | (주)우리끼리</title> 를 넣어주세요. 브라우저 탭과 검색 결과에 표시됩니다.")
+             "<head> 안에 <title>페이지 이름 | 반오토</title> 를 넣어주세요. 브라우저 탭과 검색 결과에 표시됩니다.")
 
 
 def resolve(link, source):
