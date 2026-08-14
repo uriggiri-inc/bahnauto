@@ -1,0 +1,35 @@
+name: PR 검사
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: HTML 문법 검사
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: HTMLHint 실행
+        run: npx --yes htmlhint "**/*.html"
+
+  links:
+    name: 링크 검사
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 깨진 링크 확인
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --accept 200,204,206,429
+            --exclude-path .github
+            --exclude '^https://bahnauto\.kr'
+            .
+          fail: true
