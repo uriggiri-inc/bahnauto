@@ -16,12 +16,16 @@ sitemap.xml         사이트맵
 
 ## 배포
 
-`main` 브랜치에 푸시하면 GitHub Pages가 자동으로 반영합니다. 별도 빌드 과정은 없습니다.
+`main` 브랜치에 병합되면 GitHub Pages가 자동으로 반영합니다. 별도 빌드 과정은 없습니다.
+
+**`main`에는 직접 push할 수 없습니다.** 브랜치를 따서 PR을 만들어주세요.
 
 ```bash
-git add -A
-git commit -m "내용 수정"
-git push
+git checkout main && git pull
+git checkout -b content/내용-수정
+git add -A && git commit -m "내용 수정"
+git push -u origin content/내용-수정
+gh pr create --fill
 ```
 
 ## 로컬 확인
@@ -34,3 +38,11 @@ python3 -m http.server 8000
 ## 내용 채우기
 
 `index.html` 안의 `<!-- TODO: ... -->` 주석과 "준비 중" 표기를 실제 정보로 교체하면 됩니다.
+
+## 문서
+
+| 문서 | 내용 |
+|---|---|
+| [docs/onboarding.md](docs/onboarding.md) | 새 팀원 시작 가이드 |
+| [docs/git-flow.md](docs/git-flow.md) | 브랜치 전략 — 작은 수정부터 전면 개편까지 |
+| [docs/deploy.md](docs/deploy.md) | 배포·롤백·도메인·HTTPS 운영 |
