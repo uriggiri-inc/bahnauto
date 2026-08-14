@@ -22,7 +22,15 @@ https://bahnauto.kr
 | 검사 | 도구 | 내용 |
 |---|---|---|
 | HTML 문법 검사 | HTMLHint | 닫히지 않은 태그, 중복 id, 잘못된 속성 |
-| 링크 검사 | lychee | 깨진 내부 링크, 죽은 외부 링크 |
+| 링크 검사 | `tools/check-links.py` | 깨진 내부 링크 + `CNAME`·`.nojekyll`·`404.html` 존재 확인 |
+
+링크 검사는 네트워크를 쓰지 않습니다. 외부 사이트 사정으로 CI가 깨지는 일이 없고,
+`/about` 처럼 확장자 없는 경로도 GitHub Pages와 같은 규칙으로 해석합니다.
+로컬에서도 그대로 돌려볼 수 있습니다.
+
+```bash
+python3 tools/check-links.py
+```
 
 **둘 다 통과해야 병합 버튼이 활성화됩니다.**
 
@@ -69,6 +77,22 @@ gh pr create --fill
 
 `git reset --hard` 는 쓰지 마세요. main은 force push가 막혀 있고, 히스토리를 지우는 건 위험합니다.
 **`git revert`는 되돌리는 새 커밋을 만들기 때문에 안전합니다.**
+
+## 경로 규칙
+
+루트의 `.html` 파일 하나가 URL 하나입니다. GitHub Pages에서 실측한 동작:
+
+| 파일 | 접속 URL | 결과 |
+|---|---|---|
+| `service.html` | `/service` | 200 — 리다이렉트 없음 |
+| `service.html` | `/service.html` | 200 |
+| `service/index.html` | `/service/` | 200 |
+| `service/index.html` | `/service` | 301 → `/service/` |
+
+리다이렉트가 없는 **`service.html` 방식**을 씁니다.
+하위 경로(`/service/consulting`)가 필요해지면 그때 디렉터리 방식으로 바꾸면 됩니다.
+
+없는 경로는 `404.html` 이 404 상태로 응답합니다.
 
 ## 도메인 · HTTPS
 

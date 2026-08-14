@@ -5,13 +5,23 @@
 ## 구조
 
 ```
-index.html          단일 랜딩 페이지 (hero / 회사소개 / 사업영역 / 문의)
-assets/style.css    스타일 (라이트·다크 모드 대응)
-assets/favicon.svg  파비콘
-CNAME               커스텀 도메인 (bahnauto.kr)
-robots.txt          크롤러 설정
-sitemap.xml         사이트맵
-.nojekyll           Jekyll 빌드 비활성화
+index.html            /            홈
+about.html            /about       회사소개
+service.html          /service     사업영역
+contact.html          /contact     문의
+404.html                           없는 경로일 때
+
+assets/style.css      전체 스타일 (라이트·다크 모드 대응)
+assets/site.js        공통 스크립트
+assets/favicon.svg    파비콘
+
+serve.py              로컬 미리보기 서버
+tools/check-links.py  내부 링크 검사 (CI에서도 실행)
+
+CNAME                 커스텀 도메인 (bahnauto.kr) — 삭제 금지
+.nojekyll             Jekyll 빌드 비활성화 — 삭제 금지
+robots.txt            크롤러 설정
+sitemap.xml           사이트맵
 ```
 
 ## 배포
@@ -31,9 +41,11 @@ gh pr create --fill
 ## 로컬 확인
 
 ```bash
-python3 -m http.server 8000
-# http://localhost:8000
+python3 serve.py        # http://localhost:8000
 ```
+
+`python3 -m http.server` 대신 이 스크립트를 쓰세요. GitHub Pages와 동일하게
+확장자 없는 경로(`/about`)를 처리하고, 없는 경로는 `404.html`을 보여줍니다.
 
 ## 내용 채우기
 
