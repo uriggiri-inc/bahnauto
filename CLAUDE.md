@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm run dev          # 개발 서버 (Turbopack)
-npm run typecheck    # tsc --noEmit
+npm run typecheck    # next typegen && tsc --noEmit
 npm run lint         # eslint
 npm run format:check # prettier --check .   (실패하면 npm run format)
 npm run build        # 기본 빌드
