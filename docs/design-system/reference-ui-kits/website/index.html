@@ -1,0 +1,112 @@
+<!-- @dsCard group="Website" viewport="1280x900" name="공식 홈페이지" subtitle="홈 · 운영시스템 · 요금 · 상담 · 매니저 지원 — 클릭 가능한 재현" -->
+<!-- @startingPoint section="Website" subtitle="반오토 공식 홈페이지 — 전 페이지 클릭 가능" viewport="1280x900" -->
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>반오토 BAHNAUTO — 공식 홈페이지</title>
+    <link rel="icon" href="../../assets/logo/symbol.svg" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        font-family: var(--font-sans);
+        color: var(--color-text);
+        background: var(--color-bg);
+        -webkit-font-smoothing: antialiased;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      a {
+        color: var(--color-brand);
+      }
+      a:hover {
+        color: var(--color-brand-hover);
+      }
+      h1,
+      h2,
+      h3 {
+        text-wrap: pretty;
+      }
+      :focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../_ds_bundle.js"></script>
+    <script>
+      window.PRICING = {
+        vatIncluded: false,
+        baseNote: "33㎡ 이하 매장 기준",
+        defaultPlanId: "w3",
+        plans: [
+          { id: "w1", label: "주 1회", visitsPerMonth: 4, monthly: 0 },
+          { id: "w2", label: "주 2회", visitsPerMonth: 9, monthly: 0 },
+          { id: "w3", label: "주 3회", visitsPerMonth: 13, monthly: 0 },
+          { id: "w5", label: "주 5회", visitsPerMonth: 22, monthly: 0 },
+          { id: "wd", label: "매일", visitsPerMonth: 30, monthly: 0 },
+        ],
+      };
+    </script>
+    <script type="text/babel" src="Shared.jsx"></script>
+    <script type="text/babel" src="AppMock.jsx"></script>
+    <script type="text/babel" src="Home.jsx"></script>
+    <script type="text/babel" src="System.jsx"></script>
+    <script type="text/babel" src="Pricing.jsx"></script>
+    <script type="text/babel" src="Contact.jsx"></script>
+    <script type="text/babel" src="Careers.jsx"></script>
+    <script type="text/babel">
+      function App() {
+        const [route, setRoute] = React.useState("/");
+        const go = (r) => {
+          setRoute(r);
+          window.scrollTo(0, 0);
+        };
+        const P =
+          {
+            "/": Home,
+            "/system": System,
+            "/pricing": Pricing,
+            "/contact": Contact,
+            "/careers": Careers,
+          }[route] || Home;
+        return (
+          <>
+            <Header
+              logoSrc="../../assets/logo/logo-horizontal.svg"
+              active={route}
+              onNavigate={go}
+            />
+            <main>
+              <P go={go} />
+            </main>
+            <Footer logoSrc="../../assets/logo/logo-slogan-dark.svg" business={BIZ} />
+          </>
+        );
+      }
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>

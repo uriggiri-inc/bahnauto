@@ -1,0 +1,74 @@
+/* 후기 두 줄 마퀴.
+   globals.css 의 `.ba-reviews` 를 대체한다 — 두 줄·양방향·양끝 페이드는
+   전역 유틸에 둘 만큼 재사용되는 패턴이 아니라 컴포넌트 옆에 붙여 둔다. */
+
+/* ── 한 줄의 창 ──────────────────────────────────────────────
+   양끝을 마스크로 지운다. 오버레이 그라디언트를 얹는 방식과 달리 배경색을
+   가정하지 않아, 섹션 배경이 흰색이든 tint 든 그대로 통한다. */
+.viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+
+/* ── 흐르는 트랙 ─────────────────────────────────────────────
+   같은 내용의 두 벌이 나란히 들어 있고 -50% 에서 되돌아온다. 두 벌이 정확히
+   같아야 이음매가 보이지 않는다 — 한쪽만 고치면 그 지점에서 티가 난다. */
+.track {
+  display: flex;
+  width: max-content;
+  animation: ba-review-scroll var(--row-dur, 72s) linear infinite;
+}
+
+/* 아랫줄은 반대로 흐른다. 두 줄이 같은 방향이면 화면 전체가 한 덩어리로
+   밀리는 것처럼 보여 움직임이 오히려 둔해진다. */
+.trackReverse {
+  animation-direction: reverse;
+}
+
+@keyframes ba-review-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* ── 안전장치 1: 멈출 수 있어야 한다 ─────────────────────────
+   무한 루프 금지 규칙의 예외 조건이다(globals.css 티커 주석과 같은 근거).
+   커서·키보드 포커스에 더해 `:active` 로 터치도 받는다 — 터치 기기에는
+   hover 가 없어서, 손가락을 대고 있는 동안만이라도 멈춰야 읽을 수 있다. */
+.viewport:hover .track,
+.viewport:focus-within .track,
+.viewport:active .track {
+  animation-play-state: paused;
+}
+
+/* 커서가 올라간 카드만 살짝 뜬다. 흐름이 멈춘 뒤 어느 장을 보고 있는지 표시 */
+.card {
+  transition: transform var(--dur-fast, 160ms) var(--ease-brand);
+}
+
+.card:hover {
+  transform: scale(1.04);
+}
+
+/* ── 안전장치 2: 모션 축소는 완전 정지 ───────────────────────
+   애니메이션만 끄면 첫 두어 장 뒤가 잘려 읽을 방법이 사라진다. 손으로 넘길 수
+   있는 가로 스크롤로 바꾸고, 스크롤 중에 끝이 흐려지면 방해가 되므로 마스크도 뗀다. */
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .track {
+    animation: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}

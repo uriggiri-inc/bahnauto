@@ -1,0 +1,37 @@
+{
+  "vatIncluded": false,
+  "baseNote": "33㎡ 이하 매장 기준",
+  "plans": [
+    {
+      "id": "w1",
+      "label": "주 1회",
+      "visitsPerMonth": 4,
+      "monthly": 0
+    },
+    {
+      "id": "w2",
+      "label": "주 2회",
+      "visitsPerMonth": 9,
+      "monthly": 0
+    },
+    {
+      "id": "w3",
+      "label": "주 3회",
+      "visitsPerMonth": 13,
+      "monthly": 0
+    },
+    {
+      "id": "w5",
+      "label": "주 5회",
+      "visitsPerMonth": 22,
+      "monthly": 0
+    },
+    {
+      "id": "wd",
+      "label": "매일",
+      "visitsPerMonth": 30,
+      "monthly": 0
+    }
+  ],
+  "defaultPlanId": "w3"
+}

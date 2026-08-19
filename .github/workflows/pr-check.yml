@@ -1,5 +1,20 @@
 name: PR 검사
 
+# ─────────────────────────────────────────────────────────────────────
+# ⚠️ 이 워크플로는 2026-08-19 에 **내용이 통째로 바뀌었다.**
+#
+# 이전 판은 손으로 만든 정적 HTML 사이트를 검사했다:
+#     npx htmlhint "**/*.html"      ← 루트의 index.html·about.html…
+#     python3 tools/check-pages.py  ← 인코딩·파일명·링크·필수파일
+#
+# 사이트가 Next.js 로 교체되면서 그 검사들은 대상이 사라졌다 — 루트에 .html 이
+# 없고(빌드 때 생성된다) tools/check-pages.py 도 함께 지워졌다. 그대로 두면
+# 모든 PR 이 빨간불이 되어 **검사가 의미를 잃는다.**
+#
+# 그래서 이 저장소의 커밋 전 통과 조건(CLAUDE.md §4)을 그대로 옮겼다.
+# 로컬에서 돌리는 것과 같은 네 가지다.
+# ─────────────────────────────────────────────────────────────────────
+
 on:
   pull_request:
     branches: [main]
@@ -8,20 +23,34 @@ permissions:
   contents: read
 
 jobs:
-  validate:
-    name: HTML 문법 검사
+  verify:
+    name: 타입·린트·서식·빌드
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: HTMLHint 실행
-        run: npx --yes htmlhint "**/*.html"
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
 
-  pages:
-    name: 페이지 검사
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+      - run: npm ci
 
-      - name: 인코딩 · 파일명 · 링크 · 필수파일 확인
-        run: python3 tools/check-pages.py
+      - name: 타입 검사
+        run: npm run typecheck
+
+      - name: 린트
+        run: npm run lint
+
+      - name: 서식 검사
+        run: npm run format:check
+
+      - name: 정적 빌드
+        # ⚠️ 일반 `next build` 가 아니라 **정적 내보내기**로 검사한다.
+        #    두 경로는 결과가 다르다 — 메타데이터 라우트(robots·sitemap)에
+        #    `force-static` 이 빠지면 일반 빌드는 통과하고 정적 빌드만 실패한다.
+        #    배포가 쓰는 경로로 검사해야 배포 전에 잡힌다.
+        #
+        # 노션 시크릿을 넣지 않는다: PR 은 포크에서도 열릴 수 있고, 공지 내용은
+        # 검사에 필요하지 않다. 시크릿이 없으면 커밋된 news.json 이 쓰인다.
+        run: npm run build:static

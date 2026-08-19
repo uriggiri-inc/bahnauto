@@ -1,0 +1,51 @@
+@keyframes ba-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ba-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ba-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-distance));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ba-orbit {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  @keyframes ba-reveal {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes ba-orbit {
+    from {
+      transform: none;
+    }
+    to {
+      transform: none;
+    }
+  }
+}

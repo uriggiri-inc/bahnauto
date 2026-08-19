@@ -1,0 +1,153 @@
+<!-- @dsCard group="Components" viewport="700x430" name="App" subtitle="앱 헤더 / 체크리스트 행 / 상태 배지 / 진행률 / 하단 탭" -->
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--color-bg);
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      .grp {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .cap {
+        font-size: 11.5px;
+        color: var(--color-text-muted);
+        letter-spacing: 0.04em;
+        margin: 0 0 8px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../_ds_bundle.js"></script>
+    <script type="text/babel">
+      const { AppHeader, ChecklistItem, StatusPill, ProgressBar, TabBar } =
+        window.BAHNAUTODesignSystem_9a8a8a;
+
+      const TABS = [
+        { id: "home", label: "홈", icon: "home" },
+        { id: "checklist", label: "체크리스트", icon: "checklist" },
+        { id: "attendance", label: "출퇴근", icon: "attendance" },
+        { id: "inventory", label: "재고관리", icon: "inventory" },
+        { id: "board", label: "게시판", icon: "board" },
+        { id: "order", label: "발주요청", icon: "order" },
+      ];
+      function Demo() {
+        const [t, setT] = React.useState("checklist");
+        const [d, setD] = React.useState([true, true, false]);
+        return (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.15fr 1fr",
+              gap: 18,
+              alignItems: "start",
+            }}
+          >
+            <div
+              style={{
+                border: "1px solid var(--color-border)",
+                borderRadius: "var(--radius-lg)",
+                overflow: "hidden",
+                background: "var(--color-bg-subtle)",
+              }}
+            >
+              <AppHeader
+                title="체크리스트"
+                subtitle="상시근무 · 오늘"
+                right={<StatusPill status="working" label="근무중 · 19:04" />}
+              />
+              <div style={{ padding: "14px 14px 16px", display: "grid", gap: 9 }}>
+                <div
+                  style={{
+                    background: "#fff",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: "var(--radius-md)",
+                    padding: 14,
+                  }}
+                >
+                  <ProgressBar label="오늘 진행률" value={67} />
+                </div>
+                {[
+                  "장난감 및 자동차 정리 정돈",
+                  "정글짐 내부 정리정돈",
+                  "휴지통 비우기 (분리수거 및 일반쓰레기)",
+                ].map((tt, i) => (
+                  <ChecklistItem
+                    key={i}
+                    index={i + 1}
+                    title={tt}
+                    done={d[i]}
+                    photos={d[i] ? 2 : 0}
+                    onToggle={() => setD((p) => p.map((x, j) => (j === i ? !x : x)))}
+                  />
+                ))}
+              </div>
+              <TabBar items={TABS} value={t} onChange={setT} />
+            </div>
+            <div style={{ display: "grid", gap: 14 }}>
+              <div>
+                <p className="cap">STATUS PILL</p>
+                <div className="grp">
+                  <StatusPill status="normal" />
+                  <StatusPill status="soon" />
+                  <StatusPill status="discard" />
+                  <StatusPill status="working" />
+                  <StatusPill status="pending" />
+                  <StatusPill status="done" />
+                </div>
+              </div>
+              <div>
+                <p className="cap">PROGRESS</p>
+                <div style={{ display: "grid", gap: 12 }}>
+                  <ProgressBar label="오늘 체크리스트" value={70} />
+                  <ProgressBar label="주간 완료율" value={94} tone="success" />
+                </div>
+              </div>
+              <div>
+                <p className="cap">CHECKLIST — 사진 미첨부</p>
+                <ChecklistItem
+                  index={7}
+                  title="창문 문 단속, 조명, 냉난방기 확인 및 소등"
+                  photos={0}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      }
+      ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+    </script>
+  </body>
+</html>

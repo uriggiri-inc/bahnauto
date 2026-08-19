@@ -1,0 +1,152 @@
+name: 배포 (GitHub Pages)
+
+# ─────────────────────────────────────────────────────────────────────
+# bahnauto.kr 배포. Next.js 를 정적으로 내보내 GitHub Pages 에 올린다.
+#
+# ⚠️ 이 워크플로가 동작하려면 저장소 관리자가 한 번 설정해야 한다:
+#      Settings → Pages → Source 를 **GitHub Actions** 로 변경
+#    이전 방식(main 브랜치 루트를 그대로 서빙)에서는 이 워크플로의 결과가
+#    무시된다. write 권한으로는 그 설정을 바꿀 수 없다.
+#
+# ── 세 가지 계기로 돈다 ──
+#   push      main 에 코드가 들어올 때
+#   수동       Actions 화면의 "Run workflow" 버튼
+#   예약       15분마다 — **노션 공지가 바뀐 경우에만** 빌드한다(아래 check 잡)
+#
+# 예약이 필요한 이유: 사이트가 정적이라 노션 글은 **빌드할 때만** 읽힌다.
+# 이 예약이 없으면 노션에 글을 올려도 누군가 배포를 돌려야 반영된다.
+# ─────────────────────────────────────────────────────────────────────
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # 15분마다. 공개 저장소라 Actions 사용량은 무료지만, 변경이 없으면
+    # 빌드를 건너뛰어 배포 이력이 쓸데없이 쌓이지 않게 한다.
+    - cron: "*/15 * * * *"
+
+# 배포 중에 새 배포가 끼어들면 순서가 뒤바뀐다. 최신 것만 살린다.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # ── 빌드할 이유가 있는가 ────────────────────────────────────────────
+  check:
+    name: 변경 확인
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.decide.outputs.should_build }}
+    steps:
+      - id: decide
+        name: 예약 실행이면 노션 변경 여부를 본다
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_NEWS_DB_ID: ${{ secrets.NOTION_NEWS_DB_ID }}
+        run: |
+          # push·수동 실행은 항상 빌드한다
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+            echo "계기=${{ github.event_name }} → 빌드한다"
+            exit 0
+          fi
+
+          # 노션을 연결하지 않았으면 예약 실행은 할 일이 없다
+          if [ -z "$NOTION_TOKEN" ] || [ -z "$NOTION_NEWS_DB_ID" ]; then
+            echo "should_build=false" >> "$GITHUB_OUTPUT"
+            echo "노션 시크릿이 없다 → 예약 빌드를 건너뛴다"
+            exit 0
+          fi
+
+          # 크론 주기(15분)보다 1분 넓게 본다. 창이 주기와 똑같으면 실행이
+          # 조금만 늦어도 그 틈의 수정이 양쪽 창에 다 걸리지 않아 영구히 누락된다.
+          SINCE=$(date -u -d '16 minutes ago' +%Y-%m-%dT%H:%M:%SZ)
+
+          # 상태(게시완료)로 걸러 묻지 않는다 — 게시완료를 임시저장으로 되돌리는
+          # 것도 사이트에서 내려야 하는 변경이다. 어느 글이 나갈지는 빌드 때
+          # scripts/fetch-news.mjs 가 정한다.
+          COUNT=$(curl -sS -X POST \
+            "https://api.notion.com/v1/databases/${NOTION_NEWS_DB_ID}/query" \
+            -H "Authorization: Bearer ${NOTION_TOKEN}" \
+            -H "Notion-Version: 2022-06-28" \
+            -H "Content-Type: application/json" \
+            -d "{\"page_size\":100,\"filter\":{\"timestamp\":\"last_edited_time\",\"last_edited_time\":{\"on_or_after\":\"${SINCE}\"}}}" \
+            | python3 -c 'import json,sys; d=json.load(sys.stdin); print(len(d.get("results",[])) if "results" in d else "ERR")')
+
+          if [ "$COUNT" = "ERR" ]; then
+            # 노션 오류는 배포 실패로 만들지 않는다. 다음 수정 때 함께 반영된다.
+            echo "should_build=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::노션을 읽지 못했다 — 예약 빌드를 건너뛴다"
+          elif [ "$COUNT" -gt 0 ]; then
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+            echo "노션 변경 ${COUNT}건 (기준 ${SINCE}) → 빌드한다"
+          else
+            echo "should_build=false" >> "$GITHUB_OUTPUT"
+            echo "노션 변경 없음 (기준 ${SINCE}) → 건너뛴다"
+          fi
+
+  # ── 빌드 ────────────────────────────────────────────────────────────
+  build:
+    name: 정적 빌드
+    needs: check
+    if: needs.check.outputs.should_build == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # 버전은 저장소의 .node-version 이 정본이다 — 여기 숫자를 적으면 갈라진다
+          node-version-file: .node-version
+          cache: npm
+
+      - name: 의존성 설치
+        # package-lock.json 을 그대로 따른다. npm install 은 잠금을 갱신해
+        # 로컬과 다른 버전이 배포될 수 있다.
+        run: npm ci
+
+      - name: 정적 내보내기
+        # prebuild:static 이 scripts/fetch-news.mjs 를 먼저 돌려 노션 공지를
+        # src/content/news.json 에 넣는다. 시크릿이 없거나 노션을 못 읽으면
+        # 저장소에 커밋된 마지막 성공본이 쓰인다(빌드는 실패하지 않는다).
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_NEWS_DB_ID: ${{ secrets.NOTION_NEWS_DB_ID }}
+        run: npm run build:static
+
+      - name: 산출물 점검
+        # 배포 직전에 반드시 있어야 하는 파일을 확인한다. CNAME 이 빠지면
+        # 커스텀 도메인이 풀려 bahnauto.kr 이 끊긴다 — 조용히 실패하면 안 된다.
+        run: |
+          cd dist-deploy/site
+          for f in index.html CNAME robots.txt sitemap.xml 404.html; do
+            if [ ! -f "$f" ]; then
+              echo "::error::산출물에 $f 가 없다"
+              exit 1
+            fi
+          done
+          echo "파일 $(find . -type f | wc -l)개 · CNAME=$(cat CNAME)"
+          echo "robots.txt:"; cat robots.txt
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist-deploy/site
+
+  # ── 배포 ────────────────────────────────────────────────────────────
+  deploy:
+    name: Pages 배포
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

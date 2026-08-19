@@ -1,0 +1,10 @@
+:root {
+  --shadow-card: 0 4px 14px rgba(0, 74, 204, 0.06);
+  --shadow-float: 0 14px 34px rgba(24, 32, 52, 0.12);
+  --shadow-cta: 0 10px 24px rgba(0, 74, 204, 0.24);
+  --shadow-inset-field: inset 0 0 0 1px var(--color-border);
+
+  --ring-focus: 0 0 0 2px #fff, 0 0 0 4px var(--color-focus); /* @kind shadow */
+  --blur-nav: blur(10px); /* @kind other */
+  --scrim-nav: rgba(255, 255, 255, 0.9); /* @kind color */
+}
