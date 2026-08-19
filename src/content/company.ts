@@ -33,7 +33,7 @@ export const COMPANY = {
    * 그대로 남아 있다. 홈페이지 호스팅과는 별개의 위탁이다.
    *
    * ⚠️ 미국 법인이라 **국외이전 고지 대상**이다.
-   *    방침에 해당 조항이 아직 없다 — `scripts/DEPLOY.md` 오픈 전 점검 4번.
+   *    방침에 해당 조항이 아직 없다 — `scripts/DEPLOY.md` 오픈 전 점검 "국외이전 고지".
    *
    * ── 2026-08-19 실제와 일치시켰다 (사용자 지시) ──
    * `Cloudflare, Inc.` → `GitHub, Inc.`. 배포가 Cloudflare Pages 에서
@@ -45,7 +45,7 @@ export const COMPANY = {
    *
    * ⚠️ **원본 .docx 는 아직 이 값이 아니다.** 사이트만 고친 상태다 —
    *    개인정보처리방침 원본을 같은 값으로 갱신해야 두 문서가 일치한다
-   *    (`scripts/DEPLOY.md` 점검 목록 7번).
+   *    (`scripts/DEPLOY.md` 점검 목록 "개인정보처리방침 원본 .docx 갱신").
    */
   hosting: "GitHub, Inc. (미국)",
   /** 두 법정 문서의 시행일 */
