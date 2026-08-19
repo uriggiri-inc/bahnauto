@@ -59,7 +59,13 @@ export const FEATURES: readonly Feature[] = [
   },
   {
     key: "dispatch",
-    title: "바로출동서비스",
+    /*
+      사용자 지시(2026-08-19) — `바로출동서비스` → `방문관리 서비스`.
+      화면에 보이는 이름만 바꾼다. `key` 는 주소(`/features/dispatch`)이자
+      요금표·아이콘·더미데이터의 참조 키다. 바꾸면 이미 나간 링크가 죽고
+      sitemap 도 어긋난다.
+    */
+    title: "방문관리 서비스",
     summary: "고장 났을 때 부를 곳을 찾지 않아도 됩니다",
     bullets: [
       "외부 전문 관리 업체와 협업",

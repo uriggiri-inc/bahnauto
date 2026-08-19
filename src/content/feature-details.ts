@@ -315,7 +315,7 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
     eyebrow: "CUSTOMER SERVICE",
     headline: ["고객 응대는 저희가,", "사장님은 매장 운영만"],
     sub: "무인매장 이용 고객의 문의를 대신 응대해, 매니저가 없는 시간에도 응대 공백이 생기지 않게 합니다.",
-    chips: ["매장 이용고객 전용 채널", "오전 9시 ~ 오후 9시 운영", "바로출동서비스 연계"],
+    chips: ["매장 이용고객 전용 채널", "오전 9시 ~ 오후 9시 운영", "방문관리 서비스 연계"],
     groups: [
       {
         labelEn: "KEY FEATURES",
@@ -331,15 +331,15 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
             body: "챗봇이 해결하지 못한 문의는 본사 고객센터가 이어받아 매니저 개입을 줄입니다.",
           },
           {
-            title: "바로출동서비스 연계",
-            body: "접수된 이슈는 게시판과 바로출동서비스로 이어집니다.",
+            title: "방문관리 서비스 연계",
+            body: "접수된 이슈는 게시판과 방문관리 서비스로 이어집니다.",
           },
         ],
       },
     ],
     screens: [
       { alt: "매장 이용고객 문의 응대 화면", caption: "고객 응대 화면" },
-      { alt: "바로출동서비스 연계 접수 화면", caption: "출동 연계 화면" },
+      { alt: "방문관리 서비스 연계 접수 화면", caption: "방문관리 연계 화면" },
     ],
     effect: {
       title: "무인매장의 약점인 고객 응대 공백을 메웁니다",
