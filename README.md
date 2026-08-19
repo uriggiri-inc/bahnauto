@@ -45,6 +45,7 @@ public/                그대로 배포되는 파일
   contact.html
   brand/               로고·모션
 
+관리자-할일.md         비개발자용 — 남은 설정 작업을 링크와 함께 단계별로
 scripts/
   build-static.mjs     정적 내보내기 (dist-deploy/site 생성)
   fetch-news.mjs       노션 공지 → src/content/news.json
@@ -98,4 +99,9 @@ npm run build:static   # ← 일반 build 가 아니라 이것
 ## 공지사항은 노션에서 씁니다
 
 노션 데이터베이스에 글을 쓰고 상태를 `게시완료` 로 바꾸면 15분 안에 사이트에
-나갑니다. 설정 방법은 `scripts/NOTION-NEWS-SETUP.md` 를 보세요.
+나갑니다.
+
+⚠️ **연결이 아직 안 됐습니다** — GitHub Actions Secrets 두 개(`NOTION_TOKEN`,
+`NOTION_NEWS_DB_ID`)를 넣어야 합니다. 개발자용 설명은
+`scripts/NOTION-NEWS-SETUP.md`, 비개발자용 단계별 안내는
+[`관리자-할일.md`](관리자-할일.md) 1단계에 있습니다.

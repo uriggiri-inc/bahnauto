@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
+import { buttonClasses } from "@/components/ui/Button";
 
 /**
  * `/app` — 앱 안내 (PRD §7.9).
@@ -30,6 +31,34 @@ import { Badge } from "@/components/ui/Badge";
  * `h1` 이 없는 페이지가 된다.
  */
 
+/**
+ * 스토어 링크 — 2026-08-19 **실제 링크로 확정** (사용자 제공, 실측 확인).
+ *
+ * 두 주소가 같은 앱인지 확인했다: 양쪽 **번들 ID 가 `kr.uriggiri.bahnauto` 로
+ * 동일**하다(애플 lookup API `id=6795351680` 응답의 `bundleId`). 이름이 비슷한
+ * 다른 앱을 잘못 연결한 것이 아니다. 양쪽 모두 HTTP 200 이고 무료 배포 중이다.
+ *
+ * ⚠️ 애플 스토어의 **개발자 표기가 `Boseok Seo`(개인 이름)** 다. 이 사이트는
+ *    운영사를 `(주)우리끼리` 로 고지하므로 방문자 눈에는 다른 이름이 보인다.
+ *    링크를 거는 데 문제가 되는 사항은 아니지만, 스토어 판매자명을 법인으로
+ *    바꾸는 편이 맞다(구글 플레이 쪽은 `uriggiri` 로 표기돼 있다).
+ *
+ * 애플 주소의 한글이 퍼센트 인코딩된 채로 둔 이유: 애플이 돌려주는 정식 주소가
+ * 이 형태이고, 편집기·터미널 인코딩에 따라 한글이 깨져 링크가 죽는 일을 막는다.
+ * 사람이 읽는 형태는 `.../kr/app/반오토-무인매장-자동화-운영관리/id6795351680` 이다.
+ * 애플이 함께 주는 `?uo=4` 는 검색 API 용 추적 파라미터라 떼어 냈다.
+ */
+const STORES = [
+  {
+    label: "Google Play",
+    href: "https://play.google.com/store/apps/details?id=kr.uriggiri.bahnauto",
+  },
+  {
+    label: "App Store",
+    href: "https://apps.apple.com/kr/app/%EB%B0%98%EC%98%A4%ED%86%A0-%EB%AC%B4%EC%9D%B8%EB%A7%A4%EC%9E%A5-%EC%9E%90%EB%8F%99%ED%99%94-%EC%9A%B4%EC%98%81%EA%B4%80%EB%A6%AC/id6795351680",
+  },
+] as const;
+
 export const metadata: Metadata = {
   title: "앱 안내",
   description:
@@ -57,14 +86,26 @@ export default function AppPage() {
           </p>
 
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            {/* 스토어 링크는 §13-F 확정 대기 */}
-            {["Google Play", "App Store"].map((store) => (
-              <span
-                key={store}
-                className="border-border-strong text-body-sm text-text-sub inline-flex min-h-[52px] items-center justify-center rounded-sm border bg-white px-7 font-semibold"
+            {/*
+              둘 다 primary 다. "primary 는 페이지당 하나" 규정(`Button.tsx`)은 서로
+              **다른 목적**이 경쟁하는 것을 막기 위한 것이고, 두 스토어는 같은
+              목적(앱 받기)을 OS 로 나눈 것이다. 한쪽을 secondary 로 내리면 그 OS
+              쓰는 사람에게 "이건 보조 경로" 로 읽힌다.
+
+              새 창에서 연다 — 이 화면에 온 사람은 대개 계약 점주·매니저이고,
+              아래의 계정 발급 안내를 다시 볼 일이 있다.
+            */}
+            {STORES.map((store) => (
+              <a
+                key={store.label}
+                href={store.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonClasses({ variant: "primary", size: "lg" })}
               >
-                {store} · <span className="text-warning ml-1">링크 확정 필요</span>
-              </span>
+                {store.label}
+                <span className="sr-only"> (새 창에서 열림)</span>
+              </a>
             ))}
           </div>
 

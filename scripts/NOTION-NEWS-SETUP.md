@@ -1,11 +1,22 @@
 # 공지사항 노션 연결 — 설정 안내
 
-사이트 쪽 준비와 노션 데이터베이스는 끝나 있다. **2~5번만 하면** 노션에 쓴 글이
+
+> **비개발자용 안내는 [`../관리자-할일.md`](../관리자-할일.md) 에 따로 있습니다.**
+> 이 문서는 왜 그렇게 만들었는지까지 적은 개발자용입니다.
+
+사이트 쪽 준비와 노션 데이터베이스는 끝나 있다. **2·3번만 하면** 노션에 쓴 글이
 사이트에 자동으로 나간다.
 
-이 문서의 **1·2·3번은 사람이 해야 한다** — 열쇠(토큰) 발급과 붙여넣기는
+이 문서의 **2·3번은 사람이 해야 한다** — 열쇠(토큰) 발급과 붙여넣기는
 개발자가 대신하지 않는다(`../CLAUDE.md` §1.1 S1: 시크릿을 코드·문서·대화에
 남기지 않는다).
+
+> ### 2026-08-19 — 3번부터 내용이 바뀌었다
+> 배포가 **Cloudflare Pages → GitHub Pages** 로 옮겨졌다. 이전 판의
+> 3~5번(Cloudflare 환경변수 · Deploy hook · `workers/news-watcher` 감시원 배포)은
+> **이 저장소에서 성립하지 않는다** — `workers/` 디렉터리가 여기 없고,
+> `wrangler` 도 쓰지 않는다. 감시원이 하던 일은
+> `.github/workflows/deploy.yml` 의 **15분 예약 실행**이 대신한다.
 
 ---
 
@@ -18,11 +29,14 @@
 | 주소 | https://app.notion.com/p/b81755b4a9ce42f99caa81081fad517a |
 | 데이터베이스 ID | `b81755b4a9ce42f99caa81081fad517a` |
 
+이 ID 는 시크릿이 아니다 — 열쇠(`NOTION_TOKEN`) 없이는 아무것도 읽지 못한다.
+그래서 문서에 적어 둔다. 열쇠는 절대 적지 않는다.
+
 시험용 글 1건이 `임시저장` 상태로 들어 있다(사이트에 안 나간다). 그 글 본문에
 칸 설명과 작성 규칙을 적어 두었으니 **글 쓰실 분에게 먼저 보여줄 것.**
 
 칸은 아래와 같다. **이름을 바꾸면 사이트가 못 읽는다.** 바꾸려면
-`fetch-news.mjs` 의 `FIELD` 상수와 `workers/news-watcher/index.mjs` 를 함께 고친다.
+`fetch-news.mjs` 의 `FIELD` 상수를 함께 고친다.
 
 | 칸 이름 | 종류 | 설정 |
 |---|---|---|
@@ -56,137 +70,103 @@
 2. **New integration** → 이름 `반오토 홈페이지` → 워크스페이스 선택 → 저장
 3. **Internal Integration Secret** 을 복사한다 (`ntn_...` 또는 `secret_...` 로 시작)
    - 이 값이 열쇠다. **아무 문서에도, 카톡에도 붙여넣지 않는다.** 3번에서 바로 쓴다
-4. 1번에서 만든 데이터베이스 페이지로 이동 → 우측 상단 `···` →
+4. 1번의 데이터베이스 페이지로 이동 → 우측 상단 `···` →
    **연결 추가(Add connections)** → 방금 만든 `반오토 홈페이지` 선택
    - 이 단계를 빼먹으면 열쇠가 맞아도 `404` 가 난다. 노션은 명시적으로 연결한
      페이지만 보여준다
-5. 데이터베이스 ID 는 위 1번에 적어 두었다 — 주소창에서 찾을 필요 없다
 
 ---
 
-## 3. Cloudflare 에 값 넣기
+## 3. GitHub Actions Secrets 에 값 넣기
 
-Cloudflare 대시보드 → Workers & Pages → `banauto` → Settings →
-**Variables and Secrets** → 아래 둘을 추가한다.
+https://github.com/uriggiri-inc/bahnauto/settings/secrets/actions →
+**New repository secret** 으로 아래 둘을 추가한다.
 
-| 이름 | 값 | 종류 |
-|---|---|---|
-| `NOTION_TOKEN` | 2번의 Integration Secret | **Secret** (암호화) |
-| `NOTION_NEWS_DB_ID` | 2번의 데이터베이스 ID | Text 로 두어도 된다 |
+| Name | Secret |
+|---|---|
+| `NOTION_TOKEN` | 2번의 Internal Integration Secret |
+| `NOTION_NEWS_DB_ID` | `b81755b4a9ce42f99caa81081fad517a` |
 
-**Production 과 Preview 양쪽에 넣는다.** Preview 에만 없으면 PR 프리뷰에서
-공지가 옛 내용으로 보여 원인을 찾느라 시간을 쓴다.
+**Environment secret 이 아니라 Repository secret 이다.** `deploy.yml` 이
+`secrets.NOTION_TOKEN` 으로 읽고, `check` 잡에는 `environment:` 지정이 없다 —
+Environment 에만 넣으면 `check` 잡에서 빈 값이 되어 예약 실행이 영구히 건너뛴다.
 
-넣은 뒤 **재배포**해야 적용된다. Deployments → 최신 배포 → `Retry deployment`.
+`NOTION_NEWS_DB_ID` 도 Secret 으로 넣는다. 값 자체는 비밀이 아니지만 GitHub 에
+Repository 단위 일반 변수와 Secret 을 섞어 두면 다음 사람이 어디를 봐야 하는지
+헷갈린다. 둘 다 같은 자리에 있는 편이 낫다.
+
+**PR 검사(`pr-check.yml`)에는 이 값을 주지 않는다.** PR 은 포크에서도 열릴 수 있고
+공지 내용은 검사에 필요하지 않다. 시크릿이 없으면 커밋된 `news.json` 이 쓰인다.
+
+넣은 뒤 **재실행해야 적용된다** — 이미 돌아간 워크플로에는 소급되지 않는다.
+4번의 수동 실행으로 확인한다.
 
 ---
 
 ## 4. 확인
 
-배포 로그(Cloudflare → Deployments → 해당 배포 → Build log)에서 이 줄을 찾는다.
+https://github.com/uriggiri-inc/bahnauto/actions/workflows/deploy.yml →
+**Run workflow** → 완료 후 `정적 빌드` → `정적 내보내기` 로그에서 아래를 찾는다.
 
 | 로그 | 뜻 |
 |---|---|
 | `[fetch-news] N건을 news.json 에 반영했다.` | **정상.** 노션에서 N건을 읽었다 |
 | `[fetch-news] 변경 없음 (N건).` | 정상. 지난 배포와 내용이 같다 |
-| `NOTION_TOKEN / NOTION_NEWS_DB_ID 가 없다` | 3번 환경변수가 안 들어갔다 |
-| `⚠ 노션 응답 401` | 열쇠가 틀렸다. 2-3번 다시 |
+| `NOTION_TOKEN / NOTION_NEWS_DB_ID 가 없다` | 3번이 안 들어갔다 |
+| `⚠ 노션 응답 401` | 열쇠가 틀렸다. 2번 다시 |
 | `⚠ 노션 응답 404` | **2-4번(연결 추가)을 빼먹었다.** 또는 DB ID 오타 |
 | `⚠ 게시완료 상태인 글이 0건` | 칸 이름이 다르거나 전부 `임시저장` 이다 |
 
-⚠️ 위 경고가 나도 **배포는 성공한다.** 저장소에 커밋된 마지막 성공본이 그대로
-나가기 때문이다. 공지 하나 때문에 사이트 전체가 안 올라가는 것이 더 나쁘다 —
-그래서 로그를 확인하는 습관이 필요하다.
+⚠️ 위 경고가 나도 **배포는 성공(초록)으로 끝난다.** 저장소에 커밋된 마지막
+성공본이 그대로 나가기 때문이다. 공지 하나 때문에 사이트 전체가 안 올라가는 것이
+더 나쁘다 — 그래서 로그를 확인하는 습관이 필요하다.
 
 ---
 
-## 5. 감시원 배포 — 글을 올리면 자동으로 나가게
+## 5. 자동 반영은 어떻게 되는가 — 예약 실행
 
-4번까지 하면 **배포가 돌 때만** 노션을 읽는다. 즉 글을 올려도 누군가 재배포를
-눌러야 한다. 감시원(`workers/news-watcher/`)이 그 단계를 없앤다 — 10분마다 노션을
-확인하고 **바뀌었을 때만** 재배포를 부른다.
-
-### 5-1. 배포 훅 만들기
-
-Cloudflare → Workers & Pages → `banauto` → Settings → **Builds & deployments** →
-**Deploy hooks** → Add deploy hook
-
-| 항목 | 값 |
-|---|---|
-| Hook name | `news-watcher` |
-| Branch | `main` |
-
-만들면 주소가 나온다. **이 주소 자체가 열쇠다** — 아는 사람은 누구나 배포를 돌릴
-수 있다. 저장소·문서·대화에 붙여넣지 않는다.
-
-### 5-2. 감시원 배포
-
-저장소 폴더에서:
-
-```bash
-npx wrangler deploy -c workers/news-watcher/wrangler.jsonc
-```
-
-처음이면 브라우저 로그인 창이 뜬다.
-
-### 5-3. 시크릿 세 개 넣기
-
-한 줄씩 실행하고, 물어보면 값을 붙여넣는다. **화면에 남지 않는다.**
-
-```bash
-npx wrangler secret put NOTION_TOKEN        -c workers/news-watcher/wrangler.jsonc
-npx wrangler secret put NOTION_NEWS_DB_ID   -c workers/news-watcher/wrangler.jsonc
-npx wrangler secret put DEPLOY_HOOK_URL     -c workers/news-watcher/wrangler.jsonc
-```
-
-`NOTION_TOKEN` · `NOTION_NEWS_DB_ID` 는 2·3번에서 쓴 것과 같은 값이다.
-**4번의 Pages 환경변수와 별개로 여기에도 넣어야 한다** — 서로 다른 실행 환경이다.
-
-### 5-4. 확인
-
-감시원은 크론이라 결과가 로그에만 남는다. 설정 직후 확인용 입구를 뒀다.
-
-```
-https://bahnauto-news-watcher.<계정 서브도메인>.workers.dev/check
-```
-
-돌려주는 값:
-
-| 응답 | 뜻 |
-|---|---|
-| `{"ok":true,"changed":0,"deployed":false}` | **정상.** 최근 11분간 수정 없음 |
-| `{"ok":true,"changed":1,"dryRun":true}` | 정상. 수정을 감지했다(확인 모드라 배포는 안 함) |
-| `{"ok":false,"error":"설정이 빠졌다: ..."}` | 5-3 시크릿이 빠졌다 |
-| `{"ok":false,"error":"노션 응답 401"}` | 열쇠가 틀렸다 |
-| `{"ok":false,"error":"노션 응답 404"}` | **3번(연결 추가)을 빼먹었다** |
-
-`/check` 는 판정만 하고 **배포하지 않는다.** 확인하려고 눌렀다가 배포가 도는 일을
-막기 위해서다.
-
----
-
-## 6. 전체 흐름 (설정이 끝난 뒤)
+`deploy.yml` 이 **15분마다** 돌면서 `check` 잡이 노션에 묻는다:
+"최근 16분 안에 수정된 글이 있나?" 있을 때만 빌드·배포한다.
 
 ```
 글 쓰는 분: 노션에서 글 쓰고 상태를 '게시완료' 로
                     │
-        10분 안에    ▼
-감시원:     "수정됐네" → 재배포 요청
+        15분 안에    ▼
+check 잡:   "수정됐네" → 빌드 진행 (없으면 여기서 끝)
                     │
-        1~3분        ▼
-빌드:      fetch-news.mjs 가 노션을 읽어 news.json 에 넣고 사이트 생성
+        1~2분        ▼
+build:     fetch-news.mjs 가 노션을 읽어 news.json 에 넣고 사이트 생성
                     │
                     ▼
-사이트:    banauto.pages.dev/news 에 나타남
+사이트:    https://bahnauto.kr/news/ 에 나타남
 ```
 
-**게시부터 화면까지 최대 13분.** 그 사이 사람이 할 일은 없다.
+**게시부터 화면까지 최대 약 17분.** 그 사이 사람이 할 일은 없다.
+급하면 4번의 **Run workflow** 로 즉시 반영한다.
+
+### 왜 크론 주기(15분)보다 넓은 16분을 보는가
+
+창이 주기와 똑같으면 실행이 조금만 늦어도 그 틈에 들어온 수정이 **양쪽 창에 다
+걸리지 않아 영구히 누락된다.** 1분 겹치게 두면 같은 수정이 두 번 걸릴 수는 있어도
+빠지지는 않는다. 중복 빌드는 손해가 작고, 누락은 "글을 올렸는데 안 나온다" 가 된다.
+
+### 상태로 걸러 묻지 않는 이유
+
+`check` 잡은 `게시완료` 인 글만 묻지 않고 **모든 수정**을 본다.
+`게시완료` 를 `임시저장` 으로 되돌리는 것도 **사이트에서 내려야 하는 변경**이기
+때문이다. 어느 글이 나갈지는 빌드할 때 `fetch-news.mjs` 가 정한다.
+
+### 노션이 응답하지 않으면
+
+`check` 잡이 `should_build=false` 로 끝내고 경고만 남긴다. 배포를 실패로 만들지
+않는다 — 다음 수정 때 함께 반영된다.
 
 ---
 
-## 7. 아직 남은 것
+## 6. 아직 남은 것
 
 | 항목 | 내용 |
 |---|---|
 | 상세 페이지 | 지금은 목록(제목·날짜·분류·요약)만이다. 노션 **본문 블록**까지 읽어 `/news/[slug]` 를 만드는 것은 2단계다 |
-| 검색 노출 | `public/_headers` 의 `noindex` 가 살아 있는 동안 공지도 검색에 안 잡힌다(X-07) |
+| 검색 노출 | `src/lib/seo.ts` 의 `SEARCH_OPEN` 이 `false` 인 동안 공지도 검색에 안 잡힌다 |
+| 반영 지연 | 15분이 길면 크론 주기를 줄일 수 있다. 단 공개 저장소라 Actions 는 무료지만 실행 이력이 쌓인다 |
