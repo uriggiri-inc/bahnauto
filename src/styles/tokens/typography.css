@@ -1,0 +1,32 @@
+:root {
+  /* Fluid scale — clamp(min, vw, max) */
+  --text-display: clamp(34px, 4.6vw, 58px);
+  --text-h1: clamp(28px, 3.8vw, 42px);
+  --text-h2: clamp(26px, 3.2vw, 36px);
+  --text-h3: clamp(21px, 2.2vw, 27px);
+  --text-h4: 18px;
+  --text-body-lg: clamp(16px, 1.5vw, 18.5px);
+  --text-body: 16px;
+  --text-body-sm: 14.5px;
+  --text-label: 13.5px;
+  --text-caption: 12.5px;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --leading-display: 1.24;
+  --leading-heading: 1.35;
+  --leading-snug: 1.4;
+  --leading-body: 1.75;
+  --leading-relaxed: 1.7;
+  --leading-tight: 1;
+
+  --tracking-display: -0.035em;
+  --tracking-heading: -0.03em;
+  --tracking-h3: -0.025em;
+  --tracking-h4: -0.02em;
+  --tracking-normal: 0;
+  --tracking-label: 0.06em;
+}

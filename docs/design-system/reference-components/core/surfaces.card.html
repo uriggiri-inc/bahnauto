@@ -1,0 +1,126 @@
+<!-- @dsCard group="Components" viewport="700x290" name="Core — Card · Toast" subtitle="카드 4톤 / 토스트 3종" -->
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--color-bg);
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      .grp {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .cap {
+        font-size: 11.5px;
+        color: var(--color-text-muted);
+        letter-spacing: 0.04em;
+        margin: 0 0 8px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../_ds_bundle.js"></script>
+    <script type="text/babel">
+      const { Card, Toast, Button } = window.BAHNAUTODesignSystem_9a8a8a;
+
+      function Demo() {
+        return (
+          <div style={{ display: "grid", gap: 16 }}>
+            <div>
+              <p className="cap">CARD</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }}>
+                <Card padding={16}>
+                  <b style={{ fontSize: 14 }}>default</b>
+                  <p style={{ margin: "6px 0 0", fontSize: 12.5, color: "var(--color-text-sub)" }}>
+                    화이트 + 보더 + 블루 섀도우
+                  </p>
+                </Card>
+                <Card padding={16} tone="subtle">
+                  <b style={{ fontSize: 14 }}>subtle</b>
+                  <p style={{ margin: "6px 0 0", fontSize: 12.5, color: "var(--color-text-sub)" }}>
+                    섹션 내부 블록
+                  </p>
+                </Card>
+                <Card padding={16} tone="brand">
+                  <b style={{ fontSize: 14 }}>brand</b>
+                  <p style={{ margin: "6px 0 0", fontSize: 12.5, color: "var(--color-text-sub)" }}>
+                    강조 블록
+                  </p>
+                </Card>
+                <div
+                  style={{
+                    background: "var(--color-ink)",
+                    borderRadius: "var(--radius-lg)",
+                    padding: 8,
+                  }}
+                >
+                  <Card padding={12} tone="dark">
+                    <b style={{ fontSize: 14 }}>dark</b>
+                    <p
+                      style={{
+                        margin: "6px 0 0",
+                        fontSize: 12.5,
+                        color: "var(--color-text-on-dark-sub)",
+                      }}
+                    >
+                      다크 섹션
+                    </p>
+                  </Card>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p className="cap">TOAST</p>
+              <div style={{ display: "grid", gap: 8 }}>
+                <Toast
+                  tone="success"
+                  title="상담 신청이 접수되었습니다"
+                  description="1영업일 내에 연락드리겠습니다."
+                  onClose={() => {}}
+                />
+                <Toast
+                  tone="danger"
+                  title="전송에 실패했습니다"
+                  description="입력값은 유지됩니다. 다시 시도하시거나 전화로 문의해 주세요."
+                  onClose={() => {}}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      }
+      ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+    </script>
+  </body>
+</html>

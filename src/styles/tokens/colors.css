@@ -1,0 +1,52 @@
+:root {
+  /* ── Brand ─────────────────────────────────────────────
+     Blue is the single brand colour. Pantone 2728C / C100 M80 Y0 K0 / #004ACC */
+  --color-brand: #004acc;
+  --color-brand-hover: #003ba3;
+  --color-brand-active: #002f82;
+  --color-brand-50: #f5f8ff;
+  --color-brand-100: #eef3ff;
+  --color-brand-200: #dbe4fa;
+  --color-brand-300: #8fb4ff; /* brand text on dark surfaces */
+  --color-brand-400: #4d86f7; /* light end of the symbol ring */
+
+  /* ── Ink / text ────────────────────────────────────────
+     Brand Gray. The asset PDF prints both #282828 and R38 G43 B60; the actual
+     artwork (slogan lettering in the feature graphic) measures #262B3C, and the
+     CMYK build (C90 M85 Y60 K45) is blue-biased — so #262B3C is canonical here. */
+  --color-ink: #262b3c;
+  --color-ink-900: #1a1e2b;
+  --color-text: #262b3c;
+  --color-text-sub: #5a6070;
+  --color-text-muted: #8b919e; /* >=18px or non-essential only — 3.1:1 on white */
+  --color-text-invert: #ffffff;
+  --color-text-on-dark-sub: #b9bfce;
+
+  /* ── Surface ───────────────────────────────────────────*/
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f7f9fd;
+  --color-bg-tint: #f4f7fd;
+  --color-bg-dark: var(--color-ink);
+  --color-surface-card: #ffffff;
+  --color-border: #e8ecf5;
+  --color-border-light: #eef1f7;
+  --color-border-strong: #d5dcea;
+  --color-border-dark: rgba(255, 255, 255, 0.14);
+
+  /* ── Semantic (mirrors the manager app's status colours) ─*/
+  --color-success: #16a34a;
+  --color-success-bg: #e9f7ef;
+  --color-warning: #d97706;
+  --color-warning-bg: #fef4e6;
+  --color-danger: #dc2626;
+  --color-danger-bg: #fdecec;
+  --color-info: var(--color-brand);
+  --color-info-bg: var(--color-brand-100);
+
+  /* ── Gradient — symbol ring + CTA gauges ONLY ───────────*/
+  --gradient-brand: linear-gradient(90deg, #004acc 0%, #4d86f7 100%); /* @kind color */
+  --gradient-ring: linear-gradient(90deg, #004acc 0%, #a3c3ff 100%); /* @kind color */
+
+  /* ── Focus ─────────────────────────────────────────────*/
+  --color-focus: #004acc;
+}

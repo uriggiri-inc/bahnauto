@@ -1,0 +1,105 @@
+<!-- @dsCard group="Components" viewport="700x620" name="Layout" subtitle="Sticky GNB (데스크톱 · 모바일) / 4단 푸터 / 모바일 하단 CTA" -->
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--color-bg);
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      .grp {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .cap {
+        font-size: 11.5px;
+        color: var(--color-text-muted);
+        letter-spacing: 0.04em;
+        margin: 0 0 8px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../_ds_bundle.js"></script>
+    <script type="text/babel">
+      const { Header, Footer, MobileStickyCTA } = window.BAHNAUTODesignSystem_9a8a8a;
+
+      const BIZ = [
+        { label: "상호명", value: "우리끼리(주)" },
+        { label: "대표자", value: "[확정 필요]" },
+        { label: "사업자등록번호", value: "[확정 필요]" },
+        { label: "대표전화", value: "[확정 필요]" },
+      ];
+      function Demo() {
+        return (
+          <div style={{ display: "grid", gap: 18 }}>
+            <div
+              style={{
+                border: "1px solid var(--color-border)",
+                borderRadius: "var(--radius-lg)",
+                overflow: "hidden",
+              }}
+            >
+              <Header logoSrc="../../assets/logo/logo-horizontal.svg" active="/system" />
+              <div style={{ height: 26, background: "var(--color-bg-subtle)" }} />
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "320px 1fr",
+                gap: 18,
+                alignItems: "start",
+              }}
+            >
+              <div
+                style={{
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "var(--radius-lg)",
+                  overflow: "hidden",
+                }}
+              >
+                <Header logoSrc="../../assets/logo/logo-horizontal.svg" compact />
+                <div style={{ height: 20, background: "var(--color-bg-subtle)" }} />
+                <MobileStickyCTA />
+              </div>
+              <div style={{ borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
+                <Footer logoSrc="../../assets/logo/logo-slogan-dark.svg" business={BIZ} />
+              </div>
+            </div>
+          </div>
+        );
+      }
+      ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+    </script>
+  </body>
+</html>

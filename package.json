@@ -1,0 +1,55 @@
+{
+  "name": "bahnauto-web",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "news:fetch": "node scripts/fetch-news.mjs",
+    "prebuild": "npm run news:fetch",
+    "build": "next build",
+    "prebuild:static": "npm run news:fetch",
+    "build:static": "node scripts/build-static.mjs",
+    "build:cf": "opennextjs-cloudflare build",
+    "preview": "opennextjs-cloudflare preview",
+    "preview:static": "npx --yes serve dist-deploy/site",
+    "start": "next start",
+    "lint": "eslint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.7.1",
+    "@icons-pack/react-simple-icons": "^13.13.0",
+    "@next/third-parties": "^16.3.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "clsx": "^2.1.1",
+    "motion": "^13.0.0",
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-hook-form": "^7.84.0",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.2",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "wrangler": "^4.119.0"
+  },
+  "overrides": {
+    "undici": "^7.29.0"
+  }
+}
