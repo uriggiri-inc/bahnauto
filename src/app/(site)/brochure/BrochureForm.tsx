@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -143,12 +142,24 @@ export function BrochureForm() {
               </div>
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">보유 기간</dt>
-                <dd>
-                  발송 완료 후 1년까지 보관 후 파기 ·{" "}
-                  <Link href="/privacy" className="text-brand underline underline-offset-2">
-                    전문 보기
-                  </Link>
-                </dd>
+                {/*
+                  사용자 지시(2026-08-19) — 도입 상담·채용 폼과 같은 표기로 맞춘다.
+                  이 줄은 이제 네 폼 모두 `목적 달성 시 폐기` 하나다.
+
+                  ⚠️ 이전 문구 `발송 완료 후 1년까지 보관 후 파기` 는
+                     **개인정보처리방침에 근거가 없는 수치였다.** 제3조 보유기간
+                     목록에 소개서 요청 항목이 아예 없다 — 폼에서 만들어 낸 숫자다.
+                     근거 없는 구체적 기간보다 표준 문구가 낫다.
+
+                  처리방침 전문 링크를 뗀 이유: 푸터에 상시 있고, 동의 체크박스
+                  옆에서 밖으로 나가는 링크는 제출을 중단시킨다. 필수 3요소
+                  (수집 항목·이용 목적·보유 기간)는 이 화면에 그대로 남아 있다.
+
+                  ⚠️ 남은 불일치: 방침 제3조는 상담문의를 "문의 처리 완료 후
+                     1년까지 보관 후 파기" 로 적고 있다. 오픈 전에 방침 원본과
+                     함께 일치시켜야 한다(`ContactForm.tsx` 에 같은 경고가 있다).
+                */}
+                <dd>목적 달성 시 폐기</dd>
               </div>
             </dl>
           }
