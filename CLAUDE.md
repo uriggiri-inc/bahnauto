@@ -120,8 +120,14 @@ app/layout.tsx          루트: <html>, 메타데이터, Pretendard <link>
 `/lab` 과 `/design-system` 은 링크로 연결돼 있지 않지만 **주소를 알면 열린다.**
 외부 공유 전에는 `scripts/DEPLOY.md` 의 안내를 따른다.
 
-`public/_headers` 는 현재 전 경로에 `X-Robots-Tag: noindex` 를 건다(더미 데이터 색인
-방지). 이 줄을 지우는 것이 정식 오픈의 마지막 단계다.
+검색 노출은 `src/lib/seo.ts` 의 `SEARCH_OPEN` **한 줄이 정한다.** 지금 `false` 라
+`robots.txt` 가 전 경로를 막고 모든 페이지에 `noindex` 가 붙는다. 이 값을 `true` 로
+바꾸는 것이 정식 오픈의 마지막 단계다.
+
+⚠️ **GitHub Pages 는 응답 헤더를 설정할 수 없다.** 이전 판에는 Cloudflare 용
+`public/_headers` 가 `X-Robots-Tag: noindex` 를 함께 걸어 이중 방어를 했는데, 배포가
+GitHub Pages 로 옮겨오면서 그 수단이 사라졌다 — **그 파일은 이 저장소에 없다.**
+차단 장치가 하나뿐이므로 그 한 줄의 무게가 크다. 켜는 순간이 곧 공개다(§1.3).
 
 ### 6. 디자인 토큰 — 어느 파일이 진짜인가
 
