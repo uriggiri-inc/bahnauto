@@ -276,12 +276,14 @@ export function CareersForm() {
               </div>
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">보유 기간</dt>
-                <dd className="text-warning">
-                  [채용 보유기간 확정 필요 · §13-E] ·{" "}
-                  <Link href="/privacy" className="text-brand underline underline-offset-2">
-                    처리방침 보기
-                  </Link>
-                </dd>
+                {/*
+                  사용자 지시(2026-08-19) — 확정 필요 표시와 처리방침 링크를 지우고
+                  보유기간만 적는다. 전문은 푸터의 `개인정보처리방침` 링크로 닿는다.
+
+                  `text-warning`(주황)도 뗐다. 그 색은 "아직 확정되지 않은 값" 표시라
+                  확정 문구에 남겨 두면 방문자에게 경고로 읽힌다.
+                */}
+                <dd>목적 달성 시 폐기</dd>
               </div>
             </dl>
           }

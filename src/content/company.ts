@@ -32,10 +32,22 @@ export const COMPANY = {
    * 팜포레스트는 반오토 앱 데이터(회원정보·서류·CCTV 영상) 수탁사로 방침 제7조에
    * 그대로 남아 있다. 홈페이지 호스팅과는 별개의 위탁이다.
    *
-   * ⚠️ Cloudflare 는 미국 법인이라 **국외이전 고지 대상**이다.
+   * ⚠️ 미국 법인이라 **국외이전 고지 대상**이다.
    *    방침에 해당 조항이 아직 없다 — `scripts/DEPLOY.md` 오픈 전 점검 4번.
+   *
+   * ── 2026-08-19 실제와 일치시켰다 (사용자 지시) ──
+   * `Cloudflare, Inc.` → `GitHub, Inc.`. 배포가 Cloudflare Pages 에서
+   * **GitHub Pages** 로 옮겨졌다. A 레코드 실측: 185.199.108~111.153 (GitHub Pages).
+   *
+   * DNS 는 **가비아**(`ns.gabia.net` 등, 국내 법인)다. Cloudflare 는 어디에도
+   * 관여하지 않는다. 가비아를 이 값에 넣지 않은 이유: 이 항목은 **호스팅 제공자**
+   * 고지이고, DNS 는 이름을 IP 로 바꿔주는 역할이라 개인정보를 처리하지 않는다.
+   *
+   * ⚠️ **원본 .docx 는 아직 이 값이 아니다.** 사이트만 고친 상태다 —
+   *    개인정보처리방침 원본을 같은 값으로 갱신해야 두 문서가 일치한다
+   *    (`scripts/DEPLOY.md` 점검 목록 7번).
    */
-  hosting: "Cloudflare, Inc. (미국)",
+  hosting: "GitHub, Inc. (미국)",
   /** 두 법정 문서의 시행일 */
   effectiveDate: "2026년 9월 1일",
 } as const;
