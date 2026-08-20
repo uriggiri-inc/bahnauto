@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FaqTabs } from "@/components/marketing/FaqTabs";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { buttonClasses } from "@/components/ui/Button";
 import { formatCopy } from "@/components/ui/Copy";
 import { FAQ_GROUPS } from "@/content/faq";
+import { faqPageJsonLd } from "@/lib/structured-data";
 
 /**
  * `/faq` — 자주 묻는 질문.
@@ -32,6 +34,12 @@ export const metadata: Metadata = {
 export default function FaqPage() {
   return (
     <>
+      {/*
+        FAQPage 구조화 데이터 (X-14). 문항은 아래 `FaqTabs` 가 그리는 것과 같은
+        `FAQ_GROUPS` 에서 파생된다 — 근거와 한계는 `lib/structured-data.ts` 주석에 있다.
+      */}
+      <JsonLd data={faqPageJsonLd()} />
+
       <section className="from-brand-50 bg-gradient-to-b to-white">
         <div className="container-ba pt-12 pb-12 md:pt-20 md:pb-16">
           <SectionLabel className="mb-3">자주 묻는 질문</SectionLabel>
