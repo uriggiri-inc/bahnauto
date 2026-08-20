@@ -57,8 +57,12 @@ export default function NewsPage() {
         <div className="container-ba">
           {/*
             공지가 하나도 없을 때. 빈 테두리 상자만 남으면 "고장났나" 로 읽히므로
-            상태를 문장으로 말해 준다. 노션에 게시완료 글이 올라오면 최대 15분 안에
-            이 자리가 목록으로 바뀐다(`deploy.yml` 의 15분 예약 실행).
+            상태를 문장으로 말해 준다. 노션에 게시완료 글이 올라오면 이 자리가
+            목록으로 바뀐다(`deploy.yml` 의 예약 실행). 크론은 15분 주기로 설정돼
+            있지만 GitHub 이 공개 저장소의 예약 실행을 미루므로 실제로는 15분~1시간
+            이다 — 화면 문구에 시간을 약속하지 않는 이유다.
+            (주의: 이 주석 안에 크론 표기를 그대로 쓰면 별표+슬래시가 JSX 주석을
+            끊는다. 말로 적는다.)
           */}
           {NEWS.length === 0 ? (
             <div className="border-border rounded-lg border bg-white p-10 text-center">
