@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { ROBOTS_META, SITE_URL } from "@/lib/seo";
+import { ROBOTS_META, SITE_URL, verificationMeta } from "@/lib/seo";
 import "./globals.css";
 
 const SITE_NAME = "반오토 BAHNAUTO";
@@ -89,6 +89,15 @@ export const metadata: Metadata = {
        Cloudflare 용 `_headers` 는 `noindex` 라 두 지시가 반대였다(X-14 치명).
   */
   robots: ROBOTS_META,
+  /*
+    검색엔진 소유 확인. 값은 `lib/seo.ts` 의 `SITE_VERIFICATION` 에 넣는다.
+    비어 있으면 태그가 아예 나가지 않으므로 지금은 아무것도 추가되지 않는다.
+
+    ⚠️ 확인만 미리 해 두는 것이고 **색인이 시작되는 것은 아니다.** 지금
+       `robots.txt` 가 전 경로를 막고 있어 네이버·구글은 "수집 불가" 로 본다.
+       `SEARCH_OPEN` 을 켠 뒤에 사이트맵을 제출한다.
+  */
+  verification: verificationMeta(),
 };
 
 export const viewport: Viewport = {
