@@ -60,3 +60,63 @@ export function absoluteUrl(path: string): string {
   const clean = path.startsWith("/") ? path : `/${path}`;
   return `${SITE_URL}${clean.endsWith("/") ? clean : `${clean}/`}`;
 }
+
+/**
+ * 검색엔진 소유 확인 코드.
+ *
+ * ── 이게 없으면 어떻게 되나 ──
+ * **네이버는 서치어드바이저에 등록하지 않으면 사실상 노출되지 않는다.** 구글은
+ * 등록 없이도 언젠가 색인하지만 서치콘솔이 없으면 색인 요청도, 문제 확인도 못
+ * 한다. `SEARCH_OPEN` 을 켜는 날 바로 색인을 요청할 수 있게 미리 확인만 끝내
+ * 두는 자리다.
+ *
+ * ── 값은 비밀이 아니다 ──
+ * 이 코드는 HTML 소스에 그대로 노출되는 **공개 식별자**다. 비밀번호나 API 키가
+ * 아니므로 저장소에 커밋해도 된다(`CLAUDE.md` §1.1 S1 대상이 아니다). 다른
+ * 사람이 이 값을 알아도 우리 검색 데이터에 접근할 수 없다 — 소유 확인은
+ * "이 사이트에 태그를 넣을 권한이 있었다" 만 증명한다.
+ *
+ * ── 채우는 곳 ──
+ * | 엔진 | 어디서 받나 |
+ * |---|---|
+ * | `naver` | 서치어드바이저 → 사이트 등록 → 소유확인 → **HTML 태그** 방식 |
+ * | `google` | 서치콘솔 → 속성 추가 → URL 접두어 → **HTML 태그** 방식 |
+ * | `bing` | 빙 웹마스터도구 → 가져오기(서치콘솔 연동) 또는 HTML 태그 |
+ *
+ * 태그 전체(`<meta ... />`)가 아니라 **`content` 안의 값만** 넣는다.
+ *
+ * ⚠️ 빈 문자열이면 그 메타태그를 아예 내지 않는다. `content=""` 인 태그는
+ *    확인이 실패하고 소스만 지저분해진다.
+ *
+ * ⚠️ 파일 업로드 방식(`naverXXXX.html` 을 루트에 두기)도 있지만 쓰지 않는다.
+ *    정적 빌드는 `public/` 에 둔 파일을 그대로 내보내므로 동작은 하지만,
+ *    확인 수단이 코드와 파일 두 곳으로 갈라진다.
+ */
+export const SITE_VERIFICATION = {
+  /** 네이버 서치어드바이저 — 한국 노출의 전제 조건 */
+  naver: "",
+  /** 구글 서치콘솔 */
+  google: "",
+  /** 빙 웹마스터도구 */
+  bing: "",
+} as const;
+
+/**
+ * 채워진 것만 골라 Next 의 `metadata.verification` 형태로 돌려준다.
+ *
+ * 전부 비어 있으면 `undefined` 를 돌려 `verification` 키 자체가 나가지 않게 한다.
+ */
+export function verificationMeta() {
+  const other: Record<string, string> = {};
+  if (SITE_VERIFICATION.naver) other["naver-site-verification"] = SITE_VERIFICATION.naver;
+  // 빙은 표준 이름이 `msvalidate.01` 이다. Next 에 전용 필드가 없어 other 로 넣는다
+  if (SITE_VERIFICATION.bing) other["msvalidate.01"] = SITE_VERIFICATION.bing;
+
+  const hasGoogle = Boolean(SITE_VERIFICATION.google);
+  if (!hasGoogle && Object.keys(other).length === 0) return undefined;
+
+  return {
+    ...(hasGoogle && { google: SITE_VERIFICATION.google }),
+    ...(Object.keys(other).length > 0 && { other }),
+  };
+}
