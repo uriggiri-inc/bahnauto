@@ -32,9 +32,11 @@ import { FaqTeaser } from "@/components/marketing/FaqTeaser";
  */
 
 export const metadata: Metadata = {
-  title: "도입 절차",
+  title: "무인매장 관리 도입 절차",
+  // 화면 리드와 같은 문장을 쓰지 않는다 — 199행의 `lead` 는 화면에 보이는 글이라
+  // 건드리지 않기로 했고(사용자 지시), 검색결과 문장은 키워드를 앞에 둔다.
   description:
-    "도입 상담부터 매장 방문 진단, 계약과 매니저 배정, 관리 시작까지. 각 단계에서 사장님이 하실 일과 반오토가 할 일을 나눠 안내합니다.",
+    "무인매장 관리를 맡기는 절차입니다. 도입 상담, 매장 방문 진단, 계약과 매니저 배정, 관리 시작까지 각 단계에서 사장님이 하실 일을 나눠 안내합니다.",
 };
 
 const STEPS: readonly Step[] = [

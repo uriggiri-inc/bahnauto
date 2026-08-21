@@ -26,9 +26,9 @@ import { faqPageJsonLd } from "@/lib/structured-data";
  */
 
 export const metadata: Metadata = {
-  title: "자주 묻는 질문",
+  title: "무인매장 관리 자주 묻는 질문",
   description:
-    "주요기능과 운영 방식, 매니저 배정, 요금과 계약까지 도입 전에 가장 많이 받는 질문을 정리했습니다.",
+    "무인매장 관리에 대해 도입 전 가장 많이 받는 질문입니다. 주요기능과 운영 방식, 매니저 배정, 요금과 계약까지 정리했습니다.",
 };
 
 export default function FaqPage() {

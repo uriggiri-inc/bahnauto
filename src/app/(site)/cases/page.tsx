@@ -23,9 +23,9 @@ import { FaqTeaser } from "@/components/marketing/FaqTeaser";
  */
 
 export const metadata: Metadata = {
-  title: "도입 사례",
+  title: "무인매장 관리 도입 사례",
   description:
-    "업종과 매장 조건별로 반오토가 어떻게 관리하고 있는지, 도입 전후 무엇이 달라졌는지 정리했습니다.",
+    "무인매장 관리 도입 사례입니다. 업종과 매장 조건별로 반오토가 어떻게 관리하고 있는지, 도입 전후 무엇이 달라졌는지 정리했습니다.",
 };
 
 export default function CasesPage() {

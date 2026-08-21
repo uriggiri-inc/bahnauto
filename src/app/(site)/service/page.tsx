@@ -6,6 +6,8 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { buttonClasses } from "@/components/ui/Button";
 import { FaqTeaser } from "@/components/marketing/FaqTeaser";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { serviceJsonLd } from "@/lib/structured-data";
 
 /**
  * `/service` — 서비스 소개 (PRD §7.3).
@@ -19,9 +21,9 @@ import { FaqTeaser } from "@/components/marketing/FaqTeaser";
  */
 
 export const metadata: Metadata = {
-  title: "서비스 소개",
+  title: "무인매장 관리 서비스",
   description:
-    "체계적인 매장 관리, 전담 매니저, 실시간 고객센터, 재고·발주, 행정 업무, 데일리 리포트. 반오토가 맡는 여섯 영역과 실제 수행 항목.",
+    "무인매장 관리를 여섯 영역으로 나눠 맡습니다. 매장 관리, 전담 매니저, 고객센터, 재고·발주, 행정 업무, 데일리 리포트의 수행 항목을 정리했습니다.",
 };
 
 /** PRD §7.3 — 6영역과 세부 3항목. 값은 전부 확정본이다 */
@@ -103,6 +105,13 @@ const AREAS: readonly ServiceArea[] = [
 export default function ServicePage() {
   return (
     <>
+      {/*
+        이 페이지가 무엇에 대한 페이지인지 기계에 알린다(SEO 감사 A7).
+        화면에는 아무것도 그리지 않는다. 요금을 넣지 않은 이유는
+        `lib/structured-data.ts` 주석에 있다.
+      */}
+      <JsonLd data={serviceJsonLd()} />
+
       {/* ══ 히어로 ═══════════════════════════════════════════════ */}
       <section className="from-brand-50 bg-gradient-to-b to-white">
         <div className="container-ba pt-12 pb-12 md:pt-20 md:pb-16">
