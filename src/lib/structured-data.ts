@@ -1,5 +1,6 @@
+import { COMPANY } from "@/content/company";
 import { FAQ_GROUPS } from "@/content/faq";
-import { absoluteUrl } from "./seo";
+import { SITE_URL, absoluteUrl } from "./seo";
 
 /**
  * `/faq` 의 FAQPage 구조화 데이터 (SEO 감사 A7 · 현황판 X-14).
@@ -43,5 +44,77 @@ export function faqPageJsonLd() {
         text: item.a,
       },
     })),
+  };
+}
+
+/**
+ * 사이트 전체에 붙는 발행 주체 정보 (SEO 감사 A7).
+ *
+ * ── 이름을 왜 이렇게 나눴나 ──
+ * 사람들이 검색하는 이름은 **반오토**이고, 법인은 **주식회사 우리끼리**다.
+ * `name` 에 반오토를, `legalName` 에 법인을 넣어 둘을 같은 주체로 잇는다.
+ * 푸터가 고지하는 사업자 정보와 값이 갈라지면 안 되므로 전부
+ * `content/company.ts` 에서 읽는다 — 여기에 값을 다시 적지 않는다.
+ *
+ * ⚠️ **평점·후기·요금을 넣지 않는다.** schema.org 에는 `aggregateRating` 과
+ *    `offers` 가 있지만 이 사이트의 요금·실적은 아직 잠정값이다(현황판 X-06).
+ *    검증되지 않은 수치를 구조화 데이터로 신고하면 표시광고법 문제가 그대로
+ *    검색결과에 실린다. 확정된 뒤에 넣는다.
+ *
+ * ⚠️ `telephone`·`email`·주소는 **푸터에 이미 공개된 사업자 정보**다. 개인의
+ *    연락처가 아니므로 §1.1 S3(개인정보 기록 금지) 대상이 아니다. 개인 이름이나
+ *    담당자 직통 번호를 여기에 넣지 않는다.
+ */
+export function organizationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "반오토",
+    legalName: COMPANY.name,
+    url: absoluteUrl("/"),
+    /*
+      `absoluteUrl()` 을 쓰지 않는다. 그 함수는 `trailingSlash: true` 에 맞춰
+      **페이지 경로** 끝에 슬래시를 붙이므로 파일에 쓰면 `og-cover.png/` 가 되어
+      404 다. 실제로 한 번 그렇게 나갔고 산출물 실측에서 잡았다.
+    */
+    logo: `${SITE_URL}/brand/og-cover.png`,
+    email: COMPANY.email,
+    telephone: COMPANY.tel,
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "KR",
+      streetAddress: COMPANY.address,
+    },
+    // 운영사 홈페이지 — 같은 주체임을 검색엔진이 잇도록 한다
+    sameAs: ["https://uriggiri.kr/"],
+  };
+}
+
+/**
+ * `/service` 의 서비스 정의 (SEO 감사 A7).
+ *
+ * `serviceType` 에 주력 키워드를 그대로 쓴다 — 이 페이지가 무엇에 대한
+ * 페이지인지 기계에 알리는 자리다. 화면에는 나타나지 않는다.
+ *
+ * ⚠️ 여기에도 `offers`(요금)를 넣지 않는다. 이유는 위와 같다.
+ * ⚠️ `areaServed` 를 넣지 않았다. 실제 서비스 가능 지역이 확정되지 않았고
+ *    (현황판 X-09 대표번호·채널과 함께 대기), 없는 지역을 신고하면 헛걸음
+ *    문의가 늘어난다. 지역이 확정되면 여기에 추가한다.
+ */
+export function serviceJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "무인매장 관리",
+    serviceType: "무인매장 위탁 관리",
+    description:
+      "무인매장의 청결·재고·응대·점검을 표준 체크리스트와 사진 기록으로 위탁 관리합니다.",
+    url: absoluteUrl("/service"),
+    provider: {
+      "@type": "Organization",
+      name: "반오토",
+      legalName: COMPANY.name,
+      url: absoluteUrl("/"),
+    },
   };
 }

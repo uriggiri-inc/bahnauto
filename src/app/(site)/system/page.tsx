@@ -21,9 +21,9 @@ import { FaqTeaser } from "@/components/marketing/FaqTeaser";
  */
 
 export const metadata: Metadata = {
-  title: "운영 시스템",
+  title: "무인매장 관리 시스템",
   description:
-    "매장 전용 체크리스트, 항목별 사진 기록, 단말기 촬영 기반 출퇴근 인증, 유통기한 D-day 재고 관리. 반오토가 관리 결과를 증명하는 방법.",
+    "무인매장 관리 결과를 증명하는 방법입니다. 매장 전용 체크리스트, 항목별 사진 기록, 출퇴근 인증, 유통기한 D-day 재고 관리로 매일 기록을 남깁니다.",
 };
 
 export default function SystemPage() {

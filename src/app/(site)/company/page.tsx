@@ -22,7 +22,7 @@ import { FaqTeaser } from "@/components/marketing/FaqTeaser";
  */
 
 export const metadata: Metadata = {
-  title: "회사 소개",
+  title: "무인매장 직영 운영사 소개",
   description:
     "반오토는 우리끼리(주)가 직영 무인매장을 운영하며 만든 관리 체계입니다. 체크리스트도 앱도 현장에서 나왔습니다.",
 };

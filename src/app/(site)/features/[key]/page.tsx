@@ -50,8 +50,14 @@ export async function generateMetadata({
   const feature = FEATURES.find((f) => f.key === key);
   const detail = FEATURE_DETAIL_BY_KEY[key];
   if (!feature || !detail) return {};
+  /*
+    기능 이름을 앞에 두는 이유: 이 페이지를 찾는 검색어는 "무인매장 관리" 가 아니라
+    기능 자체("출퇴근 인증", "인허가 관리")다. 주력 키워드는 뒤에 붙여 이 페이지가
+    무엇의 일부인지만 알린다 — 8개 페이지 title 을 모두 같은 말로 시작하면
+    브라우저 탭에서 구분이 안 되고 검색엔진에도 스터핑으로 읽힌다.
+  */
   return {
-    title: `${feature.title} — 주요기능`,
+    title: `${feature.title} — 무인매장 관리`,
     description: detail.sub,
   };
 }

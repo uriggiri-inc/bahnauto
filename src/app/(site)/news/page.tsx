@@ -32,7 +32,8 @@ import { formatCopy } from "@/components/ui/Copy";
 
 export const metadata: Metadata = {
   title: "공지사항",
-  description: "반오토 서비스 변경 사항과 매장 운영 관련 공지를 안내합니다.",
+  description:
+    "반오토 무인매장 관리 서비스의 변경 사항과 매장 운영 관련 공지를 안내합니다. 체크리스트 항목 변경과 앱 업데이트를 먼저 알려드립니다.",
 };
 
 /** 2026-08-04 → 2026.08.04 */
