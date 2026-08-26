@@ -27,9 +27,13 @@ import { FaqTeaser } from "@/components/marketing/FaqTeaser";
  * 가운데 정렬하면 본문이 오른쪽으로 쏠린다. 남은 폭 안에서 자체 상한
  * (1140px)을 두고 거터만 준다.
  *
- * ── CTA 섹션은 사이드바 바깥이다 ──
+ * ── CTA 섹션은 사이드바 바깥이다 (lg 이상) ──
  * 사이드바(`sticky h-svh`)는 부모가 끝날 때까지 따라온다. CTA 를 같은 부모에
- * 넣으면 브랜드 컬러 섹션 옆에 흰 300px 기둥이 남는다.
+ * 넣으면 브랜드 컬러 섹션 옆에 흰 300px 기둥이 남는다. 그래서 lg 이상에서는
+ * FAQ·CTA 를 사이드바의 부모(안쪽 div) 밖에 둔다.
+ *
+ * 좁은 화면은 반대다 — 목차 띠가 CTA 위까지 따라와야 한다(사용자 지시
+ * 2026-08-25). 두 요구를 한꺼번에 만족시키는 방법은 아래 `return` 주석에 있다.
  *
  * 정적 내보내기(`output: "export"`)와 호환되도록 `generateStaticParams` 로
  * 8개 경로를 전부 미리 만든다. 목록에 없는 키는 404 다.
@@ -72,15 +76,35 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
   const navItems = FEATURES.map((f) => ({ key: f.key, label: f.title }));
 
   return (
-    <>
-      {/*
-        ══ 사이드바 + 본문 ═══════════════════════════════════════
-        `no-header-pad` — `globals.css` 의 "첫 섹션에 헤더 높이만큼 여백" 규칙에서
-        빼는 표시다. 이 페이지는 사이드바가 화면 맨 위(y=0)에서 시작해야 하고,
-        본문 칸이 자기 위 여백을 직접 계산한다(아래 `lg:pt-[...]`). 밖에서 여백을
-        주면 사이드바가 통째로 72px 밀려 로고가 화면 중턱에 떠 보인다.
-      */}
-      <div className="no-header-pad lg:flex">
+    /*
+      ══ 왜 div 가 두 겹인가 (겉·안) ═════════════════════════════
+      겉 div — **페이지 전체**를 감싼다. 두 가지 일을 한다.
+
+      ① 좁은 화면에서 목차 띠(`sticky`)의 **기준 상자**가 된다. `sticky` 는 자기
+         부모 상자 안에서만 움직이므로, 부모가 본문까지만이면 띠는 FAQ 직전에서
+         멈춰 사라진다. 겉 div 가 FAQ·최종 CTA 까지 품으므로 띠가 페이지 끝까지
+         헤더 아래에 붙어 따라온다(사용자 지시 2026-08-25). 푸터는 `<main>` 밖이라
+         여전히 겹치지 않는다.
+      ② Next 의 **스크롤 기준점**이 된다. 라우트가 바뀌면 Next 는 이 세그먼트의
+         첫 요소를 찾아 "이미 화면에 보이면 스크롤하지 않는다" 로 판정한다
+         (`layout-router.js` 의 `shouldSkipElement`). 그 함수는 **박스가 없는
+         요소**(rect 가 전부 0 — `display: contents` 가 그렇다)를 건너뛰고 다음
+         형제로 넘어간다. 그래서 겉을 `contents` 로 만들면 기준점이 FAQ 섹션으로
+         밀려 "이미 보인다" 로 잘못 판정되고, **페이지를 옮겨도 맨 위로 올라가지
+         않는다.** 겉은 반드시 실제 상자여야 한다.
+
+      `no-header-pad` — `globals.css` 의 "첫 섹션에 헤더 높이만큼 여백" 규칙에서
+      빼는 표시다. 사이드바가 화면 맨 위(y=0)에서 시작해야 하고, 본문 칸이 자기 위
+      여백을 직접 계산한다(아래 `lg:pt-[...]`). 밖에서 여백을 주면 사이드바가
+      통째로 72px 밀려 로고가 화면 중턱에 떠 보인다.
+
+      안 div — 좁은 화면에서 `contents`(상자를 만들지 않음)라 위 ①이 성립하고,
+      lg 이상에서는 `lg:flex` 가 이겨 사이드바+본문 2단이 된다. 그때는 이쪽이
+      기준 상자이므로 `h-svh` 패널이 본문 구간에서만 따라온다 — FAQ·CTA 위로는
+      넘어오지 않는다(의도한 동작).
+    */
+    <div className="no-header-pad">
+      <div className="contents lg:flex">
         <FeatureSideNav items={navItems} activeKey={key} />
 
         <div className="min-w-0 flex-1">
@@ -105,7 +129,8 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
         </div>
       </div>
 
-      {/* ══ 자주 묻는 질문 — 하단 CTA 바로 위 (사용자 지시 2026-08-18) ═════ */}
+      {/* ══ 자주 묻는 질문 — 하단 CTA 바로 위 (사용자 지시 2026-08-18) ═════
+          겉 div 안에 있어야 한다 — 좁은 화면에서 목차 띠가 여기까지 따라오는 근거다 */}
       <FaqTeaser
         groupId="features"
         offset={0}
@@ -141,6 +166,6 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
