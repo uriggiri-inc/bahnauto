@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useRef, useState } from "react";
-import { AppScreen } from "./AppScreen";
+import { ScreenShot, type Shot } from "./ScreenStack";
 import { ServiceIcon, type ServiceIconName } from "./serviceIcons";
 import { cn } from "@/lib/cn";
 
@@ -33,7 +33,14 @@ export type ServiceArea = {
   /** 세부 3항목 */
   items: readonly string[];
   icon: ServiceIconName;
-  screenAlt: string;
+  /**
+   * 영역 화면 한 장. 틀을 쓰지 않으므로 `width`/`height` 로 비율을 잡는다.
+   *
+   * ⚠️ **캡처가 없으면 이 값을 비운다.** 자리표시자를 라이브에 두지 않기로 했다
+   *    (사용자 확정 2026-08-25). 비면 이미지 칼럼 자체가 사라지고 설명이 전체
+   *    폭을 쓴다 — 빈 상자가 남는 것보다 낫다.
+   */
+  screen?: Shot;
 };
 
 /**
@@ -151,7 +158,12 @@ export function ServiceTabs({ areas }: { areas: readonly ServiceArea[] }) {
               hidden={!on}
               className="border-border rounded-lg border bg-white p-6 shadow-[var(--shadow-card)] lg:col-start-2 lg:row-span-6 lg:row-start-1 lg:min-h-[400px] lg:p-8"
             >
-              <div className="grid gap-8 sm:grid-cols-[minmax(0,1fr)_220px] sm:items-start">
+              <div
+                className={cn(
+                  "grid gap-8 sm:items-start",
+                  a.screen && "sm:grid-cols-[minmax(0,1fr)_220px]",
+                )}
+              >
                 <div>
                   <p className="text-h3 text-ink mb-6">{a.lead}</p>
 
@@ -178,8 +190,12 @@ export function ServiceTabs({ areas }: { areas: readonly ServiceArea[] }) {
                   </ul>
                 </div>
 
-                {/* 영역별 이미지 6종은 §13 확정 대기. 확보 전에는 자리표시자가 뜬다 */}
-                <AppScreen alt={a.screenAlt} aspect="aspect-[9/16]" />
+                {/*
+                  틀 없이 원본 비율 그대로. 이 칼럼은 220px 로 좁아 **가로 PC 캡처를
+                  넣으면 글자가 안 보인다** — 세로 모바일 화면을 골라 넣는다.
+                  캡처가 없으면 아무것도 그리지 않는다(위 `screen` 주석 참조).
+                */}
+                {a.screen && <ScreenShot shot={a.screen} sizes="220px" />}
               </div>
             </div>
           </Fragment>

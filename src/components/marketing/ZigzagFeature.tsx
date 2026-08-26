@@ -1,4 +1,4 @@
-import { AppScreen } from "./AppScreen";
+import { ScreenShot, type Shot } from "./ScreenStack";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { cn } from "@/lib/cn";
@@ -21,12 +21,16 @@ export type ZigzagFeatureProps = {
   body: string;
   /** 사실 항목. 각 줄이 그 자체로 검증 가능한 문장이어야 한다 */
   points?: readonly string[];
-  screen: {
-    /** 마스킹 완료된 실제 앱 캡처. 미확보 시 생략하면 자리표시자가 뜬다 */
-    src?: string;
-    alt: string;
+  /**
+   * 앱 화면 한 장.
+   *
+   * 틀(고정 화면비)을 쓰지 않는다 — 캡처마다 해상도가 달라 화면비를 강제하면
+   * 잘린다(사용자 확정 2026-08-25). `width`/`height` 로 원본 비율을 유지한다.
+   */
+  screen: Shot & {
     caption?: string;
-    aspect?: string;
+    /** 화면 폭 제한. 모바일 캡처는 세로로 길어 좁게 잡아야 섹션이 안 늘어난다 */
+    maxW?: string;
   };
   /** true 면 데스크톱에서 화면이 왼쪽에 온다 */
   flip?: boolean;
@@ -48,12 +52,10 @@ export function ZigzagFeature({
       {/* 화면 — DOM 상 먼저. 모바일에서 위로 오게 하기 위해서다 */}
       <Reveal className={cn(flip ? "lg:order-1" : "lg:order-2")}>
         {children ?? (
-          <AppScreen
-            src={screen.src}
-            alt={screen.alt}
+          <ScreenShot
+            shot={screen}
             caption={screen.caption}
-            aspect={screen.aspect}
-            className="mx-auto max-w-[380px]"
+            className={cn("mx-auto", screen.maxW ?? "max-w-[380px]")}
           />
         )}
       </Reveal>

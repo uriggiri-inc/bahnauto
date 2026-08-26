@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FeatureNavStrip } from "./FeatureNavStrip";
 import { cn } from "@/lib/cn";
 
 /**
@@ -19,14 +20,29 @@ import { cn } from "@/lib/cn";
  *
  * ── 활성 판정 ──
  * 스크롤 위치가 아니라 "지금 어느 페이지인가"로 정해진다. IntersectionObserver
- * 가 필요 없어 **서버 컴포넌트**다(JS 0바이트). 링크를 공유하면 그 기능
+ * 가 필요 없어 이 컴포넌트는 **서버 컴포넌트**다. 링크를 공유하면 그 기능
  * 페이지가 바로 열린다(`/features/dispatch`).
+ *
+ * 완전히 JS 0바이트는 아니다 — 좁은 화면 띠의 스크롤 위치를 지키려고 `<ol>` 한
+ * 겹만 클라이언트(`FeatureNavStrip`)로 뺐다. 항목은 그대로 서버에서 그린다.
  *
  * ── 좁은 화면 ──
  * lg 미만에서는 사이드바가 설 자리가 없다. 헤더 바로 아래 붙는 **가로 스크롤
  * 띠**로 바뀐다. 배경 없이 붙이면 본문 글자가 목차 뒤로 비쳐 보이므로 좁은
  * 화면에만 배경을 깐다. 로고는 이 폭에서 렌더하지 않는다 — 그 자리는
  * 헤더가 계속 로고를 들고 있다(`Header.tsx` 의 접힘은 lg 이상 전용).
+ *
+ * 이 띠는 **페이지 끝까지 헤더 아래에 붙어 따라온다**(사용자 지시 2026-08-25).
+ * 그 범위는 여기가 아니라 부모가 정한다 — `features/[key]/page.tsx` 는 div 를 두 겹
+ * 두고, 좁은 화면에서 **안쪽 div 만 `display: contents`** 로 만들어 `sticky` 의 기준
+ * 상자를 페이지 전체를 감싼 겉 div 로 올린다. 안쪽에서 `contents` 를 지우면 띠는
+ * 본문이 끝나는 지점(FAQ 직전)에서 멈춘다. 겉 div 를 없애면(또는 겉을 `contents` 로
+ * 만들면) Next 의 스크롤 기준점이 어긋나 페이지를 옮겨도 맨 위로 가지 않는다 —
+ * 그쪽 주석에 이유가 있다.
+ *
+ * 가로로 밀어 둔 위치는 라우트가 바뀌어도 유지된다 — `FeatureNavStrip` 참고.
+ * `FaqTabs` 는 반대로 `sticky` 를 **일부러 뺐다**(2026-08-18, "따라오지 않고
+ * 제자리에 있다"). 두 판단이 달라 보이는 것은 각각 명시적으로 정한 것이다.
  */
 
 export type FeatureSideNavItem = { key: string; label: string };
@@ -71,7 +87,7 @@ export function FeatureSideNav({
 
       <nav aria-label="주요기능 목차">
         {/* 좁은 화면에서는 가로로 흘린다 — 세로 목록이 본문보다 길어진다 */}
-        <ol
+        <FeatureNavStrip
           className={cn(
             "flex gap-2 overflow-x-auto px-4 py-3",
             "lg:flex-col lg:gap-1 lg:overflow-visible lg:px-3 lg:py-0",
@@ -114,7 +130,7 @@ export function FeatureSideNav({
               </li>
             );
           })}
-        </ol>
+        </FeatureNavStrip>
       </nav>
     </div>
   );

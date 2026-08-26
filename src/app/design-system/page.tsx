@@ -8,6 +8,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { Stat } from "@/components/ui/Stat";
 import { ScrollCue } from "@/components/ui/ScrollCue";
 import { Loader } from "@/components/ui/Loader";
+import { ScreenStack, ScreenShot } from "@/components/marketing/ScreenStack";
 
 export const metadata: Metadata = {
   title: "디자인 시스템",
@@ -378,6 +379,67 @@ export default function DesignSystemPage() {
       </Section>
 
       {/* ─── 컴포넌트 ─── */}
+      <Section
+        id="screens"
+        label="App Screens"
+        title="앱 화면 — 틀을 쓰지 않는다"
+        note="고정 화면비(틀)를 강제하지 않습니다. 캡처의 width/height 로 비율을 잡으므로 어떤 해상도가 와도 한 픽셀도 잘리지 않습니다. 이전에는 아이폰 베젤·카드 틀을 썼는데, 실제 캡처(PC 2000×1093 · 모바일 756×1466)가 그 화면비와 어긋나 탭바 양끝이 잘렸습니다."
+      >
+        <h3 className="text-h4 text-ink mb-1">ScreenStack · 나란히</h3>
+        <p className="text-body-sm text-text-sub mb-4 max-w-[60ch]">
+          PC 와 모바일을 한 장으로. 겹치지 않아 <strong>PC 사이드바 메뉴까지 온전히</strong>{" "}
+          보입니다. 좁은 화면에서는 세로로 쌓입니다. 배치 비교는{" "}
+          <code className="text-caption">/lab/screens</code> 에 있습니다.
+        </p>
+        <div className="mb-10 max-w-[860px]">
+          <ScreenStack
+            layout="side"
+            pc={{
+              src: "/app/report-pc.webp",
+              alt: "반오토 앱 오늘의 리포트 화면 (PC)",
+              width: 1910,
+              height: 861,
+            }}
+            mobile={{
+              src: "/app/checklist-mobile.webp",
+              alt: "반오토 앱 업무 체크리스트 화면",
+              width: 756,
+              height: 1466,
+            }}
+          />
+        </div>
+
+        <h3 className="text-h4 text-ink mb-1">ScreenShot · 한 장</h3>
+        <p className="text-body-sm text-text-sub mb-4 max-w-[60ch]">
+          짝이 없거나 한 장으로 충분한 자리에 씁니다. 가로·세로 어느 쪽이든 원본 비율을 유지하므로
+          호출부가 <code className="text-caption">max-w</code> 로 폭만 정합니다.
+        </p>
+        <div className="flex flex-wrap items-end gap-6">
+          <ScreenShot
+            shot={{
+              src: "/app/inventory-pc.webp",
+              alt: "반오토 앱 재고관리 화면 (PC)",
+              width: 2000,
+              height: 1093,
+            }}
+            caption="가로 · PC"
+            sizes="560px"
+            className="max-w-[560px]"
+          />
+          <ScreenShot
+            shot={{
+              src: "/app/checklist-mobile.webp",
+              alt: "반오토 앱 업무 체크리스트 화면",
+              width: 756,
+              height: 1466,
+            }}
+            caption="세로 · 모바일"
+            sizes="220px"
+            className="max-w-[220px]"
+          />
+        </div>
+      </Section>
+
       <Section
         id="components"
         label="Components"

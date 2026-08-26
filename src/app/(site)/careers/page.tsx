@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { AppScreen } from "@/components/marketing/AppScreen";
+import { ScreenShot } from "@/components/marketing/ScreenStack";
+import { SCREENS } from "@/content/app-screens";
 import { DummyBanner } from "@/components/marketing/DummyBanner";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -114,10 +115,16 @@ export default function CareersPage() {
             </a>
           </div>
 
-          <AppScreen
-            alt="반오토 앱 매니저 체크리스트 화면"
+          {/*
+            매니저는 현장에서 **모바일로만** 일한다. PC 화면을 함께 보여주면
+            지원자에게 없는 업무를 암시하게 되므로 모바일 한 장만 둔다.
+            틀 없이 원본 비율 그대로 — 하단 탭바가 잘리지 않는다.
+          */}
+          <ScreenShot
+            shot={SCREENS.checklistMobile}
             priority
-            className="mx-auto max-w-[360px]"
+            sizes="(max-width: 640px) 70vw, 300px"
+            className="mx-auto max-w-[300px]"
           />
         </div>
       </section>

@@ -24,22 +24,38 @@ export type DetailCard = { title: string; body: string };
 /**
  * 기능별 실제 화면 자리.
  *
- * ── 왜 미리 만들어 두는가 ──
- * 캡처가 확보된 뒤에 자리를 만들면 그때 레이아웃부터 다시 잡게 된다. 자리를
- * 먼저 두면 **이 파일의 `src` 한 줄만 채워서** 끼워 넣을 수 있다.
+ * ── 캡처가 없는 화면은 적지 않는다 (2026-08-25 사용자 확정) ──
+ * 이전에는 자리를 미리 만들어 두고 자리표시자를 그렸다. 그런데 자리표시자가
+ * 라이브에 남아 있으면 사이트가 미완성으로 보인다. 그래서 **캡처가 있는 화면만**
+ * 적고, 화면이 0개인 기능은 "실제 화면" 섹션 자체가 렌더되지 않는다.
  *
- * ⚠️ `src` 가 비어 있는 동안 `AppScreen` 이 "[실제 앱 캡처 대기]" 자리표시자를
- *    그린다. 그럴듯한 가짜 UI 를 그리지 않는 것이 의도다 — 더미가 그대로
- *    오픈되는 사고를 막는 장치다(PRD §7.1 AC).
- * ⚠️ 캡처를 넣을 때 **실제 매장명·연락처를 마스킹**한다(CLAUDE.md §5).
+ * 확보해야 할 화면 목록은 코드가 아니라 **별도 문서**로 관리한다 — 코드에 빈
+ * 항목으로 남겨 두면 그게 곧 자리표시자가 된다.
+ *
+ * ⚠️ 캡처를 넣을 때 **실제 매장명·연락처·사람 이름을 마스킹**한다(CLAUDE.md §5).
+ */
+/**
+ * 기능 상세의 "실제 화면" 한 장.
+ *
+ * `width`/`height` 는 **틀을 쓰지 않기 때문에** 필요하다(사용자 확정 2026-08-25).
+ * 화면비를 강제하면 해상도가 다른 캡처가 잘리므로, 원본 크기로 비율을 잡는다.
+ *
+ * ⚠️ **캡처가 없는 화면은 여기에 넣지 않는다**(사용자 확정 2026-08-25).
+ *    자리표시자를 라이브에 두면 사이트가 미완성으로 보인다. 화면이 0개인 기능은
+ *    "실제 화면" 섹션 자체가 렌더되지 않는다(`screens.length > 0` 가드).
+ *    확보해야 할 화면 목록은 별도 문서로 관리한다.
+ *
+ * 가로(PC) 화면은 `2000×1093`, 세로(모바일)는 `756×1466` 이 실측값이다.
  */
 export type FeatureScreen = {
   /** 어떤 화면인지. 캡처 확보 전에는 자리표시자에 이 문장이 그대로 보인다 */
   alt: string;
-  /** 프레임 하단 한 줄 — 기능마다 다른 이름을 쓴다 */
+  /** 화면 아래 한 줄 — 기능마다 다른 이름을 쓴다 */
   caption: string;
   /** 마스킹 완료된 실제 캡처 경로. 확보되면 여기만 채운다 */
   src?: string;
+  width: number;
+  height: number;
 };
 
 export type DetailGroup = {
@@ -128,9 +144,27 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
       },
     ],
     screens: [
-      { alt: "매니저용 업무 체크리스트 화면", caption: "업무 체크리스트 화면" },
-      { alt: "점주용 데일리 리포트 화면", caption: "데일리 리포트 화면" },
-      { alt: "출퇴근 인증 화면", caption: "출퇴근 인증 화면" },
+      {
+        alt: "매니저용 업무 체크리스트 화면",
+        caption: "업무 체크리스트 화면",
+        src: "/app/checklist-mobile.webp",
+        width: 756,
+        height: 1466,
+      },
+      {
+        alt: "점주용 데일리 리포트 화면",
+        caption: "데일리 리포트 화면",
+        src: "/app/report-pc.webp",
+        width: 1910,
+        height: 861,
+      },
+      {
+        alt: "출퇴근 인증 화면",
+        caption: "출퇴근 인증 화면",
+        src: "/app/attendance-photo-mobile.webp",
+        width: 756,
+        height: 1466,
+      },
     ],
     effect: {
       title: "사장님이 매장에 없어도, 무엇을 언제 어떻게 했는지 확인됩니다",
@@ -174,10 +208,7 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
         ],
       },
     ],
-    screens: [
-      { alt: "매니저 문의 챗봇 응대 화면", caption: "챗봇 응대 화면" },
-      { alt: "본사 고객센터 연결 화면", caption: "본사 연결 화면" },
-    ],
+    screens: [],
     effect: {
       title: "응대 공백 없이, 본사는 실제 이슈 해결에 집중합니다",
       items: [
@@ -215,8 +246,13 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
       },
     ],
     screens: [
-      { alt: "인허가 만료 현황 화면", caption: "인허가 만료 현황 화면" },
-      { alt: "직원 서류함 화면", caption: "직원 서류 관리 화면" },
+      {
+        alt: "직원 서류함 화면",
+        caption: "직원 서류 관리 화면",
+        src: "/app/ops-pc.webp",
+        width: 2000,
+        height: 1093,
+      },
     ],
     effect: {
       title: "영업정지와 과태료 위험을 미리 막습니다",
@@ -255,8 +291,20 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
       },
     ],
     screens: [
-      { alt: "발주 요청·검토 화면", caption: "발주 관리 화면" },
-      { alt: "매니저 배치·근태 현황 화면", caption: "매니저 운영 화면" },
+      {
+        alt: "발주 요청·검토 화면",
+        caption: "발주 관리 화면",
+        src: "/app/ordering-pc.webp",
+        width: 2000,
+        height: 1093,
+      },
+      {
+        alt: "매니저 배치·근태 현황 화면",
+        caption: "매니저 운영 화면",
+        src: "/app/attendance-pc.webp",
+        width: 2000,
+        height: 1093,
+      },
     ],
     effect: {
       title: "점주가 직접 챙기지 않아도 경영 업무가 위탁됩니다",
@@ -298,8 +346,13 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
       },
     ],
     screens: [
-      { alt: "시설 이슈 접수 게시판 화면", caption: "이슈 접수 화면" },
-      { alt: "정기 점검 일정 관리 화면", caption: "정기 점검 일정 화면" },
+      {
+        alt: "시설 이슈 접수 게시판 화면",
+        caption: "이슈 접수 화면",
+        src: "/app/board-pc.webp",
+        width: 2000,
+        height: 1093,
+      },
     ],
     effect: {
       title: "상주 인력 없이도 문제 발생 시 신속하게 대응합니다",
@@ -337,10 +390,7 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
         ],
       },
     ],
-    screens: [
-      { alt: "매장 이용고객 문의 응대 화면", caption: "고객 응대 화면" },
-      { alt: "방문관리 서비스 연계 접수 화면", caption: "방문관리 연계 화면" },
-    ],
+    screens: [],
     effect: {
       title: "무인매장의 약점인 고객 응대 공백을 메웁니다",
       items: [
@@ -381,11 +431,7 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
         ],
       },
     ],
-    screens: [
-      { alt: "월간 매출 리포트 화면", caption: "월간 매출 리포트 화면" },
-      { alt: "지출 항목 분석 화면", caption: "지출 분석 화면" },
-      { alt: "상권·업종 비교 화면", caption: "상권 비교 화면" },
-    ],
+    screens: [],
     effect: {
       title: "운영 중인 매장과 같은 기준으로, 매달 같은 형식의 리포트를 받습니다",
       items: [
@@ -422,10 +468,7 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
         ],
       },
     ],
-    screens: [
-      { alt: "네이버 플레이스 예약 관리 화면", caption: "예약 관리 화면" },
-      { alt: "리뷰 응대 관리 화면", caption: "리뷰 관리 화면" },
-    ],
+    screens: [],
     effect: {
       title: "별도 마케팅 인력 없이도 온라인 채널이 관리됩니다",
       items: [

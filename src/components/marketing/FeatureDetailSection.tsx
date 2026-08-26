@@ -1,4 +1,4 @@
-import { AppScreen } from "@/components/marketing/AppScreen";
+import { ScreenShot } from "@/components/marketing/ScreenStack";
 import { Card } from "@/components/ui/Card";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -64,26 +64,44 @@ export function FeatureDetailSection({ detail, title }: { detail: FeatureDetail;
 
       {/*
         ── 실제 화면 ──
-        캡처는 아직 없다. 자리를 먼저 만들어 두고 `feature-details.ts` 의
-        `screens[].src` 가 채워지면 그대로 끼워 넣는다(§13-C6).
-        `AppScreen` 은 `src` 가 없으면 그럴듯한 가짜 UI 대신 "[실제 앱 캡처 대기]"
-        자리표시자를 그린다 — 더미가 그대로 오픈되는 사고를 막는 장치다.
+        **틀을 쓰지 않는다**(사용자 확정 2026-08-25). 아이폰 베젤 틀에 넣었더니
+        모바일 캡처(756×1466)가 9:19.5 와 어긋나 하단 탭바 양끝이 잘렸다.
+        지금은 원본 비율 그대로 그리므로 잘리지 않는다.
+
+        폭은 화면 방향에 따라 자동으로 갈린다 — PC 캡처는 가로로 넓어 좁은 칼럼에
+        넣으면 글자가 안 보이고, 모바일 캡처는 세로로 길어 넓게 두면 섹션이
+        과하게 늘어난다. `width > height` 로 판별한다.
+
+        `src` 가 없으면 "[실제 앱 캡처 대기]" 자리표시자가 뜬다 — 더미가 그대로
+        오픈되는 사고를 막는 장치다(§13-C6).
       */}
       {detail.screens.length > 0 && (
         <div className="mt-10">
           <SectionLabel className="mb-2">실제 화면</SectionLabel>
           <h2 className="text-h3 text-ink">{title} 화면은 이렇게 생겼습니다</h2>
 
-          {/* 아이폰 틀(사용자 확정 2026-08-14) — 캡처가 오면 feature-details.ts 의
-              `screens[].src` 만 채우면 폰 화면 안에 들어간다 */}
-          <ul className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {detail.screens.map((s, i) => (
-              <li key={s.caption}>
-                <Reveal delayMs={i * 60}>
-                  <AppScreen src={s.src} alt={s.alt} caption={s.caption} frame="phone" />
-                </Reveal>
-              </li>
-            ))}
+          <ul className="mt-8 flex flex-wrap items-end gap-6 md:gap-8">
+            {detail.screens.map((s, i) => {
+              const wide = s.width > s.height;
+              return (
+                <li
+                  key={s.caption}
+                  className={
+                    wide
+                      ? "w-full lg:w-[calc(62%-1rem)]"
+                      : "w-[calc(50%-0.75rem)] sm:w-[220px] lg:w-[200px]"
+                  }
+                >
+                  <Reveal delayMs={i * 60}>
+                    <ScreenShot
+                      shot={s}
+                      caption={s.caption}
+                      sizes={wide ? "(max-width: 1024px) 92vw, 800px" : "220px"}
+                    />
+                  </Reveal>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
