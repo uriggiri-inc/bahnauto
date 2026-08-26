@@ -259,7 +259,7 @@ function renderBody(s: HomeSection) {
         길어져 바로 아래 요금까지 닿지 않았다.
         그 증거는 `/features` 의 해당 기능 상세가 맡는다 — 이제 카드마다
         그쪽으로 바로 갈 수 있다.
-        ⚠️ `ChecklistDemo`·`AppScreen` 컴포넌트는 지우지 않았다. `/system`
+        ⚠️ `ChecklistDemo` 컴포넌트는 지우지 않았다. `/system`
            등 다른 화면이 쓰고 있고, 캡처가 확보되면 되살릴 수 있다.
       */
       return (

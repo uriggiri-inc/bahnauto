@@ -8,6 +8,7 @@ import { buttonClasses } from "@/components/ui/Button";
 import { FaqTeaser } from "@/components/marketing/FaqTeaser";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { serviceJsonLd } from "@/lib/structured-data";
+import { SCREENS } from "@/content/app-screens";
 
 /**
  * `/service` — 서비스 소개 (PRD §7.3).
@@ -38,7 +39,7 @@ const AREAS: readonly ServiceArea[] = [
       "항목별로 사진을 기록하고 이력을 보관합니다",
       "매장별 관리 현황을 모니터링합니다",
     ],
-    screenAlt: "반오토 앱 매장 관리 현황 화면",
+    screen: SCREENS.checklistMobile,
   },
   {
     id: "manager",
@@ -50,7 +51,6 @@ const AREAS: readonly ServiceArea[] = [
       "정기 교육과 관리 품질 평가를 실시합니다",
       "담당자가 부재일 때는 대체 인력이 운영됩니다",
     ],
-    screenAlt: "반오토 앱 담당 매니저 배정 화면",
   },
   {
     id: "support",
@@ -62,7 +62,6 @@ const AREAS: readonly ServiceArea[] = [
       "환불·오류 문의를 1차 처리합니다",
       "응대 내역을 리포트로 정리해 드립니다",
     ],
-    screenAlt: "반오토 고객센터 응대 내역 화면",
   },
   {
     id: "stock",
@@ -74,7 +73,7 @@ const AREAS: readonly ServiceArea[] = [
       "발주 시점을 알리고 발주를 대행합니다",
       "소진 추이 데이터를 제공합니다",
     ],
-    screenAlt: "반오토 앱 재고·발주 관리 화면",
+    screen: SCREENS.inventoryMobile,
   },
   {
     id: "admin",
@@ -86,7 +85,6 @@ const AREAS: readonly ServiceArea[] = [
       "기한 전에 미리 알려드립니다",
       "서류를 보관하고 이력을 남깁니다",
     ],
-    screenAlt: "반오토 앱 일정 관리 화면",
   },
   {
     id: "report",
@@ -98,7 +96,7 @@ const AREAS: readonly ServiceArea[] = [
       "항목별 사진 기록을 함께 첨부합니다",
       "월간 종합 리포트를 제공합니다",
     ],
-    screenAlt: "점주가 받는 데일리 리포트 화면",
+    screen: SCREENS.reportMobile,
   },
 ];
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AppScreen } from "@/components/marketing/AppScreen";
+import { ScreenStack } from "@/components/marketing/ScreenStack";
+import { SCREEN_PAIRS, SCREENS } from "@/content/app-screens";
 import { ChecklistDemo } from "@/components/marketing/ChecklistDemo";
 import { ZigzagFeature } from "@/components/marketing/ZigzagFeature";
 import { Reveal } from "@/components/ui/Reveal";
@@ -30,9 +31,21 @@ export default function SystemPage() {
   return (
     <>
       {/* ══ 히어로 ═══════════════════════════════════════════════ */}
+      {/*
+        ── 히어로 구조를 바꿨다 (2026-08-25, 사용자 확정) ──
+        이전에는 2단(텍스트 | 화면 380px)이었다. 실제 캡처가 들어오면서 그 폭으로는
+        PC 화면을 담을 수 없다 — 사이드바 9개 메뉴가 보이지 않으면 "이걸로 다
+        관리한다" 가 전달되지 않는다.
+
+        그래서 텍스트를 위에 두고 화면을 **컨테이너 전체 폭**으로 내렸다.
+        `ScreenStack` 의 나란히 배치라 PC·모바일 둘 다 온전히 보인다.
+
+        ⚠️ 히어로는 LCP 요소다. 모션 라이브러리를 쓰지 않고(`../CLAUDE.md` §4),
+           PC 이미지에만 `priority` 를 준다.
+      */}
       <section className="from-brand-50 bg-gradient-to-b to-white">
-        <div className="container-ba grid items-center gap-10 pt-12 pb-16 md:pt-20 md:pb-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
-          <div>
+        <div className="container-ba pt-12 pb-16 md:pt-20 md:pb-20">
+          <div className="max-w-[46rem]">
             <SectionLabel className="mb-3">반오토 운영 시스템</SectionLabel>
             <h1 className="text-display text-ink mb-5">
               관리의 결과를,
@@ -57,7 +70,13 @@ export default function SystemPage() {
             </div>
           </div>
 
-          <AppScreen alt="반오토 앱 대시보드 화면" priority className="mx-auto max-w-[380px]" />
+          <ScreenStack
+            layout="side"
+            priority
+            pc={SCREEN_PAIRS.report.pc}
+            mobile={SCREEN_PAIRS.report.mobile}
+            className="mt-12 md:mt-14"
+          />
         </div>
       </section>
 
@@ -75,7 +94,7 @@ export default function SystemPage() {
               "1~4주차 항목이 따로 있어 주기적인 관리가 빠지지 않습니다",
               "무인키즈카페의 경우 상시근무와 주차별 항목을 합쳐 총 319개입니다",
             ]}
-            screen={{ alt: "반오토 앱 체크리스트 화면" }}
+            screen={{ ...SCREENS.checklistMobile, maxW: "max-w-[300px]" }}
           >
             <ChecklistDemo />
           </ZigzagFeature>
@@ -96,7 +115,11 @@ export default function SystemPage() {
               "특이사항은 메모로 함께 남깁니다",
               "완료 처리하면 진행률에 자동으로 반영됩니다",
             ]}
-            screen={{ alt: "반오토 앱 사진 첨부 화면", caption: "항목별 사진 기록" }}
+            screen={{
+              ...SCREENS.checklistPhotoMobile,
+              caption: "항목별 사진 기록",
+              maxW: "max-w-[300px]",
+            }}
           />
         </div>
       </section>
@@ -119,7 +142,11 @@ export default function SystemPage() {
               "촬영된 화면의 시각을 자동으로 인식합니다",
               "인정 시간은 18:00~10:00 입니다",
             ]}
-            screen={{ alt: "반오토 앱 출퇴근 인증 화면", caption: "단말기 촬영 · 시각 자동 인식" }}
+            screen={{
+              ...SCREENS.attendancePhotoMobile,
+              caption: "단말기 촬영 · 시각 자동 인식",
+              maxW: "max-w-[300px]",
+            }}
           />
         </div>
       </section>
@@ -138,7 +165,11 @@ export default function SystemPage() {
               "발주 요청은 작성 → 검토 → 수령 → 완료 4단계로 진행됩니다",
               "문제가 생기면 이슈로 보고합니다",
             ]}
-            screen={{ alt: "반오토 앱 재고·발주 관리 화면", caption: "유통기한 D-day 산출" }}
+            screen={{
+              ...SCREENS.inventoryPc,
+              caption: "유통기한 D-day 산출",
+              maxW: "max-w-[560px]",
+            }}
           />
         </div>
       </section>
@@ -154,7 +185,7 @@ export default function SystemPage() {
               "게시판 카테고리: 분실물 · 긴급발주 · AS요청 · 장난감 파손 보고 · 기타",
               "채널톡으로 실시간 문의가 가능합니다",
             ]}
-            screen={{ alt: "반오토 앱 게시판 화면", caption: "카테고리별 게시판" }}
+            screen={{ ...SCREENS.boardPc, caption: "카테고리별 게시판", maxW: "max-w-[560px]" }}
           />
         </div>
       </section>
@@ -172,10 +203,16 @@ export default function SystemPage() {
               "항목별 사진 기록이 함께 첨부됩니다",
               "월간 종합 리포트도 제공합니다",
             ]}
+            /*
+              "리포트 실물"(인쇄물·메일 캡처)은 아직 없다. 대신 점주가 실제로 보는
+              리포트 화면을 넣었다 — 없는 것을 자리표시자로 비워 두기보다
+              사실인 화면을 보여주는 편이 맞다. 실물이 확보되면 교체한다.
+            */
             screen={{
-              alt: "점주가 받는 데일리 리포트 실물",
-              caption: "리포트 샘플 확보 후 교체",
-              aspect: "aspect-[4/5]",
+              ...SCREENS.reportPc,
+              alt: "점주가 받는 데일리 리포트 화면",
+              caption: "매일 발송되는 리포트",
+              maxW: "max-w-[560px]",
             }}
           />
         </div>
