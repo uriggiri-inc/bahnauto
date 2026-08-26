@@ -245,15 +245,7 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
         ],
       },
     ],
-    screens: [
-      {
-        alt: "직원 서류함 화면",
-        caption: "직원 서류 관리 화면",
-        src: "/app/ops-pc.webp",
-        width: 2000,
-        height: 1093,
-      },
-    ],
+    screens: [],
     effect: {
       title: "영업정지와 과태료 위험을 미리 막습니다",
       items: [
@@ -290,22 +282,7 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
         ],
       },
     ],
-    screens: [
-      {
-        alt: "발주 요청·검토 화면",
-        caption: "발주 관리 화면",
-        src: "/app/ordering-pc.webp",
-        width: 2000,
-        height: 1093,
-      },
-      {
-        alt: "매니저 배치·근태 현황 화면",
-        caption: "매니저 운영 화면",
-        src: "/app/attendance-pc.webp",
-        width: 2000,
-        height: 1093,
-      },
-    ],
+    screens: [],
     effect: {
       title: "점주가 직접 챙기지 않아도 경영 업무가 위탁됩니다",
       items: [

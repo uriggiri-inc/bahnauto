@@ -48,14 +48,12 @@ export const SCREENS = {
   checklistMobile: mobile("checklist-mobile", "반오토 앱 업무 체크리스트 화면 (모바일)"),
   checklistPhotoMobile: mobile("checklist-photo-mobile", "체크리스트 항목별 사진 기록 화면"),
 
-  attendancePc: pc("attendance-pc", "반오토 앱 출퇴근관리 화면 (PC)"),
   attendanceMobile: mobile("attendance-mobile", "반오토 앱 출퇴근관리 화면 (모바일)"),
   attendancePhotoMobile: mobile("attendance-photo-mobile", "출퇴근 사진 촬영 인증 화면"),
 
   inventoryPc: pc("inventory-pc", "반오토 앱 재고관리 화면 (PC)"),
   inventoryMobile: mobile("inventory-mobile", "반오토 앱 재고관리 화면 (모바일)"),
 
-  orderingPc: pc("ordering-pc", "반오토 앱 발주요청 화면 (PC)"),
   orderingMobile: mobile("ordering-mobile", "반오토 앱 발주요청 화면 (모바일)"),
 
   boardPc: pc("board-pc", "반오토 앱 게시판 화면 (PC)"),
@@ -63,8 +61,6 @@ export const SCREENS = {
 
   manualPc: pc("manual-pc", "반오토 앱 매뉴얼 화면 (PC)"),
   manualMobile: mobile("manual-mobile", "반오토 앱 매뉴얼 화면 (모바일)"),
-
-  opsPc: pc("ops-pc", "반오토 앱 경영지원 화면 (PC)"),
 } as const;
 
 /**
@@ -76,9 +72,7 @@ export const SCREENS = {
 export const SCREEN_PAIRS = {
   report: { pc: SCREENS.reportPc, mobile: SCREENS.reportMobile },
   checklist: { pc: SCREENS.checklistPc, mobile: SCREENS.checklistMobile },
-  attendance: { pc: SCREENS.attendancePc, mobile: SCREENS.attendanceMobile },
   inventory: { pc: SCREENS.inventoryPc, mobile: SCREENS.inventoryMobile },
-  ordering: { pc: SCREENS.orderingPc, mobile: SCREENS.orderingMobile },
   board: { pc: SCREENS.boardPc, mobile: SCREENS.boardMobile },
   manual: { pc: SCREENS.manualPc, mobile: SCREENS.manualMobile },
 } as const;
