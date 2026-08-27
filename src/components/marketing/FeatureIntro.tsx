@@ -42,8 +42,13 @@ export function FeatureIntro({
   detail: FeatureDetail;
   no: number;
   title: string;
-  /** 도입부 아래 첫 섹션의 id — 칩 아래 안내 문장이 가리킨다 */
-  scrollTargetId: string;
+  /**
+   * 도입부 아래 첫 섹션의 id — 칩 아래 안내 문장이 가리킨다.
+   *
+   * **없을 수 있다.** ⑦ A/S 바로출동서비스는 아래에 그릴 내용이 없다("준비 중"
+   * 두 줄뿐이다). 그때도 링크를 두면 눌러도 아무 데도 가지 않는 링크가 된다.
+   */
+  scrollTargetId?: string;
 }) {
   return (
     <section id={`${detail.key}-intro`}>
@@ -77,16 +82,20 @@ export function FeatureIntro({
       </ul>
 
       <p className="text-caption text-text-sub mt-5">
-        {title} · 포함 항목은{" "}
+        {/* 2026-08-27: "요금제 구성" → "요금 안내". 요금 화면이 플랜 3장에서
+            기본료 + 옵션 목록으로 바뀌어 가리킬 "요금제" 가 없어졌다 */}
+        {title} · 기본 요금과 옵션 구성은{" "}
         <Link href="/pricing" className="text-brand underline underline-offset-2">
-          요금제 구성
+          요금 안내
         </Link>
-        에서 확인하실 수 있습니다.{" "}
+        에서 보실 수 있습니다.{" "}
         {/* 스크롤 유도 버튼을 없앤 대신 본문으로 가는 앵커를 남긴다 —
             키보드 사용자에게 도입부를 건너뛰는 경로가 된다 */}
-        <a href={`#${scrollTargetId}`} className="text-brand underline underline-offset-2">
-          기능 자세히 보기
-        </a>
+        {scrollTargetId && (
+          <a href={`#${scrollTargetId}`} className="text-brand underline underline-offset-2">
+            기능 자세히 보기
+          </a>
+        )}
       </p>
     </section>
   );

@@ -164,6 +164,33 @@ export function ScreenCarousel({
     return () => io.disconnect();
   }, []);
 
+  /*
+    ── 화면에 들어오면 나머지 슬라이드의 이미지를 미리 받아 둔다 (2026-08-27) ──
+    지금 보이는 슬라이드만 DOM 에 있어서, 넘어간 뒤에야 그 이미지를 받기 시작한다.
+    1.5초마다 넘어가는데 그 사이에 다 받지 못하면 **빈 자리가 먼저 보인다** —
+    슬라이드가 일곱인 운영 대시보드에서 실제로 그랬다.
+
+    `new Image()` 로 브라우저 캐시만 채운다. DOM 에 넣지 않으므로 배치에 영향이
+    없고, 정적 배포는 `images.unoptimized` 라 `<Image>` 가 같은 주소를 그대로
+    쓰기 때문에 그때 다시 받지 않는다. (`next dev` 는 `/_next/image` 로 주소를
+    바꾸므로 개발 화면에서는 이 예열이 듣지 않는다 — 확인은 빌드 산출물로 한다.)
+
+    화면 밖에서는 시작하지 않는다. 페이지에 캐러셀이 여럿이면 열자마자 수십 장을
+    한꺼번에 받아 첫 화면이 늦어진다.
+  */
+  const warmed = useRef(false);
+  useEffect(() => {
+    if (!inView || warmed.current) return;
+    warmed.current = true;
+    for (const s of slides) {
+      for (const shot of s.shots) {
+        if (!shot.shot.src) continue;
+        const img = new window.Image();
+        img.src = shot.shot.src;
+      }
+    }
+  }, [inView, slides]);
+
   const paused = hover || recent || zoomOpen || !inView || reduceMotion || count < 2;
 
   useEffect(() => {
@@ -285,8 +312,20 @@ export function ScreenCarousel({
             화면에서 마지막 버튼이 잘리고 밑에 스크롤바가 따라 움직인다. 대신 버튼이
             **줄어들 수 있게** 두고(`min-w-0` · `shrink`) 좁아지면 이름이 두 줄로
             감싸이게 한다("재고 현황" → "재고 / 현황"). 네 개가 항상 한 화면에 들어온다.
+
+            ── 다섯 개 이상이면 줄을 감싼다 (2026-08-27) ──
+            기능 7종 재편으로 ① 운영 대시보드가 슬라이드 일곱을 갖게 됐다. 폭을
+            똑같이 나누면 좁은 화면에서 한 칸이 30px 남아 이름이 **석 줄**로
+            부서진다. 그래서 다섯 개부터는 칸을 균등 분할하지 않고 이름 길이대로
+            두고 넘치는 것만 아래 줄로 내린다 — 버튼은 여전히 **전부 한 화면에**
+            보이고 스크롤바도 생기지 않는다.
           */}
-          <ol className="flex min-w-0 flex-1 justify-center gap-1 sm:gap-1.5">
+          <ol
+            className={cn(
+              "flex min-w-0 flex-1 justify-center gap-1 sm:gap-1.5",
+              count > 4 && "flex-wrap gap-y-1.5",
+            )}
+          >
             {slides.map((s, i) => (
               <li key={s.id} className="min-w-0">
                 <button

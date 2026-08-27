@@ -42,8 +42,9 @@ import { formatCopy } from "@/components/ui/Copy";
  * `ProblemStory.tsx` 안에 있다(`ScrollStory*` 전례를 따름).
  *
  * ⚠️ `PainCard.tsx` 컴포넌트와 `/public/pains/*.webp` 는 지우지 않았다.
- *    카드형으로 되돌릴 가능성이 남아 있고, 카드의 hover 레이어 패턴은
- *    `FeatureGrid` 가 참조하는 기준이기도 하다.
+ *    카드형으로 되돌릴 가능성이 남아 있다. (한때 `FeatureGrid` 가 이 카드의
+ *    hover 덮개 패턴을 따랐지만, 2026-08-27 목업 교체로 그 덮개가 없어졌다 —
+ *    이제 두 컴포넌트는 서로를 참조하지 않는다.)
  */
 
 /** 도입 4단계 (PRD §7.4). 소요 기간은 미검증이라 싣지 않는다 */
@@ -254,23 +255,22 @@ function renderBody(s: HomeSection) {
       /*
         기획 확정(2026-08-14): 격자 아래에 있던 체크리스트 증거 블록
         ("관리했습니다라는 말 대신…" + ChecklistDemo + 앱 화면 2장)을 통째로
-        내렸다. 여덟 장을 훑는 자리에서 기능 하나(운영 대시보드)만 크게
-        증명하면 나머지 일곱 개가 곁가지로 보이고, 섹션이 화면 세 배로
-        길어져 바로 아래 요금까지 닿지 않았다.
+        내렸다. 카드를 훑는 자리에서 기능 하나(운영 대시보드)만 크게 증명하면
+        나머지가 곁가지로 보이고, 섹션이 화면 세 배로 길어져 바로 아래 요금까지
+        닿지 않았다.
         그 증거는 `/features` 의 해당 기능 상세가 맡는다 — 이제 카드마다
         그쪽으로 바로 갈 수 있다.
         ⚠️ `ChecklistDemo` 컴포넌트는 지우지 않았다. `/system`
            등 다른 화면이 쓰고 있고, 캡처가 확보되면 되살릴 수 있다.
+
+        ── 안내 한 줄을 뺐다 (2026-08-27) ──
+        "카드에 커서를 올리면 무엇이 포함되는지 나옵니다" 가 있었다. 카드가
+        **처음부터 펼쳐진 모습**으로 바뀌어(목업대로) 접힘 자체가 없어졌으므로
+        가리킬 대상이 없다.
       */
       return (
         <>
           <FeatureGrid />
-
-          {/* 카드가 접혀 있다는 신호. `+` 배지를 카드마다 띄우는 것보다 한 번
-              말하는 편이 조용하다(problem 섹션과 같은 방식) */}
-          <p className="text-caption text-text-sub mt-4 hidden [@media(hover:hover)]:block">
-            카드에 커서를 올리면 무엇이 포함되는지 나옵니다. 누르면 해당 기능 상세로 이동합니다.
-          </p>
 
           <div className="mt-8">
             <Link href="/features/dashboard" className={buttonClasses({ variant: "secondary" })}>

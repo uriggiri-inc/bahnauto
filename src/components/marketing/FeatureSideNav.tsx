@@ -4,7 +4,7 @@ import { FeatureNavStrip } from "./FeatureNavStrip";
 import { cn } from "@/lib/cn";
 
 /**
- * 주요기능 사이드바 — 8기능 목차. **기능별 상세 페이지 공통**으로 붙는다.
+ * 주요기능 사이드바 — 기능 7종 목차. **기능별 상세 페이지 공통**으로 붙는다.
  *
  * ── 왜 `FeatureNav` 를 대체하는가 (사용자 확정 2026-08-18) ──
  * 이전 판은 본문 격자의 240px 칸에 들어가는 세로 목록이었다. 참고 시안은
@@ -21,7 +21,7 @@ import { cn } from "@/lib/cn";
  * ── 활성 판정 ──
  * 스크롤 위치가 아니라 "지금 어느 페이지인가"로 정해진다. IntersectionObserver
  * 가 필요 없어 이 컴포넌트는 **서버 컴포넌트**다. 링크를 공유하면 그 기능
- * 페이지가 바로 열린다(`/features/dispatch`).
+ * 페이지가 바로 열린다(`/features/visit-care`).
  *
  * 완전히 JS 0바이트는 아니다 — 좁은 화면 띠의 스크롤 위치를 지키려고 `<ol>` 한
  * 겹만 클라이언트(`FeatureNavStrip`)로 뺐다. 항목은 그대로 서버에서 그린다.

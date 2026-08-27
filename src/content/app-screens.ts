@@ -138,12 +138,88 @@ export const SCREEN_PAIRS = {
  * `desc` 와 `note` 는 장식이 아니다 — 캡처만 보고는 무슨 화면인지 알 수 없으므로
  * **화면마다 무엇을 보는 자리인지** 적어 둔다.
  *
- * 캡처가 아직 없는 기능(방문관리 서비스·매장 고객 응대센터)은 여기 없다. 자산이
- * 들어오면 항목을 추가한다. 방문관리는 오픈 예정 알림만 걸려 있다
+ * ── 2026-08-27 기능 7종 재편에 맞춰 키를 다시 붙였다 ──
+ * 옛 `manager-support`·`docs` 슬라이드는 ① `dashboard` 로 합쳐졌고(그 두 기능이
+ * 대시보드 안의 그룹이 되었다), 옛 `ops-support` 의 재고 슬라이드도 ① 로 왔다 —
+ * 담당자 문서가 **재고 관리를 ① 의 항목**으로 적었기 때문이다. 발주·정산은
+ * ⑤ `field-ops` 로 갔고, 옛 `place`·`revenue` 는 ③ `biz-support` 에 합쳤다.
+ *
+ * ⚠️ 챗봇 대화 캡처는 **매니저**가 체크리스트 수정 방법을 물은 화면이다. ④ 고객센터
+ *    (매장 이용고객 응대)에 쓰면 다른 것을 보여주는 셈이라 ① 에 둔다. ④ 는 캡처가
+ *    확보될 때까지 "실제 화면" 섹션 없이 나간다.
+ *
+ * 캡처가 아직 없는 기능(② 기본서비스 · ④ 고객센터 · ⑥ 방문관리서비스 ·
+ * ⑦ A/S 바로출동서비스)은 여기 없다. ⑥·⑦ 은 오픈 예정 알림만 걸려 있다
  * (`feature-details.ts` 의 `notice`).
  */
 export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
-  "manager-support": [
+  /* ① 운영 대시보드 — 세 기능이 합쳐져 슬라이드가 일곱이다. 탭이 다섯을 넘으면
+     `ScreenCarousel` 이 탭 줄을 감싸 두 줄로 내린다(가로 스크롤은 쓰지 않는다). */
+  dashboard: [
+    {
+      id: "checklist",
+      title: "업무 체크리스트",
+      desc: [
+        "매장에서 해야 할 일이 항목으로 내려오고,",
+        "매니저가 사진을 붙여 완료를 증빙합니다.",
+        "본사와 점주는 같은 목록을 PC에서 봅니다.",
+      ],
+      shots: [
+        { shot: SCREENS.checklistPc, kind: "pc", note: "매장별 완료율과 항목 상태를 한눈에" },
+        {
+          shot: SCREENS.checklistMobile,
+          kind: "mobile",
+          note: "현장에서 항목을 체크하고 사진을 남깁니다",
+        },
+      ],
+    },
+    {
+      id: "attendance",
+      title: "출퇴근 관리",
+      desc: [
+        "출퇴근은 GPS·Wi-Fi·단말기 화면 촬영 중",
+        "매장이 정한 방식으로 인증합니다.",
+        "기록이 사진과 함께 남아 나중에 확인할 수 있습니다.",
+      ],
+      shots: [
+        { shot: SCREENS.attendanceMobile, kind: "mobile", note: "출근·퇴근 기록과 근무 시간" },
+        {
+          shot: SCREENS.attendancePhotoMobile,
+          kind: "mobile",
+          badge: "사진 인증",
+          note: "단말기 화면을 촬영해 근무를 증빙",
+        },
+      ],
+    },
+    {
+      id: "stock",
+      title: "재고 관리",
+      desc: [
+        "품목별 유통기한을 D-day로 세어",
+        "폐기 대상과 임박 상품을 먼저 띄웁니다.",
+        "매니저가 매장에서 확인하고, 본사는 같은 화면을 PC에서 봅니다.",
+      ],
+      shots: [
+        {
+          shot: SCREENS.opsStockPc,
+          kind: "pc",
+          note: "폐기 대상·임박·정상을 숫자로 요약하고 품목별로 나열",
+        },
+        { shot: SCREENS.opsStockMobile, kind: "mobile", note: "잔여일 순으로 정렬해 바로 확인" },
+      ],
+    },
+    {
+      id: "report",
+      title: "데일리 리포트",
+      desc: [
+        "오늘 매장에서 무슨 일이 있었는지",
+        "체크리스트 완료율·출근 인원·특이사항을 한 장으로 정리합니다.",
+      ],
+      shots: [
+        { shot: SCREENS.reportPc, kind: "pc", note: "핵심 지표와 처리 내역·이번 달 누적" },
+        { shot: SCREENS.reportMobile, kind: "mobile", note: "같은 리포트를 이동 중에 확인" },
+      ],
+    },
     {
       id: "support-board",
       title: "공통 게시판",
@@ -186,26 +262,32 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
         },
       ],
     },
-  ],
-
-  "ops-support": [
     {
-      id: "ops-stock",
-      title: "재고 현황",
+      id: "docs",
+      title: "인허가·서류",
       desc: [
-        "품목별 유통기한을 D-day로 세어",
-        "폐기 대상과 임박 상품을 먼저 띄웁니다.",
-        "매니저가 매장에서 확인하고, 본사는 같은 화면을 PC에서 봅니다.",
+        "소방·안전·보험·가맹계약의 만료일을 한 화면에 모아 D-day로 셉니다.",
+        "보건증·자격증 같은 서류도 만료일과 함께 올려 둡니다.",
       ],
       shots: [
         {
-          shot: SCREENS.opsStockPc,
+          shot: SCREENS.docsStatusPc,
           kind: "pc",
-          note: "폐기 대상·임박·정상을 숫자로 요약하고 품목별로 나열",
+          badge: "만료 현황",
+          note: "항목별 만료일과 남은 날짜를 한 줄에",
         },
-        { shot: SCREENS.opsStockMobile, kind: "mobile", note: "잔여일 순으로 정렬해 바로 확인" },
+        {
+          shot: SCREENS.docsUploadPc,
+          kind: "pc",
+          badge: "서류 등록",
+          note: "서류명·유형·만료일·대상을 지정해 등록",
+        },
       ],
     },
+  ],
+
+  /* ⑤ 현장 운영 지원 — 발주 대행과 실비 정산이 여기 온다 */
+  "field-ops": [
     {
       id: "ops-order",
       title: "발주 요청",
@@ -259,40 +341,8 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     },
   ],
 
-  docs: [
-    {
-      id: "docs-status",
-      title: "인허가 현황",
-      desc: [
-        "소방·안전·보험·가맹계약의 만료일을 한 화면에 모아 D-day로 셉니다.",
-        "만료가 임박하면 상태가 색과 글자로 함께 바뀝니다.",
-      ],
-      shots: [
-        {
-          shot: SCREENS.docsStatusPc,
-          kind: "pc",
-          note: "항목별 만료일과 남은 날짜를 한 줄에",
-        },
-      ],
-    },
-    {
-      id: "docs-upload",
-      title: "서류 등록",
-      desc: [
-        "보건증·자격증 같은 서류를 만료일과 함께 올려 둡니다.",
-        "매장 공통 서류와 직원별 서류를 나눠 보관합니다.",
-      ],
-      shots: [
-        {
-          shot: SCREENS.docsUploadPc,
-          kind: "pc",
-          note: "서류명·유형·만료일·대상을 지정해 등록",
-        },
-      ],
-    },
-  ],
-
-  place: [
+  /* ③ 경영지원 — 옛 `place` + `revenue` */
+  "biz-support": [
     {
       id: "place-smartplace",
       title: "스마트플레이스 관리",
@@ -310,9 +360,6 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
         },
       ],
     },
-  ],
-
-  revenue: [
     {
       id: "revenue-report",
       title: "월간 매출 리포트",
@@ -333,3 +380,9 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     },
   ],
 };
+
+/* ⚠️ `SCREENS` 중 어느 슬라이드에도 쓰이지 않는 것들 — `dashboardPc` ·
+   `checklistPhotoMobile` · `inventoryPc` · `inventoryMobile` · `orderingMobile` ·
+   `boardPc` · `boardMobile` · `manualPc` · `manualMobile` 이다. 지우지 않는 이유:
+   `/system` 과 `/service` · `/careers` 가 이들을 직접 쓴다(재고는 옛 캡처보다
+   `opsStock*` 이 최신이라 슬라이드에서만 교체했다). */
