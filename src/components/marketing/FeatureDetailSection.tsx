@@ -1,9 +1,11 @@
+import { ScreenCarousel } from "@/components/marketing/ScreenCarousel";
 import { ScreenShot } from "@/components/marketing/ScreenStack";
 import { Card } from "@/components/ui/Card";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { cn } from "@/lib/cn";
 import type { FeatureDetail } from "@/content/feature-details";
+import { FEATURE_CAROUSELS } from "@/content/app-screens";
 import { formatCopy } from "@/components/ui/Copy";
 
 /**
@@ -18,6 +20,13 @@ import { formatCopy } from "@/components/ui/Copy";
  *    있다 — 여기에 `h1` 을 다시 만들면 문서에 h1 이 둘이 된다.
  */
 export function FeatureDetailSection({ detail, title }: { detail: FeatureDetail; title: string }) {
+  /*
+    화면이 여러 장 들어온 기능은 **슬라이드**로 보여준다(사용자 지시 2026-08-26).
+    같은 주제의 PC·모바일을 한 장면에 묶어야 서로 다른 기능처럼 읽히지 않는다.
+    슬라이드가 정의되지 않은 기능은 아래의 한 줄 배치를 그대로 쓴다.
+  */
+  const slides = FEATURE_CAROUSELS[detail.key];
+
   return (
     <section id={`${detail.key}-detail`} className="scroll-mt-[calc(var(--header-h)+24px)]">
       {/* ── 그룹별 카드 ── */}
@@ -93,47 +102,54 @@ export function FeatureDetailSection({ detail, title }: { detail: FeatureDetail;
         `src` 가 없으면 "[실제 앱 캡처 대기]" 자리표시자가 뜬다 — 더미가 그대로
         오픈되는 사고를 막는 장치다(§13-C6).
       */}
-      {detail.screens.length > 0 && (
+      {(slides || detail.screens.length > 0) && (
         <div className="mt-10">
           <SectionLabel className="mb-2">실제 화면</SectionLabel>
           <h2 className="text-h3 text-ink">{title} 화면은 이렇게 생겼습니다</h2>
 
-          <ul
-            className={cn(
-              "mt-8 flex flex-wrap items-start justify-center gap-5 md:gap-6",
-              "lg:flex-nowrap lg:justify-start lg:gap-5",
-            )}
-          >
-            {detail.screens.map((s, i) => {
-              /* 가로세로 비 — 폭 배분과 방향 판별에 함께 쓴다 */
-              const ratio = s.width / s.height;
-              const wide = ratio > 1;
-              return (
-                <li
-                  key={s.caption}
-                  style={{ "--ratio": ratio } as React.CSSProperties}
-                  className={cn(
-                    /* `min-w-0` 이 없으면 이미지 기본 폭이 하한이 되어 줄이 넘친다 */
-                    "min-w-0",
-                    /* 좁은 화면에서만 PC 를 뒤로 — 폰 두 장이 먼저 나란히 선다 */
-                    wide ? "w-full max-lg:order-1" : "w-[calc(50%-0.625rem)] max-w-[240px]",
-                    "lg:w-auto lg:flex-[var(--ratio)_1_0%]",
-                    wide ? "lg:max-w-[720px]" : "lg:max-w-[240px]",
-                  )}
-                >
-                  <Reveal delayMs={i * 60}>
-                    <ScreenShot
-                      shot={s}
-                      caption={s.caption}
-                      sizes={
-                        wide ? "(max-width: 1024px) 92vw, 720px" : "(max-width: 640px) 46vw, 200px"
-                      }
-                    />
-                  </Reveal>
-                </li>
-              );
-            })}
-          </ul>
+          {slides ? (
+            <ScreenCarousel slides={slides} className="mt-8" />
+          ) : (
+            <ul
+              className={cn(
+                "mt-8 flex flex-wrap items-start justify-center gap-5 md:gap-6",
+                "lg:flex-nowrap lg:justify-start lg:gap-5",
+              )}
+            >
+              {detail.screens.map((s, i) => {
+                /* 가로세로 비 — 폭 배분과 방향 판별에 함께 쓴다 */
+                const ratio = s.width / s.height;
+                const wide = ratio > 1;
+                return (
+                  <li
+                    key={s.caption}
+                    style={{ "--ratio": ratio } as React.CSSProperties}
+                    className={cn(
+                      /* `min-w-0` 이 없으면 이미지 기본 폭이 하한이 되어 줄이 넘친다 */
+                      "min-w-0",
+                      /* 좁은 화면에서만 PC 를 뒤로 — 폰 두 장이 먼저 나란히 선다 */
+                      wide ? "w-full max-lg:order-1" : "w-[calc(50%-0.625rem)] max-w-[240px]",
+                      "lg:w-auto lg:flex-[var(--ratio)_1_0%]",
+                      wide ? "lg:max-w-[720px]" : "lg:max-w-[240px]",
+                    )}
+                  >
+                    <Reveal delayMs={i * 60}>
+                      <ScreenShot
+                        shot={s}
+                        caption={s.caption}
+                        zoomable
+                        sizes={
+                          wide
+                            ? "(max-width: 1024px) 92vw, 720px"
+                            : "(max-width: 640px) 46vw, 200px"
+                        }
+                      />
+                    </Reveal>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
       )}
 

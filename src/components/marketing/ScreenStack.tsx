@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { RingMark } from "@/components/brand/RingMark";
+import { ZoomableImage } from "@/components/marketing/ZoomableImage";
 import { cn } from "@/lib/cn";
 
 /**
@@ -215,6 +216,7 @@ export function ScreenShot({
   priority = false,
   sizes,
   className,
+  zoomable = false,
 }: {
   shot: Shot;
   caption?: string;
@@ -222,6 +224,14 @@ export function ScreenShot({
   priority?: boolean;
   sizes?: string;
   className?: string;
+  /**
+   * 눌러서 크게 볼 수 있게 한다(사용자 지시 2026-08-26).
+   *
+   * 기본값이 `false` 인 이유: 이 컴포넌트는 `/system` 지그재그처럼 **분위기를
+   * 전하는 자리**에도 쓰인다. 그런 곳에 확대 버튼이 붙으면 읽을 것이 있다는
+   * 신호를 잘못 준다. 글자를 읽어야 하는 자리에서만 켠다.
+   */
+  zoomable?: boolean;
 }) {
   return (
     <figure className={cn("w-full", className)}>
@@ -232,15 +242,25 @@ export function ScreenShot({
         )}
       >
         {shot.src ? (
-          <Image
-            src={shot.src}
-            alt={shot.alt}
-            width={shot.width}
-            height={shot.height}
-            priority={priority}
-            sizes={sizes ?? "(max-width: 640px) 92vw, 420px"}
-            className="h-auto w-full"
-          />
+          zoomable ? (
+            <ZoomableImage
+              shot={shot}
+              label={caption}
+              sizes={sizes ?? "(max-width: 640px) 92vw, 420px"}
+              priority={priority}
+              imgClassName="h-auto w-full"
+            />
+          ) : (
+            <Image
+              src={shot.src}
+              alt={shot.alt}
+              width={shot.width}
+              height={shot.height}
+              priority={priority}
+              sizes={sizes ?? "(max-width: 640px) 92vw, 420px"}
+              className="h-auto w-full"
+            />
+          )
         ) : (
           <Pending alt={shot.alt} ratio={`${shot.width} / ${shot.height}`} />
         )}

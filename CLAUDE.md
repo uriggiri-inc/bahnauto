@@ -175,6 +175,10 @@ GitHub Pages 로 옮겨오면서 그 수단이 사라졌다 — **그 파일은 
 | 브랜드 티커 | `globals.css` (`ba-ticker`) | hover 정지 · 모션 축소 완전 정지 |
 | 후기 마퀴 | `marketing/ReviewSlider.module.css` | 줄 단위 hover·focus-within·**active**(터치) 정지 · 모션 축소에서 가로 스크롤로 대체 |
 | 조건부 단계 꼬리표 | `globals.css` (`ba-tag-flash`), `marketing/ProcessSteps.tsx` | 단계 목록 hover·focus·선택 시 정지(`held` → `.is-paused`) · 모션 축소 완전 정지. 뷰포트 진입 후 재생 |
+| 앱 화면 슬라이드 (1.5초) | `marketing/ScreenCarousel.tsx` | hover·포커스·터치·버튼 조작 시 정지(조작 후 4초 조용해지면 재개) · 모션 축소에서 **자동 넘김을 시작하지 않음**(좌우 버튼·탭만) · 뷰포트 밖에서 정지 |
+
+마지막 항목(앱 화면 슬라이드)은 사용자가 간격까지 지정해 요청한 것이다
+(2026-08-26, "자동으로 1.5초마다"). 간격을 바꿀 때는 `INTERVAL_MS` 한 곳만 고친다.
 
 새 예외를 추가할 때는 **① 사용자 개입 시 정지 ② 모션 축소 시 완전 정지**를 함께
 구현하고 이 표에 등록한다.
