@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileStickyCTA } from "@/components/layout/MobileStickyCTA";
+import { ScrollDamper } from "@/components/marketing/ScrollDamper";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationJsonLd } from "@/lib/structured-data";
@@ -24,6 +25,15 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
     <>
       {/* 발행 주체 정보. 값의 정본은 `content/company.ts` 다 */}
       <JsonLd data={organizationJsonLd()} />
+
+      {/*
+        휠 한 칸당 내려가는 거리를 줄인다 (사용자 지시 2026-08-26).
+        **셸에 두는 이유**: 페이지마다 스크롤 감각이 다르면 그게 더 거슬린다 —
+        사이트 전체가 같아야 한다. `/design-system` 과 `/lab` 은 이 셸 밖이라
+        기본 스크롤을 그대로 쓴다(검증용 화면이라 손대지 않는 것이 맞다).
+        화면에는 아무것도 그리지 않는다.
+      */}
+      <ScrollDamper />
 
       <Header />
       <main className="flex-1">{children}</main>
