@@ -2,14 +2,28 @@
  * 주요기능 아이콘 — 홈 기능 섹션과 `/service` 탭이 함께 쓴다.
  *
  * 인라인 SVG 다. 아이콘 라이브러리를 쓰면 이 몇 곳 때문에 클라이언트 번들이
- * 늘어나는데, 여덟 개뿐이라 경로를 직접 들고 있는 편이 싸다.
+ * 늘어나는데, 아홉 개뿐이라 경로를 직접 들고 있는 편이 싸다.
+ *
+ * ⚠️ `place` 는 **2026-08-27 기능 7종 재편 이후 쓰는 곳이 없다**(옛 "네이버 플레이스
+ *    관리" 카드가 ③ 경영지원으로 합쳐졌다). 지우지 않는 이유는 `Mark.tsx` 의
+ *    `underline` 과 같다 — 구성이 다시 바뀔 때 되살리려면 경로를 새로 그려야 한다.
+ *    새 카드에 붙일 때는 이 주석을 함께 지운다.
+ *    (`report` 는 계속 쓰인다 — `/service` 탭의 "리포트" 영역이 참조한다.)
  *
  * 디자인 시스템 규정: stroke 1.8 / 24×24 viewBox / round cap / 색은 currentColor.
  * **면(fill) 아이콘은 쓰지 않는다.**
  */
 
 export type ServiceIconName =
-  "checklist" | "manager" | "support" | "stock" | "admin" | "report" | "dispatch" | "place";
+  | "checklist"
+  | "manager"
+  | "support"
+  | "stock"
+  | "admin"
+  | "report"
+  | "dispatch"
+  | "place"
+  | "emergency";
 
 const PATHS: Record<ServiceIconName, string> = {
   // 체계적인 매장 관리 — 체크리스트
@@ -34,6 +48,8 @@ const PATHS: Record<ServiceIconName, string> = {
     "M14.7 6.3a4 4 0 0 0 5 5l-9.4 9.4a2.8 2.8 0 0 1-4-4z|M14.7 6.3 18 3l3 3-3.3 3.3|M7 17h.01",
   // 네이버 플레이스 관리 — 위치 핀
   place: "M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z|M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+  // A/S 바로출동 — 번개 (수정안 목업의 아이콘)
+  emergency: "M13 2 4 14h6l-1 8 9-12h-6z",
 };
 
 export function ServiceIcon({ name, size = 24 }: { name: ServiceIconName; size?: number }) {

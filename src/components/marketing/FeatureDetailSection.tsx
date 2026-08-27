@@ -11,7 +11,7 @@ import { formatCopy } from "@/components/ui/Copy";
 /**
  * 기능 하나의 상세 본문 — 그룹별 카드 · 실제 화면 자리 · 도입 효과.
  *
- * 원래 `/features` 한 페이지 안의 섹션이었는데, 기능별 페이지 8개로 분리되면서
+ * 원래 `/features` 한 페이지 안의 섹션이었는데, 기능별 페이지로 분리되면서
  * (2026-08-14 사용자 확정) `/features/[key]` 가 이 컴포넌트를 그린다.
  * 문구는 전부 `content/feature-details.ts` 에서 온다 — 여기 JSX 에는 적지 않는다.
  *
@@ -153,40 +153,47 @@ export function FeatureDetailSection({ detail, title }: { detail: FeatureDetail;
         </div>
       )}
 
-      {/* ── 도입 효과 ── */}
-      <div className="bg-ink mt-10 rounded-[24px] p-7 text-white md:p-9">
-        <SectionLabel tone="onDark" className="mb-3">
-          도입 효과
-        </SectionLabel>
-        <h2 className="text-h3">{detail.effect.title}</h2>
+      {/*
+        ── 도입 효과 ──
+        **없을 수 있다.** ⑦ A/S 바로출동서비스는 담당자 문서에 "준비 중" 두 줄뿐이라
+        효과를 적으면 지어내는 것이 된다(`feature-details.ts` 의 `effect` 주석).
+        그럴 때 이 검은 상자를 빈 채로 그리면 미완성으로 보이므로 통째로 뺀다.
+      */}
+      {detail.effect && (
+        <div className="bg-ink mt-10 rounded-[24px] p-7 text-white md:p-9">
+          <SectionLabel tone="onDark" className="mb-3">
+            도입 효과
+          </SectionLabel>
+          <h2 className="text-h3">{detail.effect.title}</h2>
 
-        <ul className="mt-7 grid gap-6 sm:grid-cols-2">
-          {detail.effect.items.map((it) => (
-            <li key={it.title} className="flex gap-3">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--color-brand-300)"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-                className="mt-1 shrink-0"
-              >
-                <path d="m5 13 4 4L19 7" />
-              </svg>
-              <div>
-                <p className="text-h4">{it.title}</p>
-                <p className="text-body-sm mt-1.5 leading-[1.7] text-white/80">
-                  {formatCopy(it.body)}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+          <ul className="mt-7 grid gap-6 sm:grid-cols-2">
+            {detail.effect.items.map((it) => (
+              <li key={it.title} className="flex gap-3">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--color-brand-300)"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                  className="mt-1 shrink-0"
+                >
+                  <path d="m5 13 4 4L19 7" />
+                </svg>
+                <div>
+                  <p className="text-h4">{it.title}</p>
+                  <p className="text-body-sm mt-1.5 leading-[1.7] text-white/80">
+                    {formatCopy(it.body)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </section>
   );
 }

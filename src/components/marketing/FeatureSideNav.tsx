@@ -4,7 +4,7 @@ import { FeatureNavStrip } from "./FeatureNavStrip";
 import { cn } from "@/lib/cn";
 
 /**
- * 주요기능 사이드바 — 8기능 목차. **기능별 상세 페이지 공통**으로 붙는다.
+ * 주요기능 사이드바 — 기능 7종 목차. **기능별 상세 페이지 공통**으로 붙는다.
  *
  * ── 왜 `FeatureNav` 를 대체하는가 (사용자 확정 2026-08-18) ──
  * 이전 판은 본문 격자의 240px 칸에 들어가는 세로 목록이었다. 참고 시안은
@@ -21,7 +21,7 @@ import { cn } from "@/lib/cn";
  * ── 활성 판정 ──
  * 스크롤 위치가 아니라 "지금 어느 페이지인가"로 정해진다. IntersectionObserver
  * 가 필요 없어 이 컴포넌트는 **서버 컴포넌트**다. 링크를 공유하면 그 기능
- * 페이지가 바로 열린다(`/features/dispatch`).
+ * 페이지가 바로 열린다(`/features/visit-care`).
  *
  * 완전히 JS 0바이트는 아니다 — 좁은 화면 띠의 스크롤 위치를 지키려고 `<ol>` 한
  * 겹만 클라이언트(`FeatureNavStrip`)로 뺐다. 항목은 그대로 서버에서 그린다.
@@ -72,7 +72,7 @@ export function FeatureSideNav({
         // 좁은 화면: 헤더 바로 아래 가로 띠
         "border-border-light top-[var(--header-h)] border-b bg-white/95 backdrop-blur",
         // 넓은 화면: 화면 높이를 다 쓰는 왼쪽 패널
-        "lg:top-0 lg:h-svh lg:w-[300px] lg:shrink-0 lg:border-r lg:border-b-0 lg:bg-white lg:backdrop-blur-none xl:w-[332px]",
+        "lg:top-0 lg:h-[var(--screen-h)] lg:w-[300px] lg:shrink-0 lg:border-r lg:border-b-0 lg:bg-white lg:backdrop-blur-none xl:w-[332px]",
       )}
     >
       {/* 로고 — lg 이상에서만. 그 아래 폭에서는 헤더가 로고를 들고 있다 */}

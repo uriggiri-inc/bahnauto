@@ -3,16 +3,27 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Phone } from "@phosphor-icons/react";
-import { SiKakaotalk } from "@icons-pack/react-simple-icons";
 import { cn } from "@/lib/cn";
 import { STICKY_CTA_THRESHOLD } from "./stickyCta";
 
 /**
  * 모바일 하단 고정 CTA — 스크롤 400px 이후 등장.
  *
- * 3분할: **전화 상담 · 무료 방문 진단 · 카카오톡**
- * 폼 작성을 꺼리는 점주를 위한 대안 접점이다(PRD §7.6). 전화가 부담스러운 사람에게
- * 카카오톡은 훨씬 낮은 문턱의 진입로다.
+ * 2분할: **전화 상담 · 무료 방문 진단**
+ * 폼 작성을 꺼리는 점주를 위한 대안 접점이다(PRD §7.6).
+ *
+ * ── 카카오톡 버튼을 뺐다 (사용자 지시 2026-08-27) ──
+ * 오른쪽에 폭 56px 짜리 카카오 아이콘 버튼이 하나 더 있었다. 뺀 자리를 남은 둘이
+ * 나눠 갖는다 — 비율(1 : 1.5)은 그대로라 "무료 방문 진단" 이 계속 더 크다.
+ *
+ * 상담 경로가 없어지는 것은 아니다. `/contact` 에 카카오톡 상담 항목이 그대로
+ * 있다. 애초에 이 버튼은 **채널 주소가 확정되지 않아 눌러도 아무 일도 하지 않는
+ * 상태**였다(`kakaoUrl` 기본값이 빈 문자열이고 넘겨 주는 호출부가 없었다).
+ * 좁은 화면에서 56px 을 죽은 링크에 쓰고 있던 셈이다.
+ *
+ * ⚠️ 되살릴 때는 `kakaoUrl` prop 과 `@icons-pack/react-simple-icons` 의
+ *    `SiKakaotalk` 을 함께 되살려야 한다. 그 패키지는 이제 이 저장소에서
+ *    아무 곳도 쓰지 않는다.
  *
  * 이 바가 올라오면 헤더의 CTA 는 사라진다(임계값 공유) — 같은 전환 경로를
  * 화면에 두 번 두지 않는다.
@@ -25,8 +36,6 @@ export type MobileStickyCTAProps = {
   ctaLabel?: string;
   /** `[확정 필요 §13-A1]` 대표번호 */
   tel?: string;
-  /** `[확정 필요 §13-F3]` 카카오 채널 URL */
-  kakaoUrl?: string;
   ctaHref?: string;
   threshold?: number;
   /**
@@ -40,7 +49,6 @@ export function MobileStickyCTA({
   telLabel = "전화 상담",
   ctaLabel = "무료 방문 진단",
   tel = "",
-  kakaoUrl = "",
   ctaHref = "/contact",
   threshold = STICKY_CTA_THRESHOLD,
   previewOnDesktop = false,
@@ -95,21 +103,6 @@ export function MobileStickyCTA({
         >
           {ctaLabel}
         </Link>
-
-        {/*
-          카카오톡 — 틀(배경·보더·radius·섀도우)은 우리 디자인 시스템을 따르고,
-          말풍선 마크만 카카오 고유 형태를 유지한다.
-          노란 면을 쓰지 않으므로 형태 자체가 채널을 인지시킨다.
-        */}
-        <a
-          href={kakaoUrl || undefined}
-          target={kakaoUrl ? "_blank" : undefined}
-          rel={kakaoUrl ? "noopener noreferrer" : undefined}
-          aria-label="카카오톡 상담"
-          className="border-border tap ease-standard flex w-14 shrink-0 items-center justify-center rounded-sm border bg-white shadow-[var(--shadow-card)] transition-colors duration-[160ms] active:bg-[var(--color-bg-subtle)]"
-        >
-          <SiKakaotalk size={22} color="#3C1E1E" aria-hidden />
-        </a>
       </div>
     </div>
   );

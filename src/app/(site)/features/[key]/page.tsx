@@ -8,10 +8,11 @@ import { formatCopy } from "@/components/ui/Copy";
 import { buttonClasses } from "@/components/ui/Button";
 import { FEATURES } from "@/content/features";
 import { FEATURE_DETAIL_BY_KEY } from "@/content/feature-details";
+import { FEATURE_CAROUSELS } from "@/content/app-screens";
 import { FaqTeaser } from "@/components/marketing/FaqTeaser";
 
 /**
- * `/features/[key]` — 기능별 상세 페이지. **8기능이 각각 한 페이지**다.
+ * `/features/[key]` — 기능별 상세 페이지. **기능 7종이 각각 한 페이지**다.
  *
  * ── 참고 시안 배치로 전면 교체 (사용자 확정 2026-08-18) ──
  * 8/18 오전까지는 "풀스크린 히어로 → 스크롤하면 목차 등장" 이었다. 참고 시안에는
@@ -37,7 +38,7 @@ import { FaqTeaser } from "@/components/marketing/FaqTeaser";
  * 2026-08-25). 두 요구를 한꺼번에 만족시키는 방법은 아래 `return` 주석에 있다.
  *
  * 정적 내보내기(`output: "export"`)와 호환되도록 `generateStaticParams` 로
- * 8개 경로를 전부 미리 만든다. 목록에 없는 키는 404 다.
+ * 일곱 경로를 전부 미리 만든다. 목록에 없는 키는 404 다.
  */
 
 export const dynamicParams = false;
@@ -58,7 +59,7 @@ export async function generateMetadata({
   /*
     기능 이름을 앞에 두는 이유: 이 페이지를 찾는 검색어는 "무인매장 관리" 가 아니라
     기능 자체("출퇴근 인증", "인허가 관리")다. 주력 키워드는 뒤에 붙여 이 페이지가
-    무엇의 일부인지만 알린다 — 8개 페이지 title 을 모두 같은 말로 시작하면
+    무엇의 일부인지만 알린다 — 일곱 페이지 title 을 모두 같은 말로 시작하면
     브라우저 탭에서 구분이 안 되고 검색엔진에도 스터핑으로 읽힌다.
   */
   return {
@@ -73,6 +74,17 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
   const feature = FEATURES[index];
   const detail = FEATURE_DETAIL_BY_KEY[key];
   if (!feature || !detail) notFound();
+
+  /*
+    본문(그룹 카드 · 실제 화면 · 도입 효과)이 하나라도 있는가.
+    ⑦ A/S 바로출동서비스는 담당자 문서가 "준비 중" 두 줄뿐이라 셋 모두 비어 있다.
+    그대로 그리면 빈 `<section>` 이 남고 도입부의 앵커가 아무 데도 가지 않는다.
+  */
+  const hasDetailBody =
+    detail.groups.length > 0 ||
+    detail.screens.length > 0 ||
+    FEATURE_CAROUSELS[key] !== undefined ||
+    detail.effect !== undefined;
 
   /* 목록에도 상태를 보여준다 — 오픈 예정 기능은 들어가기 전에 알 수 있어야 한다 */
   const navItems = FEATURES.map((f) => ({
@@ -145,13 +157,19 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
               detail={detail}
               no={index + 1}
               title={feature.title}
-              scrollTargetId={`${key}-detail`}
+              /*
+                아래에 그릴 것이 하나도 없는 기능(⑦ A/S 바로출동서비스)은 앵커를
+                주지 않는다. 링크를 남겨 두면 눌러도 아무 데도 가지 않는다.
+              */
+              scrollTargetId={hasDetailBody ? `${key}-detail` : undefined}
             />
 
             {/* 도입부와 본문 사이 여백을 0.75배로 — 도입부가 한 화면에 담겨야 한다 */}
-            <div className="mt-[calc(var(--section-py)*0.75)]">
-              <FeatureDetailSection detail={detail} title={feature.title} />
-            </div>
+            {hasDetailBody && (
+              <div className="mt-[calc(var(--section-py)*0.75)]">
+                <FeatureDetailSection detail={detail} title={feature.title} />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -173,7 +191,7 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
             어디까지 맡기실지부터 정하시면 됩니다
           </h2>
           <p className="text-body-lg mx-auto mb-8 max-w-[46rem] text-white/80">
-            매장 상황을 알려주시면 필요한 관리 범위와 구독 플랜을 안내해 드립니다. 상담은
+            매장 상황을 알려주시면 필요한 관리 범위와 옵션 구성을 안내해 드립니다. 상담은
             무료입니다.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">

@@ -170,7 +170,7 @@ export function ZoomableImage({
               <img
                 src={shot.src}
                 alt={shot.alt}
-                className="block max-h-[90vh] max-w-[92vw] rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.35)] ring-1 ring-black/10"
+                className="block max-h-[calc(var(--screen-h)*0.9)] max-w-[calc(var(--screen-w)*0.92)] rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.35)] ring-1 ring-black/10"
               />
 
               {/* 닫기 — 이미지 위에 얹어 우측 상단에 둔다 */}

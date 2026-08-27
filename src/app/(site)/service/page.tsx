@@ -136,7 +136,7 @@ export default function ServicePage() {
       </section>
 
       {/* ══ 공통 포함 ════════════════════════════════════════════
-          어느 플랜을 고르든 달라지지 않는 것. 요금 비교 전에 알아야 할 정보다. */}
+          어느 옵션을 고르든 달라지지 않는 것. 요금 비교 전에 알아야 할 정보다. */}
       <section className="section-py bg-bg-subtle">
         <div className="container-ba">
           <SectionHeader

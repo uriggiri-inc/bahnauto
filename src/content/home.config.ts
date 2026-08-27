@@ -183,10 +183,11 @@ export const HOME_CONFIG: HomeConfig = {
       inNav: true,
       text: {
         label: "주요기능",
-        title: "여덟 가지를 하나의 기준으로 묶어 관리합니다",
-        lead: "필요한 만큼만 고르실 수 있습니다. 아래 요금제가 이 여덟 가지를 어떻게 묶는지 보여드립니다.",
+        /* 담당자 수정안(2026-08-27) 문구 그대로. 두 줄로 적혀 있어 그대로 옮겼다 */
+        title: "무인 매장 운영에 가장 필요한 기능들을 하나의 기준으로 묶어 관리합니다",
+        lead: "필요한 만큼만 고르실 수 있습니다.",
       },
-      style: { titleSize: "h1", padY: "md", bg: "subtle", align: "left", cols: 4 },
+      style: { titleSize: "h1", padY: "md", bg: "subtle", align: "left", cols: 3 },
     },
     {
       id: "pricing",
@@ -197,7 +198,7 @@ export const HOME_CONFIG: HomeConfig = {
       text: {
         label: "요금 안내",
         title: "맡기는 범위만큼만 지불하세요",
-        lead: "세 가지 요금제로 나뉩니다. 어디까지 맡기실지에 따라 고르시면 됩니다.",
+        lead: "운영 대시보드는 기본으로 제공되고, 필요한 옵션만 자유롭게 더하실 수 있습니다.",
       },
       style: { titleSize: "h1", padY: "md", bg: "white", align: "left" },
     },
@@ -238,7 +239,7 @@ export const HOME_CONFIG: HomeConfig = {
         // 기획 확정 B안. `/contact` 히어로와 **같은 문장**을 쓴다 —
         // 두 화면에서 말이 달라지면 같은 신청인지 알 수 없다.
         title: "반오토에 맡기고 싶으시다면, 확인해드리겠습니다.",
-        lead: "전화, 카카오톡, 채널톡 어디로든 편하게 문의하실 수 있습니다. 매장 규모와 운영 상황을 알려주시면 필요한 관리 범위와 구독 플랜을 안내해 드립니다. 상담은 무료이며, 도입을 강요하지 않습니다.",
+        lead: "전화, 카카오톡, 채널톡 어디로든 편하게 문의하실 수 있습니다. 매장 규모와 운영 상황을 알려주시면 필요한 관리 범위와 옵션 구성을 안내해 드립니다. 상담은 무료이며, 도입을 강요하지 않습니다.",
       },
       style: { titleSize: "h1", padY: "md", bg: "tint", align: "left" },
     },

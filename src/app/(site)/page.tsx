@@ -42,8 +42,9 @@ import { formatCopy } from "@/components/ui/Copy";
  * `ProblemStory.tsx` 안에 있다(`ScrollStory*` 전례를 따름).
  *
  * ⚠️ `PainCard.tsx` 컴포넌트와 `/public/pains/*.webp` 는 지우지 않았다.
- *    카드형으로 되돌릴 가능성이 남아 있고, 카드의 hover 레이어 패턴은
- *    `FeatureGrid` 가 참조하는 기준이기도 하다.
+ *    카드형으로 되돌릴 가능성이 남아 있다. (한때 `FeatureGrid` 가 이 카드의
+ *    hover 덮개 패턴을 따랐지만, 2026-08-27 목업 교체로 그 덮개가 없어졌다 —
+ *    이제 두 컴포넌트는 서로를 참조하지 않는다.)
  */
 
 /** 도입 4단계 (PRD §7.4). 소요 기간은 미검증이라 싣지 않는다 */
@@ -128,7 +129,7 @@ function Hero({ section, firstAnchor }: { section: HomeSection; firstAnchor?: st
     // 한 화면을 꽉 채운다(사용자 확정 2026-08-14) — 다음 섹션이 걸쳐 보이지 않는다.
     // 높이는 "뷰포트 − 상단 고정 헤더". 내용은 가운데, 스크롤 큐는 바닥에 붙는다.
     <section
-      className="from-brand-50 relative flex min-h-[calc(100svh-var(--header-h))] flex-col bg-gradient-to-b to-white"
+      className="from-brand-50 relative flex min-h-[calc(var(--screen-h)-var(--header-h))] flex-col bg-gradient-to-b to-white"
       id={section.id}
     >
       <div className="container-ba flex flex-1 flex-col items-center justify-center py-14 text-center">
@@ -254,13 +255,18 @@ function renderBody(s: HomeSection) {
       /*
         기획 확정(2026-08-14): 격자 아래에 있던 체크리스트 증거 블록
         ("관리했습니다라는 말 대신…" + ChecklistDemo + 앱 화면 2장)을 통째로
-        내렸다. 여덟 장을 훑는 자리에서 기능 하나(운영 대시보드)만 크게
-        증명하면 나머지 일곱 개가 곁가지로 보이고, 섹션이 화면 세 배로
-        길어져 바로 아래 요금까지 닿지 않았다.
+        내렸다. 카드를 훑는 자리에서 기능 하나(운영 대시보드)만 크게 증명하면
+        나머지가 곁가지로 보이고, 섹션이 화면 세 배로 길어져 바로 아래 요금까지
+        닿지 않았다.
         그 증거는 `/features` 의 해당 기능 상세가 맡는다 — 이제 카드마다
         그쪽으로 바로 갈 수 있다.
         ⚠️ `ChecklistDemo` 컴포넌트는 지우지 않았다. `/system`
            등 다른 화면이 쓰고 있고, 캡처가 확보되면 되살릴 수 있다.
+
+        ── 안내 한 줄을 뺐다가 되살렸다 (2026-08-27) ──
+        오전에 카드를 목업대로 "처음부터 펼쳐진" 모습으로 바꾸면서 가리킬 대상이
+        없어져 뺐다. 같은 날 오후 지시로 **접힌 흰 카드 + 커서 올린 카드만 펼침**
+        으로 되돌아갔으므로 이 줄도 함께 돌아왔다.
       */
       return (
         <>
