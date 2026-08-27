@@ -112,7 +112,7 @@ export function SectionShell({
       className={cn(
         PAD_CLASS[padY],
         BG_CLASS[bg],
-        fill && "flex min-h-[calc(100svh-var(--header-h))] flex-col justify-center",
+        fill && "flex min-h-[calc(var(--screen-h)-var(--header-h))] flex-col justify-center",
         className,
       )}
     >

@@ -72,7 +72,7 @@ export function FeatureSideNav({
         // 좁은 화면: 헤더 바로 아래 가로 띠
         "border-border-light top-[var(--header-h)] border-b bg-white/95 backdrop-blur",
         // 넓은 화면: 화면 높이를 다 쓰는 왼쪽 패널
-        "lg:top-0 lg:h-svh lg:w-[300px] lg:shrink-0 lg:border-r lg:border-b-0 lg:bg-white lg:backdrop-blur-none xl:w-[332px]",
+        "lg:top-0 lg:h-[var(--screen-h)] lg:w-[300px] lg:shrink-0 lg:border-r lg:border-b-0 lg:bg-white lg:backdrop-blur-none xl:w-[332px]",
       )}
     >
       {/* 로고 — lg 이상에서만. 그 아래 폭에서는 헤더가 로고를 들고 있다 */}

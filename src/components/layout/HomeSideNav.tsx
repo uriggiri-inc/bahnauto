@@ -27,9 +27,20 @@ import { cn } from "@/lib/cn";
  *   레일과 **본문 글자** 사이 최소 간격      GAP       =   32px
  *   화면 왼쪽 끝 최소 여백                  EDGE      =   16px
  *
- *   쓸 수 있는 자리 = (100vw − 1440) / 2 + 56
+ *   쓸 수 있는 자리 = (레이아웃 폭 − 1440) / 2 + 56
  *   필요한 자리     = 112 + 32 + 16 = 160
- *   → (100vw − 1440) / 2 ≥ 104  →  100vw ≥ 1648px  →  **`min-[1650px]`**
+ *   → (레이아웃 폭 − 1440) / 2 ≥ 104  →  레이아웃 폭 ≥ 1648px
+ *
+ * ── 레이아웃 폭 ≠ 화면 폭 (2026-08-27 화면 축소 이후) ──
+ * `globals.css` 가 넓은 화면에서 `html { zoom: 0.9 }` 를 걸었다. 그래서 레이아웃이
+ * 쓸 수 있는 폭은 화면 폭보다 **1/0.9 배 넓다**(`--screen-w`). 계산도 임계값도
+ * 그 폭을 기준으로 다시 잡았다.
+ *
+ *   레이아웃 폭 = 100vw ÷ 0.9 ≥ 1648  →  100vw ≥ 1483px  →  **`min-[1485px]`**
+ *
+ * ⚠️ 미디어쿼리는 축소와 무관하게 **실제 화면 폭**을 본다. 그래서 임계값은 실제
+ *    폭(1485)으로 적고, 자리 계산은 레이아웃 폭(`--screen-w`)으로 한다 — 둘의
+ *    기준이 다르다는 것을 놓치면 레일이 본문 위로 올라앉는다.
  *
  * ── 컨테이너 1120 → 1440px 확대에 따른 재계산 (2026-08-18) ──
  * 이전 판은 컨테이너 **바깥**만 자리로 셌다(= 1120 + 2 × 160 = 1440px 임계값).
@@ -40,10 +51,11 @@ import { cn } from "@/lib/cn";
  * 넣어도 **글자와의 간격 32px 과 화면 끝 여백 16px 은 그대로 지켜진다** —
  * 지켜야 할 것은 컨테이너 상자가 아니라 글자와의 거리다.
  *
- * 그래서 `min-[1650px]` 미만에서는 아예 렌더 자리를 주지 않는다. 그 이상에서는
+ * 그래서 `min-[1485px]` 미만에서는 아예 렌더 자리를 주지 않는다. 그 이상에서는
  * 레일 오른쪽 끝이 본문 글자 시작점에서 정확히 GAP 만큼 떨어진다.
  *
- * ⚠️ `100vw` 는 세로 스크롤바 폭을 포함한다(데스크톱에서 보통 15px 안팎).
+ * ⚠️ `--screen-w` 의 밑값인 `100vw` 는 세로 스크롤바 폭을 포함한다(데스크톱에서
+ *    보통 15px 안팎).
  *    그만큼 레일이 오른쪽으로 밀려 실제 간격은 GAP 보다 ~8px 줄어든다.
  *    32px 로 잡아 둔 이유가 이것이다 — 16px 였다면 스크롤바가 있는 환경에서
  *    간격이 8px 까지 좁아진다.
@@ -55,7 +67,7 @@ import { cn } from "@/lib/cn";
  *
  * ── 왜 IntersectionObserver 인가 ──
  * 스크롤 이벤트로 `getBoundingClientRect()` 를 매 프레임 재는 구현은 섹션이
- * 여덟 개면 프레임마다 여덟 번 레이아웃을 강제한다. 관찰자는 브라우저가
+ * 여러 개면 프레임마다 그만큼 레이아웃을 강제한다. 관찰자는 브라우저가
  * 교차 시점에만 알려주므로 스크롤 중 비용이 0 이다.
  * 뷰포트 위아래를 잘라 **화면 중앙의 좁은 띠**만 판정 영역으로 쓴다(rootMargin).
  * 이게 없으면 섹션 두 개가 걸쳐 있을 때 활성 항목이 위아래로 떨린다.
@@ -75,7 +87,7 @@ export type HomeSection = { id: string; label: string };
 /** 화면 중앙 ±20% 띠만 판정에 쓴다 */
 const ROOT_MARGIN = "-40% 0px -40% 0px";
 
-/** 위 주석의 계산에 쓰인 값들 — 바꾸면 노출 임계값(1650px)도 함께 다시 잡는다 */
+/** 위 주석의 계산에 쓰인 값들 — 바꾸면 노출 임계값(1485px)도 함께 다시 잡는다 */
 const RAIL_W = 112;
 const GAP = 32;
 /**
@@ -83,7 +95,7 @@ const GAP = 32;
  * 거기서 GAP + RAIL_W 를 왼쪽으로 물러난다. `--gutter` 를 더하는 항이 이번
  * 확대(1120 → 1440px)에서 추가된 부분이다.
  */
-const RAIL_LEFT = `calc((100vw - var(--container-max)) / 2 + var(--gutter) - ${GAP}px - ${RAIL_W}px)`;
+const RAIL_LEFT = `calc((var(--screen-w) - var(--container-max)) / 2 + var(--gutter) - ${GAP}px - ${RAIL_W}px)`;
 
 export type HomeSideNavProps = {
   sections: readonly HomeSection[];
@@ -163,7 +175,7 @@ export function HomeSideNav({ sections, revealAfterId }: HomeSideNavProps) {
       className={cn(
         "pointer-events-none fixed top-1/2 z-30 hidden -translate-y-1/2",
         // 자리가 나오는 폭에서만 존재한다(위 계산 참조)
-        "min-[1650px]:block",
+        "min-[1485px]:block",
         "ease-brand transition-[opacity,translate] duration-[var(--dur-menu)]",
         shown ? "translate-x-0 opacity-100" : "-translate-x-3 opacity-0",
       )}

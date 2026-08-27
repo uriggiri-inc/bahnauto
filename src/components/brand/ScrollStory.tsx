@@ -268,7 +268,7 @@ function StoryInner() {
         마크가 상단으로 밀린다. 세 블록 모두 콘텐츠 높이를 유지해 그룹 전체가
         뷰포트 정중앙에 놓이게 한다.
       */}
-      <div className="sticky top-0 flex h-[100svh] flex-col items-center justify-center gap-6 overflow-hidden md:gap-7">
+      <div className="sticky top-0 flex h-[var(--screen-h)] flex-col items-center justify-center gap-6 overflow-hidden md:gap-7">
         {/* 좌우 여백에 씬별 아이콘이 떠 있다 (lg 이상) */}
         <StoryFloaters progress={smooth} />
 

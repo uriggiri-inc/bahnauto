@@ -77,7 +77,7 @@ export function PageHero({
   );
 
   const shell = cn(
-    "relative flex min-h-[calc(100svh-var(--header-h))] flex-col",
+    "relative flex min-h-[calc(var(--screen-h)-var(--header-h))] flex-col",
     bleed && "from-brand-50 bg-gradient-to-b to-white",
     className,
   );

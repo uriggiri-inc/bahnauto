@@ -129,7 +129,7 @@ function Hero({ section, firstAnchor }: { section: HomeSection; firstAnchor?: st
     // 한 화면을 꽉 채운다(사용자 확정 2026-08-14) — 다음 섹션이 걸쳐 보이지 않는다.
     // 높이는 "뷰포트 − 상단 고정 헤더". 내용은 가운데, 스크롤 큐는 바닥에 붙는다.
     <section
-      className="from-brand-50 relative flex min-h-[calc(100svh-var(--header-h))] flex-col bg-gradient-to-b to-white"
+      className="from-brand-50 relative flex min-h-[calc(var(--screen-h)-var(--header-h))] flex-col bg-gradient-to-b to-white"
       id={section.id}
     >
       <div className="container-ba flex flex-1 flex-col items-center justify-center py-14 text-center">

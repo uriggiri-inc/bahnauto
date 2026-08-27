@@ -172,7 +172,7 @@ export function ProblemStory({ id, label, title }: ProblemStoryProps) {
   return (
     <section id={id} className="bg-bg-subtle">
       {/* 홈 전 섹션과 같은 기준으로 한 화면을 꽉 채운다(뷰포트 − 고정 헤더) */}
-      <div className="container-ba flex min-h-[calc(100svh-var(--header-h))] flex-col justify-center gap-8 py-[var(--section-py)] md:gap-10">
+      <div className="container-ba flex min-h-[calc(var(--screen-h)-var(--header-h))] flex-col justify-center gap-8 py-[var(--section-py)] md:gap-10">
         {(label || title) && (
           <div className="text-center">
             {label && <SectionLabel className="mb-3">{label}</SectionLabel>}
