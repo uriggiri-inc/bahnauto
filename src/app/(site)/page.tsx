@@ -263,14 +263,20 @@ function renderBody(s: HomeSection) {
         ⚠️ `ChecklistDemo` 컴포넌트는 지우지 않았다. `/system`
            등 다른 화면이 쓰고 있고, 캡처가 확보되면 되살릴 수 있다.
 
-        ── 안내 한 줄을 뺐다 (2026-08-27) ──
-        "카드에 커서를 올리면 무엇이 포함되는지 나옵니다" 가 있었다. 카드가
-        **처음부터 펼쳐진 모습**으로 바뀌어(목업대로) 접힘 자체가 없어졌으므로
-        가리킬 대상이 없다.
+        ── 안내 한 줄을 뺐다가 되살렸다 (2026-08-27) ──
+        오전에 카드를 목업대로 "처음부터 펼쳐진" 모습으로 바꾸면서 가리킬 대상이
+        없어져 뺐다. 같은 날 오후 지시로 **접힌 흰 카드 + 커서 올린 카드만 펼침**
+        으로 되돌아갔으므로 이 줄도 함께 돌아왔다.
       */
       return (
         <>
           <FeatureGrid />
+
+          {/* 카드가 접혀 있다는 신호. `+` 배지를 카드마다 띄우는 것보다 한 번
+              말하는 편이 조용하다(problem 섹션과 같은 방식) */}
+          <p className="text-caption text-text-sub mt-4 hidden [@media(hover:hover)]:block">
+            카드에 커서를 올리면 무엇이 포함되는지 나옵니다. 누르면 해당 기능 상세로 이동합니다.
+          </p>
 
           <div className="mt-8">
             <Link href="/features/dashboard" className={buttonClasses({ variant: "secondary" })}>
