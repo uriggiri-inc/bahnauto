@@ -381,8 +381,15 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
   ],
 };
 
-/* ⚠️ `SCREENS` 중 어느 슬라이드에도 쓰이지 않는 것들 — `dashboardPc` ·
-   `checklistPhotoMobile` · `inventoryPc` · `inventoryMobile` · `orderingMobile` ·
-   `boardPc` · `boardMobile` · `manualPc` · `manualMobile` 이다. 지우지 않는 이유:
-   `/system` 과 `/service` · `/careers` 가 이들을 직접 쓴다(재고는 옛 캡처보다
-   `opsStock*` 이 최신이라 슬라이드에서만 교체했다). */
+/* ⚠️ **화면 어디에도 나오지 않는 캡처 5장** — `dashboardPc` · `orderingMobile` ·
+   `boardMobile` · `manualPc` · `manualMobile`. 앞의 둘은 참조가 아예 없고, 뒤의
+   셋은 `SCREEN_PAIRS` 의 `board`·`manual` 쌍에만 들어 있는데 **그 쌍을 쓰는
+   화면이 없다**(`SCREEN_PAIRS` 중 실제로 쓰이는 것은 `report` 하나다 —
+   `/system` 히어로와 요금 카드).
+
+   지우지 않는 이유: 마스킹까지 마친 자산이라 자리가 생기면 바로 넣을 수 있다.
+   다시 확보하는 비용이 남겨 두는 비용보다 크다. 캡처 규격서에도 "보관" 으로
+   적어 두었으니 담당자에게 재촬영을 요청하지 않는다.
+
+   재고는 옛 `inventory*` 보다 `opsStock*`(유통기한 포함)이 최신이라 슬라이드에서만
+   교체했다. `inventory*` 는 `/system`·`/service` 가 계속 직접 쓴다. */
