@@ -147,7 +147,10 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     {
       id: "support-board",
       title: "공통 게시판",
-      desc: "본사·점주·매니저가 같은 게시판에서 공지와 현장 이슈를 주고받습니다. 카테고리로 나뉘어 있어 놓치는 글이 없고, 공지는 누가 확인했는지까지 남습니다.",
+      desc: [
+        "본사·점주·매니저가 같은 게시판에서 공지와 현장 이슈를 주고받습니다.",
+        "카테고리로 나뉘어 있어 놓치는 글이 없고, 공지는 누가 확인했는지까지 남습니다.",
+      ],
       shots: [
         {
           shot: SCREENS.supportBoardPc,
@@ -164,7 +167,11 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     {
       id: "support-chat",
       title: "챗봇 문의",
-      desc: "앱 안에서 바로 문의하면 AI가 먼저 답하고, 해결되지 않으면 본사 담당자로 이어집니다. 매니저가 전화를 기다리지 않아도 됩니다.",
+      desc: [
+        "앱 안에서 바로 문의하면 AI가 먼저 답하고,",
+        "해결되지 않으면 본사 담당자로 이어집니다.",
+        "매니저가 전화를 기다리지 않아도 됩니다.",
+      ],
       shots: [
         {
           shot: SCREENS.supportChatWidget,
@@ -185,7 +192,11 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     {
       id: "ops-stock",
       title: "재고 현황",
-      desc: "품목별 유통기한을 D-day로 세어 폐기 대상과 임박 상품을 먼저 띄웁니다. 매니저가 매장에서 확인하고, 본사는 같은 화면을 PC에서 봅니다.",
+      desc: [
+        "품목별 유통기한을 D-day로 세어",
+        "폐기 대상과 임박 상품을 먼저 띄웁니다.",
+        "매니저가 매장에서 확인하고, 본사는 같은 화면을 PC에서 봅니다.",
+      ],
       shots: [
         {
           shot: SCREENS.opsStockPc,
@@ -198,7 +209,11 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     {
       id: "ops-order",
       title: "발주 요청",
-      desc: "재고 화면에서 그대로 발주로 넘어가고, 작성 → 검토 → 수령 → 완료 네 단계가 어디까지 왔는지 한 줄로 보입니다.",
+      desc: [
+        "재고 화면에서 그대로 발주로 넘어가고,",
+        "작성 → 검토 → 수령 → 완료",
+        "네 단계가 어디까지 왔는지 한 줄로 보입니다.",
+      ],
       shots: [
         { shot: SCREENS.opsOrderPc, kind: "pc", note: "요청별 진행 단계와 항목 수·금액" },
         {
@@ -211,7 +226,10 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     {
       id: "ops-order-detail",
       title: "발주 상세",
-      desc: "요청 하나를 열면 품목·수량·단가와 유통기한, 보관 장소까지 함께 확인합니다. 검토 단계에서 무엇을 승인하는지 분명해집니다.",
+      desc: [
+        "요청 하나를 열면 품목·수량·단가와 유통기한, 보관 장소까지 함께 확인합니다.",
+        "검토 단계에서 무엇을 승인하는지 분명해집니다.",
+      ],
       shots: [
         { shot: SCREENS.opsOrderDetailPc, kind: "pc", note: "품목별 수량·단가·소계를 나열" },
         {
@@ -224,7 +242,11 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     {
       id: "ops-settle",
       title: "정산 요청",
-      desc: "매니저가 쓴 비용은 정산 요청으로 올라가고, 작성 → 검토 → 입금 → 완료까지 기록됩니다. 영수증과 입금 증빙을 같은 건에 붙입니다.",
+      desc: [
+        "매니저가 쓴 비용은 정산 요청으로 올라가고,",
+        "작성 → 검토 → 입금 → 완료까지 기록됩니다.",
+        "영수증과 입금 증빙을 같은 건에 붙입니다.",
+      ],
       shots: [
         { shot: SCREENS.opsSettleMobile, kind: "mobile", note: "요청 목록과 처리 단계" },
         {
@@ -241,7 +263,10 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     {
       id: "docs-status",
       title: "인허가 현황",
-      desc: "소방·안전·보험·가맹계약의 만료일을 한 화면에 모아 D-day로 셉니다. 만료가 임박하면 상태가 색과 글자로 함께 바뀝니다.",
+      desc: [
+        "소방·안전·보험·가맹계약의 만료일을 한 화면에 모아 D-day로 셉니다.",
+        "만료가 임박하면 상태가 색과 글자로 함께 바뀝니다.",
+      ],
       shots: [
         {
           shot: SCREENS.docsStatusPc,
@@ -253,7 +278,10 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     {
       id: "docs-upload",
       title: "서류 등록",
-      desc: "보건증·자격증 같은 서류를 만료일과 함께 올려 둡니다. 매장 공통 서류와 직원별 서류를 나눠 보관합니다.",
+      desc: [
+        "보건증·자격증 같은 서류를 만료일과 함께 올려 둡니다.",
+        "매장 공통 서류와 직원별 서류를 나눠 보관합니다.",
+      ],
       shots: [
         {
           shot: SCREENS.docsUploadPc,
@@ -268,7 +296,11 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     {
       id: "place-smartplace",
       title: "스마트플레이스 관리",
-      desc: "예약 현황과 고객 응대, 리뷰와 방문 추이를 반오토가 대신 확인하고 관리합니다. 매장 정보와 새소식도 함께 올립니다.",
+      desc: [
+        "예약 현황과 고객 응대, 리뷰와 방문 추이를",
+        "반오토가 대신 확인하고 관리합니다.",
+        "매장 정보와 새소식도 함께 올립니다.",
+      ],
       shots: [
         {
           shot: SCREENS.placeSmartplacePc,
@@ -284,7 +316,12 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     {
       id: "revenue-report",
       title: "월간 매출 리포트",
-      desc: "매출·지출·순이익 추이, 광고 대비 매출, 검색 노출과 리뷰, 예약 시간대까지 한 문서로 정리해 매달 드립니다. 실제 리포트 화면이며 가맹점명과 금액만 가렸습니다.",
+      desc: [
+        /* 앞의 항목 나열을 굵게 — 무엇이 담기는지가 이 슬라이드의 핵심이다 */
+        "**매출·지출·순이익 추이, 광고 대비 매출, 검색 노출과 리뷰, 예약 시간대**까지",
+        "한 문서로 정리해 매달 드립니다.",
+        "실제 리포트 화면이며 가맹점명과 금액만 가렸습니다.",
+      ],
       shots: [
         {
           shot: SCREENS.revenueReport,

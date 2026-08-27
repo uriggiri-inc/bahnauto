@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
-import { formatCopy } from "@/components/ui/Copy";
 import { ZoomableImage } from "@/components/marketing/ZoomableImage";
 import type { Shot } from "@/components/marketing/ScreenStack";
 
@@ -54,10 +53,42 @@ export type CarouselSlide = {
   id: string;
   /** 주제 이름 — 탭에 그대로 나온다 */
   title: string;
-  /** 이 주제가 무엇인지 한 문장 */
-  desc: string;
+  /**
+   * 이 주제가 무엇인지. **줄 단위로 직접 적는다**(사용자 지시 2026-08-27).
+   *
+   * 왜 배열인가: `formatCopy` 는 마침표에서만 끊으므로
+   * 「재고 화면에서 그대로 발주로 넘어가고,」처럼 **쉼표나 화살표 뒤에서 끊고 싶은
+   * 자리**를 표현할 수 없다. 어디서 숨을 쉬게 할지는 카피를 쓰는 사람이 정하는
+   * 것이므로 줄을 그대로 받는다.
+   *
+   * 한 줄 안에서 `**…**` 로 감싼 부분은 굵게 나온다.
+   */
+  desc: readonly string[];
   shots: readonly CarouselShot[];
 };
+
+/**
+ * 한 줄 안의 `**…**` 를 굵게 바꾼다.
+ *
+ * 왜 이런 표기인가: 카피는 `.ts` 파일에 있어 JSX 를 넣을 수 없다. 강조할 자리를
+ * 카피 옆에 두어야 나중에 문구를 고칠 때 강조 범위도 같이 눈에 들어온다.
+ *
+ * `<strong>` 을 쓴다 — 헤드라인용 `Mark` 와 달리 본문에서 실제로 중요한 구절을
+ * 가리키는 자리다(`Mark` 는 페이지당 하나라는 규칙이 있어 여기 쓰면 안 된다).
+ */
+function emphasize(line: string) {
+  const parts = line.split(/\*\*(.+?)\*\*/g);
+  /* split 결과는 [보통, 강조, 보통, 강조, …] 순서다 */
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} className="text-ink font-semibold">
+        {part}
+      </strong>
+    ) : (
+      part
+    ),
+  );
+}
 
 /** 사용자가 정한 간격 (2026-08-26) */
 const INTERVAL_MS = 1500;
@@ -204,9 +235,11 @@ export function ScreenCarousel({
           `formatCopy` — 문장 끝에서 줄을 나눈다. 그대로 흘리면 「매니저가 매장에서 /
           확인하고」처럼 한 문장이 줄 끝에서 갈라져 두 문장이 뒤섞여 읽힌다.
         */}
-        <p className="text-body-sm text-text-sub mx-auto mt-1.5 max-w-[62ch]">
-          {formatCopy(slide.desc)}
-        </p>
+        <div className="text-body-sm text-text-sub mx-auto mt-1.5 max-w-[62ch]">
+          {slide.desc.map((line) => (
+            <p key={line}>{emphasize(line)}</p>
+          ))}
+        </div>
         <ul className="text-caption text-text-sub mt-2.5 flex flex-wrap justify-center gap-x-4 gap-y-1">
           {slide.shots.map((s) => (
             <li key={s.note}>
