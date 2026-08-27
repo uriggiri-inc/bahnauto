@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { FeatureDetailSection } from "@/components/marketing/FeatureDetailSection";
 import { FeatureIntro } from "@/components/marketing/FeatureIntro";
 import { FeatureSideNav } from "@/components/marketing/FeatureSideNav";
+import { formatCopy } from "@/components/ui/Copy";
 import { buttonClasses } from "@/components/ui/Button";
 import { FEATURES } from "@/content/features";
 import { FEATURE_DETAIL_BY_KEY } from "@/content/feature-details";
@@ -73,7 +74,12 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
   const detail = FEATURE_DETAIL_BY_KEY[key];
   if (!feature || !detail) notFound();
 
-  const navItems = FEATURES.map((f) => ({ key: f.key, label: f.title }));
+  /* 목록에도 상태를 보여준다 — 오픈 예정 기능은 들어가기 전에 알 수 있어야 한다 */
+  const navItems = FEATURES.map((f) => ({
+    key: f.key,
+    label: f.title,
+    badge: FEATURE_DETAIL_BY_KEY[f.key]?.notice?.badge,
+  }));
 
   return (
     /*
@@ -114,6 +120,27 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
             같은 높이에 놓여 겹친다.
           */}
           <div className="mx-auto w-full max-w-[1140px] px-[var(--gutter)] pt-8 pb-[var(--section-py)] lg:pt-[calc(var(--header-h)+28px)]">
+            {/*
+              ── 오픈 예정 띠 (사용자 지시 2026-08-27) ──
+              아직 열지 않은 기능은 **맨 위에서 먼저** 알린다. 내용은 그대로 두고
+              띠만 얹는다 — 오픈 전에도 무엇을 제공할지는 보여줘야 문의가 들어오고,
+              동시에 지금 쓸 수 있다고 오해하면 안 되기 때문이다.
+
+              색만으로 상태를 말하지 않는다(`../../CLAUDE.md` §4) — 배지에 글자를
+              넣고, 제목·본문으로 한 번 더 적는다.
+            */}
+            {detail.notice && (
+              <div className="border-brand/25 bg-brand-50 mb-9 rounded-[18px] border p-5 md:p-6">
+                <p className="text-caption text-brand bg-brand/10 mb-2.5 inline-flex rounded-full px-2.5 py-1 font-bold tracking-[0.08em]">
+                  {detail.notice.badge}
+                </p>
+                <p className="text-h4 text-ink">{detail.notice.title}</p>
+                <p className="text-body-sm text-text-sub mt-1.5 max-w-[64ch]">
+                  {formatCopy(detail.notice.body)}
+                </p>
+              </div>
+            )}
+
             <FeatureIntro
               detail={detail}
               no={index + 1}

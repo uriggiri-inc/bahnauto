@@ -88,6 +88,20 @@ export type FeatureDetail = {
   groups: readonly DetailGroup[];
   /** 실제 화면 자리. 캡처 미확보 상태에서도 자리는 그려진다 */
   screens: readonly FeatureScreen[];
+  /**
+   * 페이지 맨 위에 띠로 걸리는 알림. 아직 열지 않은 기능에 쓴다
+   * (사용자 지시 2026-08-27).
+   *
+   * 내용을 지우지 않고 띠만 얹는 이유: 오픈 전에도 **무엇을 제공할지**는 보여줘야
+   * 문의가 들어온다. 다만 지금 쓸 수 있다고 오해하면 안 되므로 맨 위에서 먼저
+   * 알린다.
+   */
+  notice?: {
+    /** 배지 문구 — 색이 아니라 글자로 상태를 말한다(이모지 금지) */
+    badge: string;
+    title: string;
+    body: string;
+  };
   effect: { title: string; items: readonly DetailCard[] };
 };
 
@@ -322,15 +336,12 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
         ],
       },
     ],
-    screens: [
-      {
-        alt: "시설 이슈 접수 게시판 화면",
-        caption: "이슈 접수 화면",
-        src: "/app/board-pc.webp",
-        width: 2000,
-        height: 1093,
-      },
-    ],
+    screens: [],
+    notice: {
+      badge: "오픈 예정",
+      title: "2026년 11월 오픈 예정입니다",
+      body: "방문관리 서비스는 준비 중입니다. 아래 내용은 오픈 시 제공할 범위이며, 지금은 신청을 받지 않습니다.",
+    },
     effect: {
       title: "상주 인력 없이도 문제 발생 시 신속하게 대응합니다",
       items: [

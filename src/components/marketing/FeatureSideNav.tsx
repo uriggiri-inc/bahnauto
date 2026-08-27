@@ -45,7 +45,18 @@ import { cn } from "@/lib/cn";
  * 제자리에 있다"). 두 판단이 달라 보이는 것은 각각 명시적으로 정한 것이다.
  */
 
-export type FeatureSideNavItem = { key: string; label: string };
+export type FeatureSideNavItem = {
+  key: string;
+  label: string;
+  /**
+   * 상태 꼬리표. 지금은 아직 열지 않은 기능에 "오픈 예정" 을 붙인다
+   * (사용자 지시 2026-08-27).
+   *
+   * 목록에서 먼저 보여야 하는 이유: 들어가서야 오픈 예정임을 알면 헛걸음이 된다.
+   * 값의 정본은 `feature-details.ts` 의 `notice.badge` 이고, 페이지가 넘겨준다.
+   */
+  badge?: string;
+};
 
 export function FeatureSideNav({
   items,
@@ -126,6 +137,19 @@ export function FeatureSideNav({
                   >
                     {s.label}
                   </span>
+                  {s.badge && (
+                    /* 색만으로 말하지 않는다 — 글자를 넣는다(`../../CLAUDE.md` §4) */
+                    <span
+                      className={cn(
+                        "text-caption shrink-0 rounded-full border px-1.5 py-px leading-[1.5]",
+                        on
+                          ? "border-white/35 text-white/90"
+                          : "border-border-light text-text-sub bg-bg-subtle",
+                      )}
+                    >
+                      {s.badge}
+                    </span>
+                  )}
                 </Link>
               </li>
             );
