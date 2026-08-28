@@ -471,7 +471,13 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
     eyebrow: "A/S DISPATCH · OPENING SOON",
     headline: ["고장 났을 때,", "바로 부를 수 있게 준비 중입니다"],
     sub: "시설 고장이나 긴급상황 발생 시 즉시 출동하는 서비스를 준비하고 있습니다.",
-    chips: ["오픈 예정"],
+    /*
+      칩을 비웠다 (사용자 확정 2026-08-28). 정본 HTML 은 히어로에 `오픈 예정` 태그를
+      두는데, 우리 화면에는 같은 말이 **위쪽 알림 배지**와 **사이드바 배지**에 이미
+      있다. 셋이 겹쳐 "오픈 예정" 이 한 화면에 세 번 나왔다. 정본의 문장이 사라지는
+      것은 아니다 — 알림 배지가 같은 글자를 그대로 말한다.
+    */
+    chips: [],
     groups: [],
     screens: [],
     notice: {

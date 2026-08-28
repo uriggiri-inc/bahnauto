@@ -71,15 +71,19 @@ export function FeatureIntro({
 
       <p className="text-body-lg text-text-sub mt-6 max-w-[38rem]">{formatCopy(detail.sub)}</p>
 
-      <ul className="mt-7 flex flex-wrap gap-2">
-        {detail.chips.map((c) => (
-          <li key={c}>
-            <Badge tone="brand" className="border-brand-200 bg-brand-50 border px-3 py-1.5">
-              {c}
-            </Badge>
-          </li>
-        ))}
-      </ul>
+      {/* 칩이 없는 기능(⑦)에서는 목록 자체를 그리지 않는다 — 빈 `<ul>` 을 두면
+          `mt-7` 만 남아 리드와 다음 요소 사이가 이유 없이 벌어진다 */}
+      {detail.chips.length > 0 && (
+        <ul className="mt-7 flex flex-wrap gap-2">
+          {detail.chips.map((c) => (
+            <li key={c}>
+              <Badge tone="brand" className="border-brand-200 bg-brand-50 border px-3 py-1.5">
+                {c}
+              </Badge>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {/*
         ── 이 줄은 정본 HTML 문장 그대로다 (사용자 지시 2026-08-28) ──
