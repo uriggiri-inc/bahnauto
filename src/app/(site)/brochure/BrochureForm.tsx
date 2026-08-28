@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Checkbox, Field, TextInput } from "@/components/ui/Form";
+import { Checkbox, Field, Select, TextInput } from "@/components/ui/Form";
 import { Button } from "@/components/ui/Button";
-import { formatPhone } from "@/lib/contact-schema";
+import { formatPhone, REFERRERS } from "@/lib/contact-schema";
 import { brochureSchema, type BrochureInput } from "@/lib/brochure-schema";
 // 서버 액션을 직접 import 하지 않는다 — 정적 미리보기 빌드에서 교체되는 지점이다
 import { submitBrochure } from "@/lib/form-submit";
@@ -19,8 +19,14 @@ import { submitBrochure } from "@/lib/form-submit";
  *   · 필수 동의 3요소(수집 항목·이용 목적·보유 기간)를 체크박스와 같은 화면에 둔다
  *   · 동의 전에는 제출 버튼이 잠기고, 왜 잠겼는지 글로 알린다
  *
- * 다른 점은 **받는 항목이 셋뿐**이라는 것이다. 소개서를 보내는 데 필요하지 않은
- * 항목은 받지 않는다(§1.2 최소 수집).
+ * 다른 점은 **받는 항목이 적다**는 것이다. 소개서를 보내는 데 필요하지 않은 항목은
+ * 받지 않는다(§1.2 최소 수집) — 상담 폼의 업종·지역·매장 수·희망 횟수가 여기 없다.
+ *
+ * ── 유입 경로만 예외다 (사용자 지시 2026-08-28) ──
+ * 소개서를 보내는 데 필요한 항목은 아니지만 PRD §7.6 이 마케팅 채널 성과 측정용으로
+ * 반드시 포함하도록 요구한다. **선택 항목**이라 비워 두고도 제출되고, 선택지는
+ * 상담 폼과 같은 목록(`REFERRERS`)을 쓴다 — 폼마다 항목이 다르면 채널별 집계를
+ * 한 기준으로 볼 수 없다.
  */
 export function BrochureForm() {
   const router = useRouter();
@@ -36,10 +42,11 @@ export function BrochureForm() {
   } = useForm<BrochureInput>({
     resolver: zodResolver(brochureSchema),
     mode: "onBlur",
-    defaultValues: { company: "", email: "", phone: "" },
+    defaultValues: { company: "", email: "", phone: "", referrer: "", referrerDetail: "" },
   });
 
   const phone = watch("phone");
+  const referrer = watch("referrer");
   const agreePrivacy = watch("agreePrivacy");
 
   const onSubmit = handleSubmit(async (values) => {
@@ -118,6 +125,42 @@ export function BrochureForm() {
         />
       </Field>
 
+      {/*
+        ── 유입 경로 (선택) ──
+        상담 폼과 같은 목록·같은 동작이다. 소개서를 받는 조건이 아니라 비워 두고도
+        제출된다 — 그래서 `required` 를 붙이지 않고 `선택 안 함` 을 기본값으로 둔다.
+      */}
+      <Field label="어떻게 알고 오셨나요?" htmlFor="referrer">
+        <Select
+          id="referrer"
+          placeholder="선택 안 함"
+          options={REFERRERS}
+          {...register("referrer", {
+            // "기타"에서 다른 항목으로 되돌리면 직접 입력값은 더 이상 유효하지 않다
+            onChange: (e) => {
+              if (e.target.value !== "기타") setValue("referrerDetail", "");
+            },
+          })}
+        />
+      </Field>
+
+      {referrer === "기타" && (
+        <Field
+          label="알게 되신 경로를 직접 적어주세요"
+          error={errors.referrerDetail?.message}
+          htmlFor="referrerDetail"
+        >
+          <TextInput
+            id="referrerDetail"
+            maxLength={50}
+            placeholder="예: 지역 소상공인 모임"
+            invalid={Boolean(errors.referrerDetail)}
+            aria-describedby={errors.referrerDetail ? "referrerDetail-desc" : undefined}
+            {...register("referrerDetail")}
+          />
+        </Field>
+      )}
+
       {/* ── 동의 ── */}
       <div className="border-border bg-bg-subtle rounded-lg border p-5">
         <Checkbox
@@ -134,7 +177,9 @@ export function BrochureForm() {
             <dl className="grid gap-1.5">
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">수집 항목</dt>
-                <dd>회사명 또는 매장명, 이메일, 연락처</dd>
+                {/* 받는 것과 고지하는 것이 어긋나면 그 자체가 문제다 —
+                    2026-08-28 에 유입 경로를 추가하면서 이 줄도 함께 고쳤다 */}
+                <dd>회사명 또는 매장명, 이메일, 연락처, 유입 경로</dd>
               </div>
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">이용 목적</dt>

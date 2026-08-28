@@ -80,8 +80,10 @@ export default function BrochurePage() {
         {/* ── 오른쪽: 폼 ── */}
         <div className="border-border rounded-[24px] border bg-white p-6 shadow-[var(--shadow-card)] md:p-8">
           <h2 className="text-h3 text-ink mb-2">받으실 분 정보를 알려주세요</h2>
+          {/* 2026-08-28: 유입 경로가 추가되어 칸이 넷이 됐다. "세 가지만" 이라고 적어
+              두면 화면과 어긋난다 — 필수가 셋임을 밝히는 쪽으로 고쳤다 */}
           <p className="text-body-sm text-text-sub mb-7">
-            세 가지만 남겨주시면 됩니다. 다른 정보는 받지 않습니다.
+            필수는 세 가지입니다. 그 밖의 정보는 받지 않습니다.
           </p>
           <BrochureForm />
         </div>
