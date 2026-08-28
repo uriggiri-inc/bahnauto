@@ -5,6 +5,7 @@ import { DummyBanner } from "@/components/marketing/DummyBanner";
 import { BeforeAfter } from "@/components/marketing/BeforeAfter";
 import { FeatureGrid } from "@/components/marketing/FeatureGrid";
 import { PlanCards } from "@/components/marketing/PlanCards";
+import { PlanCompositionTable } from "@/components/marketing/PlanCompositionTable";
 import { ProblemStory } from "@/components/marketing/ProblemStory";
 import { ProcessSteps, type Step } from "@/components/marketing/ProcessSteps";
 import { ReviewSlider } from "@/components/marketing/ReviewSlider";
@@ -287,10 +288,17 @@ function renderBody(s: HomeSection) {
       );
 
     case "pricing":
+      /*
+        카드 아래에 **옵션별 구성표**를 붙였다(사용자 지시 2026-08-28). 카드만 두면
+        "요금 안내 자세히 보기" 링크 위아래가 비어 섹션이 휑했다. 카드가 "무엇을
+        고를 수 있나" 를, 표가 "고르면 무엇이 들어오나" 를 말한다.
+        정본은 담당자 `반오토_요금제_항목별_구성표.docx` — `plans.ts` 참고.
+      */
       return (
         <>
           <PlanCards />
-          <div className="mt-8 flex justify-center">
+          <PlanCompositionTable className="mt-14" />
+          <div className="mt-10 flex justify-center">
             <Link href="/pricing" className={buttonClasses({ variant: "ghost" })}>
               요금 안내 자세히 보기
             </Link>
