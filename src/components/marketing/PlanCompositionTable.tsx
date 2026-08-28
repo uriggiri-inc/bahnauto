@@ -1,16 +1,24 @@
 import { ServiceIcon } from "@/components/marketing/serviceIcons";
-import { SectionLabel } from "@/components/ui/SectionLabel";
 import { FEATURE_BY_KEY } from "@/content/features";
-import { PLAN_COMPOSITION, PLAN_COMPOSITION_HEADING, type PlanComposition } from "@/content/plans";
+import { PLAN_COMPOSITION, type PlanComposition } from "@/content/plans";
 import { cn } from "@/lib/cn";
 
 /**
  * 옵션별 구성표 — **무엇이 들어가고 어떻게 결제하는가** (사용자 지시 2026-08-28).
  *
- * ── 왜 생겼나 ──
- * 요금 카드(기본료 + 옵션 목록) 아래가 비어 보인다는 지적을 받았다. 그 자리에
- * 담당자 `반오토_요금제_항목별_구성표.docx` 의 표를 넣는다. 카드가 "무엇을 고를 수
+ * ── 왜 생겼나 · 어디에 있나 ──
+ * 담당자 `반오토_요금제_항목별_구성표.docx` 의 표다. 요금 카드가 "무엇을 고를 수
  * 있나" 를 말하고, 이 표가 "고르면 무엇이 들어오나" 를 말한다.
+ *
+ * 처음에는 홈 요금 섹션에 넣었다(카드 아래가 비어 보인다는 지적). 같은 날
+ * **`/pricing` 으로 옮겼다**(사용자 지시 2026-08-28) — 홈은 훑는 자리이고, 항목
+ * 일곱 개의 포함 내용을 다 읽는 자리는 요금 페이지다. 홈에는 "요금 안내 자세히
+ * 보기" 링크가 그대로 있어 이 표로 오는 길이 끊기지 않는다.
+ *
+ * ── 머리글을 스스로 그리지 않는다 ──
+ * 홈에서는 섹션 안의 하위 블록이라 `h3` 를 직접 달고 있었다. `/pricing` 에서는
+ * **자기 섹션**이 되므로 제목이 `h2` 여야 한다. 호출부가 `SectionHeader` 로
+ * 그리게 넘겼다 — 문구는 `PLAN_COMPOSITION_HEADING`(문서 정본)에서 가져온다.
  *
  * ⚠️ **금액이 없는 표다.** 옵션 금액은 비공개가 기획 확정 사항이므로 여기에도
  *    단가 열을 두지 않는다. 예전 `/pricing` 의 옵션 단가 표는 여섯 줄이 모두
@@ -57,11 +65,8 @@ export function PlanCompositionTable({ className }: { className?: string }) {
 
   return (
     <div className={className}>
-      <SectionLabel className="mb-2">{PLAN_COMPOSITION_HEADING.title}</SectionLabel>
-      <h3 className="text-h3 text-ink">{PLAN_COMPOSITION_HEADING.lead}</h3>
-
       {/* ── md 이상: 3열 표 ── */}
-      <div className="border-border mt-6 hidden overflow-hidden rounded-lg border bg-white shadow-[var(--shadow-card)] md:block">
+      <div className="border-border hidden overflow-hidden rounded-lg border bg-white shadow-[var(--shadow-card)] md:block">
         <table className="w-full border-collapse text-left">
           <thead>
             <tr className="bg-bg-subtle">
@@ -115,7 +120,7 @@ export function PlanCompositionTable({ className }: { className?: string }) {
       </div>
 
       {/* ── md 미만: 항목마다 카드 하나 ── */}
-      <ul className="mt-6 flex flex-col gap-3 md:hidden">
+      <ul className="flex flex-col gap-3 md:hidden">
         {rows.map(({ row, feature }) => (
           <li
             key={row.key}

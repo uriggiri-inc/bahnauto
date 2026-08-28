@@ -3,12 +3,14 @@ import Link from "next/link";
 import { DummyBanner } from "@/components/marketing/DummyBanner";
 import { PageHero } from "@/components/marketing/PageHero";
 import { PlanCards } from "@/components/marketing/PlanCards";
+import { PlanCompositionTable } from "@/components/marketing/PlanCompositionTable";
 import { Mark } from "@/components/ui/Mark";
 import { Reveal } from "@/components/ui/Reveal";
 import { FaqList } from "@/components/marketing/FaqList";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { buttonClasses } from "@/components/ui/Button";
 import { pricingFaqItems } from "@/content/faq";
+import { PLAN_COMPOSITION_HEADING } from "@/content/plans";
 
 /**
  * `/pricing` — 요금 안내.
@@ -78,6 +80,27 @@ export default function PricingPage() {
       </section>
 
       {/*
+        ══ 옵션별 구성표 ════════════════════════════════════════
+        담당자 `반오토_요금제_항목별_구성표.docx` 정본 표다(사용자 지시 2026-08-28).
+        위 카드가 "무엇을 고를 수 있나" 를, 이 표가 "고르면 무엇이 들어오나" 를
+        말한다. **금액 열은 없다** — 옵션 금액 비공개가 기획 확정 사항이고,
+        여섯 줄이 모두 "별도 문의" 가 되는 표는 2026-08-27 에 이미 지웠다.
+
+        머리글 문구는 문서 정본(`PLAN_COMPOSITION_HEADING`)에서 가져온다.
+        홈에도 잠깐 있었지만 사용자 지시로 이 페이지로 모았다.
+      */}
+      <section className="section-py bg-bg-subtle">
+        <div className="container-ba">
+          <SectionHeader
+            label={PLAN_COMPOSITION_HEADING.title}
+            title={PLAN_COMPOSITION_HEADING.lead}
+            lead="항목마다 무엇이 포함되는지와 결제 주기를 정리했습니다. 옵션 금액은 매장 규모와 운영 상황에 따라 달라져 도입 상담에서 안내드립니다."
+          />
+          <PlanCompositionTable />
+        </div>
+      </section>
+
+      {/*
         ══ 요금 관련 자주 묻는 질문 ═══════════════════════════════
         여기에는 "어느 요금제가 무엇을 묶는지" 섹션이 있었다. 위쪽 요금 카드가
         이미 포함 기능을 나열하고 있어 **중복**이라 사용자 지시로 삭제하고
@@ -90,7 +113,9 @@ export default function PricingPage() {
         문항은 `content/faq.ts` 가 정본이고 `/faq` 와 **같은 아코디언**(`FaqList`)을
         쓴다. 여기에 답변을 다시 적지 않는다.
       */}
-      <section className="section-py bg-bg-subtle">
+      {/* 배경이 흰색이다 — 바로 위 구성표 섹션이 `bg-bg-subtle` 이라
+          같은 색이 붙으면 두 섹션의 경계가 사라진다 */}
+      <section className="section-py">
         <div className="container-ba">
           <SectionHeader
             label="자주 묻는 질문"
