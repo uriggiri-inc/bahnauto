@@ -7,7 +7,7 @@ import { FeatureSideNav } from "@/components/marketing/FeatureSideNav";
 import { formatCopy } from "@/components/ui/Copy";
 import { buttonClasses } from "@/components/ui/Button";
 import { FEATURES } from "@/content/features";
-import { FEATURE_DETAIL_BY_KEY } from "@/content/feature-details";
+import { DEFAULT_DETAIL_CTA, FEATURE_DETAIL_BY_KEY } from "@/content/feature-details";
 import { FEATURE_CAROUSELS } from "@/content/app-screens";
 import { FaqTeaser } from "@/components/marketing/FaqTeaser";
 
@@ -85,6 +85,9 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
     detail.screens.length > 0 ||
     FEATURE_CAROUSELS[key] !== undefined ||
     detail.effect !== undefined;
+
+  /* 페이지 맨 아래 버튼 — 기능별로 다를 수 있다(⑦ 만 다르다) */
+  const cta = detail.cta ?? DEFAULT_DETAIL_CTA;
 
   /* 목록에도 상태를 보여준다 — 오픈 예정 기능은 들어가기 전에 알 수 있어야 한다 */
   const navItems = FEATURES.map((f) => ({
@@ -184,7 +187,18 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
         lead="앱과 관리 범위에 대해 도입 전에 가장 많이 받는 질문입니다."
       />
 
-      {/* ══ 최종 CTA ═════════════════════════════════════════════ */}
+      {/*
+        ══ 최종 CTA ═════════════════════════════════════════════
+        버튼 두 개의 문구·도착지는 **정본 HTML 의 `page-footer` 그대로**다
+        (사용자 지시 2026-08-28). 여섯 기능은 `무료체험 시작하기` / `요금 먼저 보기`,
+        ⑦ A/S 바로출동 서비스만 `오픈 알림 받기` / `다른 기능 보기` 다 — 아직
+        신청할 것이 없어 상담으로 보낸다. 정본은 `feature-details.ts` 의 `cta` 다.
+
+        ⚠️ 제목과 리드는 정본 HTML 에 **없다.** 그 문서는 카피 목업이라 이 브랜드
+           컬러 띠 자체를 그리지 않고 버튼 두 개만 나열한다. 넓은 면에 버튼만 두면
+           미완성으로 보이므로 우리 문장을 유지했다 — 여기가 HTML 을 글자 그대로
+           옮기지 않은 유일한 자리다.
+      */}
       <section className="bg-brand section-py text-white">
         <div className="container-ba text-center">
           <h2 className="text-h1 mx-auto mb-4 max-w-[24ch]">
@@ -195,18 +209,21 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
             무료입니다.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Link href="/contact" className={buttonClasses({ variant: "onDark", size: "lg" })}>
-              무료 도입 상담 신청
+            <Link
+              href={cta.primary.href}
+              className={buttonClasses({ variant: "onDark", size: "lg" })}
+            >
+              {cta.primary.label}
             </Link>
             <Link
-              href="/pricing"
+              href={cta.secondary.href}
               className={buttonClasses({
                 variant: "ghost",
                 size: "lg",
                 className: "text-white/85 hover:bg-white/12 hover:text-white",
               })}
             >
-              요금 먼저 보기
+              {cta.secondary.label}
             </Link>
           </div>
         </div>

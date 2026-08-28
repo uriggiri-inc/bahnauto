@@ -81,22 +81,35 @@ export function FeatureIntro({
         ))}
       </ul>
 
-      <p className="text-caption text-text-sub mt-5">
-        {/* 2026-08-27: "요금제 구성" → "요금 안내". 요금 화면이 플랜 3장에서
-            기본료 + 옵션 목록으로 바뀌어 가리킬 "요금제" 가 없어졌다 */}
-        {title} · 기본 요금과 옵션 구성은{" "}
-        <Link href="/pricing" className="text-brand underline underline-offset-2">
-          요금 안내
-        </Link>
-        에서 보실 수 있습니다.{" "}
-        {/* 스크롤 유도 버튼을 없앤 대신 본문으로 가는 앵커를 남긴다 —
-            키보드 사용자에게 도입부를 건너뛰는 경로가 된다 */}
-        {scrollTargetId && (
+      {/*
+        ── 이 줄은 정본 HTML 문장 그대로다 (사용자 지시 2026-08-28) ──
+        8/27 에 "기본 요금과 옵션 구성은 [요금 안내]에서" 로 고쳐 두었는데,
+        담당자 정본(`반오토 주요기능 수정.html`)이 **"포함 항목은 [요금제 구성]에서"**
+        로 적고 있어 되돌렸다.
+
+        ⚠️ 정본을 따르되 어긋난 점은 남겨 둔다: `/pricing` 은 2026-08-27 개편으로
+           **요금제가 없어졌다**(기본료 하나 + 옵션 목록). "요금제 구성" 이 가리킬
+           대상이 화면에 없다. 확인이 필요하다.
+
+        ⑦ A/S 바로출동 서비스에는 이 줄이 **없다.** 정본 HTML 의 그 페이지에만
+        `meta-line` 이 빠져 있다 — 아직 요금에 넣을 것이 없기 때문이다.
+        본문이 없는 기능(= `scrollTargetId` 가 없는 기능)이 그것 하나뿐이라
+        같은 조건으로 함께 가린다.
+      */}
+      {scrollTargetId && (
+        <p className="text-caption text-text-sub mt-5">
+          {title} · 포함 항목은{" "}
+          <Link href="/pricing" className="text-brand underline underline-offset-2">
+            요금제 구성
+          </Link>
+          에서 확인하실 수 있습니다.{" "}
+          {/* 스크롤 유도 버튼을 없앤 대신 본문으로 가는 앵커를 남긴다 —
+              키보드 사용자에게 도입부를 건너뛰는 경로가 된다 */}
           <a href={`#${scrollTargetId}`} className="text-brand underline underline-offset-2">
             기능 자세히 보기
           </a>
-        )}
-      </p>
+        </p>
+      )}
     </section>
   );
 }
