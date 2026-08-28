@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { BROCHURE_CONTENTS, BROCHURE_FILE } from "@/content/brochure";
 import { BrochureForm } from "./BrochureForm";
 import { formatCopy } from "@/components/ui/Copy";
 
@@ -11,34 +12,24 @@ import { formatCopy } from "@/components/ui/Copy";
  * 아직 이른 사람이 **자료만 먼저 받아보는 경로**다. 그래서 이 화면에서는
  * 상담을 다시 권하지 않는다 — 권하면 소개서를 받으러 온 사람이 폼을 닫는다.
  *
- * ⚠️ 보낼 소개서 파일이 아직 없다(X-10). 그래서 "지금 다운로드"가 아니라
- *    **"확인 후 이메일로 보내드립니다"** 톤으로 쓴다. 파일이 확보되면 완료
- *    화면에 다운로드를 붙인다.
- * ⚠️ 이메일 수집은 개인정보처리방침 개정(X-02)과 함께여야 한다. 그 전까지
- *    운영 환경에서는 접수가 성사되지 않는다(`actions.ts`).
+ * ── 흐름이 바뀌었다 (사용자 지시 2026-08-28) ──
+ * 보낼 파일이 없던 동안은 "확인 후 이메일로 보내드립니다" 톤이었다(X-10).
+ * 소개서 PDF 를 받아 `public/brochure/` 에 넣었으므로 이제 **바로 다운로드**다:
+ * 이 폼을 통과하면 완료 화면에서 파일을 내려받는다. 메일 발송을 약속하지
+ * 않는다 — 정적 사이트에는 메일을 보낼 서버가 없다.
+ *
+ * ⚠️⚠️ **입력값은 아직 어디에도 저장되지 않는다.** 정적 사이트라 받을 서버가 없고,
+ *      개인정보처리방침 제2조 수집 항목에 **이메일이 없다**(`lib/brochure-schema.ts`).
+ *      즉 지금 이 폼은 리드를 모으지 못하고 다운로드 전 확인 절차로만 동작한다.
+ *      수집을 켜려면 **방침 개정 + 접수 저장소 연결**이 함께 필요하다
+ *      (`lib/form-submit.static.ts` 주석에 자세히 적어 두었다).
  */
 
 export const metadata: Metadata = {
   title: "무인매장 관리 서비스 소개서",
   description:
-    "무인매장 관리 서비스 소개서를 이메일로 보내드립니다. 회사명과 이메일, 연락처만 남겨주시면 담당자가 확인 후 발송합니다.",
+    "무인매장 관리 서비스 소개서를 PDF로 받아보실 수 있습니다. 회사명과 이메일, 연락처만 남겨주시면 바로 다운로드하실 수 있습니다.",
 };
-
-/** 소개서에 무엇이 들어 있는지 — 받기 전에 알면 남길 이유가 생긴다 */
-const CONTENTS = [
-  {
-    title: "관리 범위와 기능",
-    body: "운영 대시보드부터 A/S 바로출동서비스까지, 일곱 가지 기능이 어디까지를 맡는지 정리했습니다.",
-  },
-  {
-    title: "요금 구성",
-    body: "기본으로 제공되는 운영 대시보드에 어떤 옵션을 더할 수 있는지 담았습니다.",
-  },
-  {
-    title: "도입 절차",
-    body: "상담부터 관리 시작까지 각 단계에서 사장님이 하실 일과 반오토가 할 일을 나눠 적었습니다.",
-  },
-];
 
 export default function BrochurePage() {
   return (
@@ -50,31 +41,26 @@ export default function BrochurePage() {
           <h1 className="text-display text-ink mb-5 max-w-[18ch]">
             먼저 자료로 확인해 보셔도 됩니다
           </h1>
-          <p className="text-body-lg text-text-sub mb-10 max-w-[34rem]">
-            상담 전에 어떤 서비스인지 먼저 보고 싶으시다면 소개서를 보내드립니다. 담당자가 확인한 뒤
-            남겨주신 이메일로 발송해 드립니다.
+          <p className="text-body-lg text-text-sub mb-4 max-w-[34rem]">
+            상담 전에 어떤 서비스인지 먼저 보고 싶으시다면 소개서를 확인해 보세요. 아래에 정보를
+            남기시면 다음 화면에서 바로 받으실 수 있습니다.
+          </p>
+          <p className="text-caption text-text-sub mb-10">
+            PDF · {BROCHURE_FILE.pages}페이지 · {BROCHURE_FILE.size}
           </p>
 
-          <ul className="flex flex-col gap-5">
-            {CONTENTS.map((c) => (
-              <li key={c.title} className="flex gap-3">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="var(--color-brand)"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                  className="mt-1 shrink-0"
-                >
-                  <path d="m5 13 4 4L19 7" />
-                </svg>
+          {/* 목차는 실제 PDF 2쪽 `CONTENTS` 를 그대로 옮긴 것이다(`content/brochure.ts`).
+              전에는 파일이 없어 추측으로 세 줄을 적어 두었다 — 받기 전에 알려주는
+              자리이므로 문서에 실제로 있는 것만 적는다 */}
+          <ul className="flex flex-col gap-4">
+            {BROCHURE_CONTENTS.map((c) => (
+              <li key={c.no} className="flex gap-3">
+                <span className="text-label text-brand mt-1 shrink-0 font-semibold tabular-nums">
+                  {c.no}
+                </span>
                 <div>
                   <p className="text-h4 text-ink">{c.title}</p>
-                  <p className="text-body-sm text-text-sub mt-1.5 leading-[1.7]">
+                  <p className="text-body-sm text-text-sub mt-1 leading-[1.7]">
                     {formatCopy(c.body)}
                   </p>
                 </div>
@@ -93,7 +79,7 @@ export default function BrochurePage() {
 
         {/* ── 오른쪽: 폼 ── */}
         <div className="border-border rounded-[24px] border bg-white p-6 shadow-[var(--shadow-card)] md:p-8">
-          <h2 className="text-h3 text-ink mb-2">어디로 보내드릴까요</h2>
+          <h2 className="text-h3 text-ink mb-2">받으실 분 정보를 알려주세요</h2>
           <p className="text-body-sm text-text-sub mb-7">
             세 가지만 남겨주시면 됩니다. 다른 정보는 받지 않습니다.
           </p>
