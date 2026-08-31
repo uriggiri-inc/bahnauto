@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { digitsOnly } from "./contact-schema";
+import { digitsOnly, REFERRERS } from "./contact-schema";
 
 /**
- * 서비스 소개서 받기 스키마 — 회사명 · 이메일 · 연락처 세 개뿐이다.
+ * 서비스 소개서 받기 스키마 — 회사명 · 이메일 · 연락처 + 유입 경로(선택).
  *
- * ── 왜 세 개인가 ──
- * 소개서를 보내는 데 필요한 최소값이다. 상담 신청서와 같은 항목(업종·매장 수·
+ * ── 왜 이만큼인가 ──
+ * 앞의 셋은 소개서를 보내는 데 필요한 최소값이다. 상담 신청서와 같은 항목(업종·매장 수·
  * 지역)을 여기서도 받으면 "소개서만 받아보려던 사람"이 상담 폼을 다시 만난 셈이
  * 되어 이탈한다. 그리고 CLAUDE.md §1.2 는 개인정보 최소 수집을 요구한다 —
  * 목적(소개서 발송)에 필요하지 않은 항목은 받지 않는다.
@@ -17,33 +17,57 @@ import { digitsOnly } from "./contact-schema";
  * 운영 환경에서는 접수가 성사되지 않는다. 방침 개정과 저장소 연결을 **같이**
  * 하기 전에는 이 플래그를 올리지 않는다.
  *
+ * ── 유입 경로를 넣었다 (사용자 지시 2026-08-28) ──
+ * 앞의 셋만 받던 폼이었다. 유입 경로는 소개서를 보내는 데 **필요하지 않지만**,
+ * PRD §7.6 이 마케팅 채널 성과 측정용으로 **반드시 포함**하도록 요구하는 항목이다.
+ * 최소 수집 원칙(§1.2)과 부딪히지 않게 두 가지를 지킨다:
+ *   · **선택 항목이다.** 비워 두고도 제출된다 — 소개서를 받는 조건이 아니다
+ *   · 선택지는 상담 폼과 **같은 목록**(`REFERRERS`)을 쓴다. 폼마다 다른 항목을
+ *     두면 채널별 집계를 한 기준으로 볼 수 없다
+ *
+ * 동의 화면의 `수집 항목` 에도 함께 적어야 한다 — 받는 것과 고지하는 것이
+ * 어긋나면 그 자체가 문제다(`BrochureForm` 의 동의 블록).
+ *
  * ── 상담 리드와 섞지 않는다 ──
  * 소개서 요청과 도입 상담은 목적과 보유기간이 다르다(§1.2). 스키마를 따로 두어
  * 나중에 한쪽만 고치는 사고를 막는다.
  */
 
-export const brochureSchema = z.object({
-  company: z
-    .string()
-    .trim()
-    .min(2, "회사명 또는 매장명을 2자 이상 입력해 주세요")
-    .max(60, "회사명이 너무 깁니다"),
+export const brochureSchema = z
+  .object({
+    company: z
+      .string()
+      .trim()
+      .min(2, "회사명 또는 매장명을 2자 이상 입력해 주세요")
+      .max(60, "회사명이 너무 깁니다"),
 
-  // 소개서를 보낼 곳. 형식만 본다 — 존재 여부는 발송 시점에 드러난다.
-  email: z
-    .string()
-    .trim()
-    .max(120, "이메일 주소가 너무 깁니다")
-    .refine((v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), "이메일 주소를 정확히 입력해 주세요"),
+    // 소개서를 보낼 곳. 형식만 본다 — 존재 여부는 발송 시점에 드러난다.
+    email: z
+      .string()
+      .trim()
+      .max(120, "이메일 주소가 너무 깁니다")
+      .refine((v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), "이메일 주소를 정확히 입력해 주세요"),
 
-  // 저장·검증은 숫자만으로 한다. 화면 표시만 하이픈을 넣는다(상담 폼과 동일).
-  phone: z
-    .string()
-    .transform(digitsOnly)
-    .refine((v) => /^01[016789]\d{7,8}$/.test(v), "휴대폰 번호를 정확히 입력해 주세요"),
+    // 저장·검증은 숫자만으로 한다. 화면 표시만 하이픈을 넣는다(상담 폼과 동일).
+    phone: z
+      .string()
+      .transform(digitsOnly)
+      .refine((v) => /^01[016789]\d{7,8}$/.test(v), "휴대폰 번호를 정확히 입력해 주세요"),
 
-  agreePrivacy: z.literal(true, { message: "개인정보 수집·이용에 동의해 주세요" }),
-});
+    /*
+    선택 항목 — 빈 문자열을 허용한다(상담 폼과 같은 방식). `기타` 를 고른 경우에만
+    아래 `referrerDetail` 이 화면에 나타난다.
+  */
+    referrer: z.union([z.enum(REFERRERS), z.literal("")]).optional(),
+    referrerDetail: z.string().trim().max(50, "50자 이내로 입력해 주세요").optional(),
+
+    agreePrivacy: z.literal(true, { message: "개인정보 수집·이용에 동의해 주세요" }),
+  })
+  /*
+    `기타` 가 아니면 직접 입력값을 버린다. 남겨 두면 "인스타그램" 을 골랐는데
+    직접 입력 칸에 옛 문장이 딸려 들어간다(상담 폼과 같은 처리).
+  */
+  .transform((v) => (v.referrer === "기타" ? v : { ...v, referrerDetail: undefined }));
 
 export type BrochureInput = z.input<typeof brochureSchema>;
 export type BrochureData = z.output<typeof brochureSchema>;
