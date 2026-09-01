@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import { COMPANY, COMPANY_PENDING } from "@/content/company";
+import { COMPANY } from "@/content/company";
 
 /**
  * 4단 푸터 + 법정 사업자 정보 블록.
  *
  * ⚠️ 개인정보처리방침 링크는 **굵게 강조**한다(법적 권고).
- * ⚠️ 사업자 정보는 전 항목이 `[확정 필요 §13-A]` 상태다. 확정 전에는
- *    자리표시자임이 화면에서 드러나야 한다 — 더미값이 그대로 오픈되는 사고를 막는다.
+ * ⚠️ 사업자 정보는 2026-09-01 통신판매업신고번호가 들어오면서 **전 항목이 확정값**이
+ *    되었다. `pending: true` 를 붙이면 `[값]` 형태에 경고색으로 그려지는 장치는
+ *    그대로 남아 있다 — 미확정 값이 확정값처럼 오픈되는 사고를 막는 안전장치다.
  * ⚠️ 앱 로그인에는 반드시 "계약 고객 전용" 라벨이 따라붙는다(PRD §2.1).
  */
 
@@ -81,7 +82,7 @@ const DEFAULT_BUSINESS: BusinessItem[] = [
   { label: "상호명", value: COMPANY.name },
   { label: "대표자", value: COMPANY.ceo },
   { label: "사업자등록번호", value: COMPANY.bizNo },
-  { label: "통신판매업신고", value: COMPANY_PENDING.mailOrderNo, pending: true },
+  { label: "통신판매업신고", value: COMPANY.mailOrderNo },
   { label: "주소", value: COMPANY.address },
   { label: "개인정보보호책임자", value: COMPANY.privacyOfficer },
   { label: "대표전화", value: COMPANY.tel },

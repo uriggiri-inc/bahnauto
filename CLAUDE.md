@@ -245,6 +245,7 @@ Illustrator 는 그라디언트 스톱 팔레트 413개를 `<style>` 에 통째�
 `TODO` 로 남아 있는 것들:
 
 - `app/layout.tsx` — `metadataBase` 미설정 (도메인 미확정 → OG·canonical 이 상대경로)
-- `content/company.ts` — 통신판매업신고번호 없음
+- ~~`content/company.ts` — 통신판매업신고번호 없음~~ → 2026-09-01 `2024-대전유성-0719`
+  확정·기재. **약관·개인정보처리방침 원본 .docx 에는 아직 없다**(`scripts/DEPLOY.md` 5번)
 - `lib/regions.ts` — 행정안전부 최신 기준 대조 필요
 - 개인정보처리방침 제2조의 수집 항목과 `/contact` 폼의 실제 필드가 불일치
