@@ -14,9 +14,10 @@
  * | 요금 계산기 | 폐기하고 "도입 상담에서 안내"로 대체(사용자 확정 2026-08-27) |
  *
  * ── 금액은 하나뿐이다 ──
- * 화면에 뜨는 공개 금액은 기본료 **24,900원/월** 하나다. 근거가 아직 없어
- * `dummy.ts` 의 `DUMMY_BASE_PRICE` 를 거친다 — `DUMMY_CONTENT` 가 true 인 동안
- * "샘플 데이터" 배너가 함께 뜬다.
+ * 화면에 뜨는 공개 금액은 기본료 **24,900원/월(VAT 별도)** 하나다.
+ * 2026-09-02 사용자가 내부 확정 금액임을 확인해 `dummy.ts` 에서 나갔다 —
+ * 정본은 `content/stats.ts` 의 `BASE_PRICE` 이고, 더 이상 `DUMMY_CONTENT`
+ * 게이트에 걸리지 않는다.
  *
  * ⚠️ **옵션 금액을 이 파일에 적지 않는다.** 비공개가 기획 확정 사항이므로 값 자체를
  *    두지 않아야 새어 나갈 경로가 없다. 조합 요금은 상담에서 안내한다.
@@ -26,7 +27,7 @@
  * 여러 화면을 뒤져야 한다. 기간이 확정되면 그때 한 곳에 상수로 둔다.
  */
 
-import { DUMMY_BASE_PRICE } from "./dummy";
+import { BASE_PRICE } from "./stats";
 import { FEATURES, FEATURE_BY_KEY, type Feature } from "./features";
 
 /**
@@ -58,7 +59,7 @@ export type PlanBase = {
  */
 export const PLAN_BASE: PlanBase = {
   name: FEATURE_BY_KEY[BASE_FEATURE_KEY].title,
-  monthly: DUMMY_BASE_PRICE,
+  monthly: BASE_PRICE,
   cta: { label: "무료체험하기", href: "/trial" },
 };
 

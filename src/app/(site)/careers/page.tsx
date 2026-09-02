@@ -90,7 +90,9 @@ const FAQ = [
 export default function CareersPage() {
   return (
     <>
-      <DummyBanner what="근무 조건과 급여" />
+      {/* 급여·모집 지역은 2026-09-02 확정값으로 교체됐다(`매장 별 협의`·`전지역`).
+          남은 잠정값은 근무 시간·횟수·1회 소요·정산 주기·우대 조건이다 */}
+      <DummyBanner what="근무 조건" />
 
       {/* ══ 히어로 ═══════════════════════════════════════════════ */}
       <section className="from-brand-50 bg-gradient-to-b to-white">

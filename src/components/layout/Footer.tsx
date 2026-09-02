@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { COMPANY } from "@/content/company";
+import { LEGAL_URLS } from "@/content/legal/urls";
 
 /**
  * 4단 푸터 + 법정 사업자 정보 블록.
@@ -192,13 +193,39 @@ export function Footer({
           </dl>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/8 pt-4">
-            <Link href="/terms" className="text-caption text-white/60 hover:text-white">
+            {/*
+              2026-09-02 사용자 지시로 **노션 원본으로 직접 보낸다**(`content/legal/urls.ts`).
+              사이트 안의 사본(`/terms`·`/privacy`)을 거치면 법무가 고칠 때마다 옮겨
+              적어야 하고 그 사이 두 문서가 어긋난다.
+
+              새 창으로 여는 이유는 컬럼 링크와 같다 — 읽던 페이지를 잃지 않게 한다.
+              `next/link` 를 쓰지 않는 것도 같은 이유다(외부 주소에 프리페치는 무의미).
+            */}
+            <a
+              href={LEGAL_URLS.terms}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-caption text-white/60 hover:text-white"
+            >
               이용약관
-            </Link>
+              <span className="sr-only"> (새 창으로 열림)</span>
+              <span aria-hidden className="ml-1 text-white/40">
+                ↗
+              </span>
+            </a>
             {/* 법적 권고 — 개인정보처리방침은 굵게 강조 */}
-            <Link href="/privacy" className="text-caption font-bold text-white/85 hover:text-white">
+            <a
+              href={LEGAL_URLS.privacy}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-caption font-bold text-white/85 hover:text-white"
+            >
               개인정보처리방침
-            </Link>
+              <span className="sr-only"> (새 창으로 열림)</span>
+              <span aria-hidden className="ml-1 text-white/50">
+                ↗
+              </span>
+            </a>
             <span className="text-caption text-white/30">운영: 우리끼리(주)</span>
             <span className="text-caption text-white/30 sm:ml-auto">{copyright}</span>
           </div>

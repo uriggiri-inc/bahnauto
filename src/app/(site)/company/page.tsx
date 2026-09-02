@@ -6,7 +6,8 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { Stat } from "@/components/ui/Stat";
 import { buttonClasses } from "@/components/ui/Button";
-import { DUMMY_COMPANY, DUMMY_STATS } from "@/content/dummy";
+import { DUMMY_COMPANY } from "@/content/dummy";
+import { SITE_STATS } from "@/content/stats";
 import { formatCopy } from "@/components/ui/Copy";
 import { FaqTeaser } from "@/components/marketing/FaqTeaser";
 
@@ -30,7 +31,9 @@ export const metadata: Metadata = {
 export default function CompanyPage() {
   return (
     <>
-      <DummyBanner what="실적 수치와 연혁" />
+      {/* 실적 수치는 2026-09-02 확정값으로 교체됐다(`content/stats.ts`).
+          이 페이지에 남은 잠정값은 연혁뿐이다 */}
+      <DummyBanner what="연혁" />
 
       {/* ══ 히어로 ═══════════════════════════════════════════════ */}
       <section className="from-brand-50 bg-gradient-to-b to-white">
@@ -84,13 +87,13 @@ export default function CompanyPage() {
         <div className="container-ba">
           <SectionHeader
             onDark
-            title="숫자로 보면 이렇습니다"
-            lead="관리 매장이 늘어난 만큼 기록도 함께 쌓였습니다."
+            title="우리끼리(주)는 이런 회사입니다"
+            lead="무인 키즈카페 프랜차이즈를 직접 운영하며 등록하고 확보한 것들입니다."
           />
           {/* 홈 "출시 이유" 와 같은 격자다 — 좁은 화면 2열(사용자 지시 2026-08-18).
               같은 데이터를 두 화면이 다른 배치로 보여주면 같은 실적인지 알기 어렵다 */}
           <div className="grid grid-cols-2 gap-x-5 gap-y-6 sm:gap-8 lg:grid-cols-4">
-            {DUMMY_STATS.map((s, i) => (
+            {SITE_STATS.map((s, i) => (
               <Reveal key={s.label} delayMs={i * 60}>
                 <Stat value={s.value} unit={s.unit} label={s.label} tone="onDark" />
               </Reveal>
