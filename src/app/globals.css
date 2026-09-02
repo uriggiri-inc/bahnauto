@@ -127,6 +127,17 @@
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 
   --animate-reveal: ba-reveal var(--dur-reveal) var(--ease-brand) both;
+  /*
+    통계 칸의 **글자 값** 전용 등장 모션(`ui/Stat.tsx`).
+
+    같은 줄에서 숫자는 카운트업으로 올라오는데 `국내 최초`·`특허 보유` 같은 글자는
+    올라올 수가 없다(셀 수 없으니까). 그대로 두면 네 칸 중 둘만 움직여 줄이 따로
+    논다. 그래서 글자는 **아래에서 밀려 올라오게** 해 같은 몸짓으로 읽히게 한다.
+
+    지속시간을 `--dur-counter` 로 맞추는 것이 핵심이다 — 숫자가 다 올라간 순간
+    글자도 제자리에 선다. 모션 축소에서는 이 토큰이 1ms 로 내려간다.
+  */
+  --animate-stat-rise: ba-stat-rise var(--dur-counter) var(--ease-brand) both;
   --animate-spin-slow: ba-spin 0.7s linear infinite;
 
   /* ── Breakpoints ──────────────────────────────────────────*/
@@ -423,6 +434,18 @@ html {
     transform: none;
   }
 }
+/* 통계 글자 값 — 거리는 글자 크기에 비례해야 한다(`text-h1` 은 clamp 로 변한다).
+   px 로 박으면 좁은 화면에서 과하게 움직인다. */
+@keyframes ba-stat-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.32em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 @keyframes ba-orbit {
   from {
     transform: rotate(0);
@@ -433,6 +456,14 @@ html {
 }
 @media (prefers-reduced-motion: reduce) {
   @keyframes ba-reveal {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes ba-stat-rise {
     from {
       opacity: 0;
     }

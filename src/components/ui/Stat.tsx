@@ -23,7 +23,14 @@ import { easeOutCubic, readDurationMs, REDUCED_MS } from "@/lib/motion";
  * 모션 축소에서 토큰이 1ms 로 내려가므로 컴포넌트에서 `matchMedia` 분기를 두지
  * 않는다(`CLAUDE.md` §7). 그때는 애니메이션 없이 최종값 그대로 남는다.
  *
- * 숫자가 아닌 값(`"10+"` 같은 것)은 파싱하지 못하므로 그대로 정적 렌더한다.
+ * ── 숫자가 아닌 값도 움직인다 (2026-09-02) ──
+ * `국내 최초`·`특허 보유` 처럼 셀 수 없는 값은 카운트업을 할 수 없다. 예전에는
+ * 그대로 정적 렌더했는데, 실적 4종이 숫자 둘 + 글자 둘로 바뀌면서 **같은 줄에서
+ * 두 칸만 움직이는** 상태가 됐다(사용자 지적). 지금은 글자 값에 `ba-stat-rise`
+ * 를 붙여 아래에서 밀려 올라오게 한다.
+ *
+ * 지속시간이 둘 다 `--dur-counter` 라 **숫자가 다 오르는 순간 글자도 제자리에
+ * 선다.** 값의 종류를 바꿔도 줄 전체가 한 몸짓으로 읽힌다.
  */
 
 export type StatProps = {
@@ -55,13 +62,21 @@ export function Stat({ value, unit, label, tone = "default", align = "left" }: S
   const ref = useRef<HTMLSpanElement>(null);
   // 초기값 = 최종값. 서버 HTML 이 그대로 읽히는 상태로 나간다
   const [shown, setShown] = useState<number | null>(target);
+  /**
+   * 글자 값(`국내 최초`·`특허 보유`)의 등장 모션을 켰는가.
+   *
+   * 서버 렌더에서는 `false` 라 아무 클래스도 붙지 않는다 — 즉 **글자는 처음부터
+   * 보인다.** `shown` 과 같은 원칙이다. 화면에 들어온 뒤에만 `true` 가 되어
+   * 키프레임이 한 번 재생된다. JS 가 실패해도 사라지지 않는다.
+   */
+  const [risen, setRisen] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || target === null) return;
+    if (!el) return;
 
     const dur = readDurationMs(el, "--dur-counter", 1400);
-    if (dur <= REDUCED_MS) return; // 모션 축소 — 최종값 그대로 둔다
+    if (dur <= REDUCED_MS) return; // 모션 축소 — 최종 상태 그대로 둔다
 
     let raf = 0;
     let played = false;
@@ -71,6 +86,16 @@ export function Stat({ value, unit, label, tone = "default", align = "left" }: S
         if (!entry.isIntersecting || played) return;
         played = true;
         io.disconnect();
+
+        /*
+          숫자가 아니면 셀 수가 없다. 그렇다고 가만히 두면 같은 줄에서 숫자 칸만
+          움직여 네 칸이 따로 논다 — 대신 아래에서 밀려 올라오게 한다.
+          지속시간이 `--dur-counter` 로 같아서 숫자가 다 오르는 순간 함께 멈춘다.
+        */
+        if (target === null) {
+          setRisen(true);
+          return;
+        }
 
         const start = performance.now();
         const step = (now: number) => {
@@ -100,7 +125,12 @@ export function Stat({ value, unit, label, tone = "default", align = "left" }: S
       >
         <span
           ref={ref}
-          className={cn("text-h1 tabular-nums", onDark ? "text-brand-300" : "text-brand")}
+          className={cn(
+            "text-h1 tabular-nums",
+            onDark ? "text-brand-300" : "text-brand",
+            // 글자 값 전용. 숫자는 카운트업이 대신하므로 붙이지 않는다
+            risen && "motion-safe:animate-stat-rise",
+          )}
         >
           {shown === null ? value : shown.toLocaleString("ko-KR")}
         </span>
