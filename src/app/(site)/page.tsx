@@ -15,7 +15,8 @@ import { Reveal } from "@/components/ui/Reveal";
 import { ScrollCue } from "@/components/ui/ScrollCue";
 import { Stat } from "@/components/ui/Stat";
 import { buttonClasses } from "@/components/ui/Button";
-import { DUMMY_STATS, DUMMY_COMPANY } from "@/content/dummy";
+import { DUMMY_COMPANY } from "@/content/dummy";
+import { SITE_STATS } from "@/content/stats";
 import { activeSections, type HomeSection } from "@/content/home.config";
 import { ContactForm } from "./contact/ContactForm";
 import { formatCopy } from "@/components/ui/Copy";
@@ -32,8 +33,10 @@ import { formatCopy } from "@/components/ui/Copy";
  * 절차처럼 구조가 고정된 데이터다. 이것들까지 설정으로 밀어 넣으면 설정이
  * 두 번째 코드베이스가 된다.
  *
- * ⚠️ 실적 수치·후기·요금은 전부 잠정값이다. `DummyBanner` 가 상단에서
- *    그 사실을 밝힌다. 개별 섹션에서 배너 조건을 바꾸지 않는다.
+ * ⚠️ 후기·요금은 잠정값이다. `DummyBanner` 가 상단에서 그 사실을 밝힌다.
+ *    개별 섹션에서 배너 조건을 바꾸지 않는다.
+ *    실적 수치는 2026-09-02 검증된 확정값으로 교체됐다 — 정본은
+ *    `content/stats.ts` 이고 `dummy.ts` 에 있지 않다.
  */
 
 /*
@@ -209,16 +212,16 @@ function renderBody(s: HomeSection) {
           <NumberedCards items={WHY} cols={cols} />
 
           {/*
-            실적 4종. 순서는 기획 지정 — 가맹점 수 / 재계약률 / 누적방문 / 연간이용자.
+            실적·자격 4종. 값의 정본은 `content/stats.ts` 이고 순서는 사용자 지정이다.
 
             좁은 화면도 **2열**이다(사용자 지시 2026-08-18). 1열 + gap-8 이면 네 항목이
-            세로로 늘어져 화면 하나를 통째로 먹었다. 숫자가 가장 긴 `12,400회` 가
-            360px 폭 한 칸(약 150px)에 들어가는지 실측해 2열로 정했다 —
-            `text-h1` 이 그 폭에서 clamp 최솟값 28px 로 내려가기 때문에 여유가 있다.
-            세로 간격만 줄인다(gap-y-6): 가로 간격까지 좁히면 두 열이 붙어 읽힌다.
+            세로로 늘어져 화면 하나를 통째로 먹었다. 폭은 예전 최장값 `12,400회` 로
+            실측해 정했는데, 지금 값 중 가장 긴 `국내 최초`·`특허 보유` 는 그보다
+            짧으므로 여유가 있다 — `text-h1` 이 그 폭에서 clamp 최솟값 28px 로
+            내려간다. 세로 간격만 줄인다(gap-y-6): 가로까지 좁히면 두 열이 붙어 읽힌다.
           */}
           <div className="border-border mt-10 grid grid-cols-2 gap-x-5 gap-y-6 border-t pt-8 sm:mt-14 sm:gap-8 sm:pt-10 lg:grid-cols-4">
-            {DUMMY_STATS.map((st, i) => (
+            {SITE_STATS.map((st, i) => (
               <Reveal key={st.label} delayMs={i * 60}>
                 <Stat value={st.value} unit={st.unit} label={st.label} />
               </Reveal>
@@ -367,7 +370,9 @@ export default function HomePage() {
       <ResetScrollOnReload />
 
       {/* 실적 수치·후기·요금이 전부 샘플이다 */}
-      <DummyBanner what="실적 수치와 후기, 요금" />
+      {/* 2026-09-02 실적 수치와 기본료가 모두 확정값이 됐다(`content/stats.ts`).
+          홈에 남은 잠정값은 후기뿐이다 */}
+      <DummyBanner what="후기" />
 
       {/* 목차 장치(좌측 레일 `HomeSideNav`, 히어로 칩 `HeroChips`)는 사용자
           확정(2026-08-14)으로 홈에서 전부 뺐다 — SNB 는 기능별 상세 페이지

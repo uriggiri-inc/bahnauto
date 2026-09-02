@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { DummyBanner } from "@/components/marketing/DummyBanner";
 import { PageHero } from "@/components/marketing/PageHero";
 import { PlanCards } from "@/components/marketing/PlanCards";
 import { PlanCompositionTable } from "@/components/marketing/PlanCompositionTable";
@@ -41,7 +40,18 @@ export const metadata: Metadata = {
 export default function PricingPage() {
   return (
     <>
-      <DummyBanner what="요금" />
+      {/*
+        "샘플 데이터" 배너를 **뗐다 (2026-09-02)**.
+
+        이 페이지에서 잠정값이었던 것은 기본료 하나뿐이었는데, 사용자가 내부 확정
+        금액임을 확인해 `content/stats.ts` 의 `BASE_PRICE` 로 옮겼다. 옵션은 원래
+        금액을 두지 않고(비공개 확정), 구성표는 담당자 정본 문서에서 온 값이다.
+        즉 이 화면에 남은 미확정 값이 없다.
+
+        ⚠️ 배너 조건을 페이지마다 임의로 바꾸지 않는다는 원칙(`CLAUDE.md`)의
+           예외가 아니다 — 가릴 값이 사라져서 뗀 것이다. 이 페이지에 잠정값을
+           다시 들이면 배너도 함께 되살린다.
+      */}
 
       {/* ══ 히어로 — 한 화면 꽉 참 · 강조는 형광펜 하나만 ═══════ */}
       <PageHero
