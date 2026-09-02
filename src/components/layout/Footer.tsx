@@ -45,7 +45,7 @@ const DEFAULT_COLUMNS: Column[] = [
       { label: "주요기능", href: "/features/dashboard" },
       { label: "도입 절차", href: "/process" },
       { label: "요금 안내", href: "/pricing" },
-      { label: "도입 사례", href: "/cases" },
+      /* `도입 사례` 는 2026-09-02 섹션째 폐기했다(사용자 지시). 페이지·데이터 모두 없다 */
     ],
   },
   {

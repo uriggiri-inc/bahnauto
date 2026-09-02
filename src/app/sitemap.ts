@@ -36,7 +36,7 @@ const STATIC_PATHS = [
   "/process",
   "/system",
   "/service",
-  "/cases",
+  /* `/cases` 는 2026-09-02 폐기했다 — 페이지가 없으므로 색인 요청도 하지 않는다 */
   "/faq",
   "/news",
   "/careers",
