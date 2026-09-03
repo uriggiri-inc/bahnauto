@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { MobileStickyCTA } from "@/components/layout/MobileStickyCTA";
 import { ScrollDamper } from "@/components/marketing/ScrollDamper";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { GoogleTagManager } from "@/components/analytics/GoogleTagManager";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationJsonLd } from "@/lib/structured-data";
 
@@ -44,6 +45,8 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <MobileStickyCTA />
 
       <GoogleAnalytics />
+      {/* 픽셀·전환 태그 전용. GA4 는 위 gtag 가 정본 — GoogleTagManager.tsx 참조 */}
+      <GoogleTagManager />
     </>
   );
 }
