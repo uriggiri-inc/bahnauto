@@ -3,6 +3,10 @@ import type { SubmitResult } from "./form-result";
 /**
  * 반오토 영업관리 접수 API 로 신청을 보낸다 — 세 폼(무료체험·매니저 지원·도입 상담)의 **유일한 저장소**.
  *
+ * ⚠️ 운영(bahnauto.kr)은 GitHub Pages 정적 빌드라 이 파일(서버 액션)은 **쓰이지 않는다** —
+ *    정적 빌드에서는 `form-submit.static.ts` 가 브라우저에서 공개키로 같은 API 를 부른다.
+ *    이 파일은 서버가 있는 배포(Cloudflare Workers 등)로 옮길 때를 위해 남긴다.
+ *
  * 문서: https://app.bahnauto.kr/developers/leads-api
  *
  * 서버 액션("use server")에서만 부른다 — 클라이언트 컴포넌트에서 import 하지 않는다.

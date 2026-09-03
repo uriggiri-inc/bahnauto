@@ -116,6 +116,13 @@ jobs:
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_NEWS_DB_ID: ${{ secrets.NOTION_NEWS_DB_ID }}
+          # 반오토 영업관리 접수 API — 정적 사이트라 브라우저가 직접 부른다(공개키 · 허용 출처 검사).
+          # Settings → Secrets and variables → Actions → **Variables** 에 둘 다 넣는다.
+          # 둘 중 하나라도 없으면 폼이 「접수 준비 중」 안내로 떨어진다(받은 척하지 않는다).
+          #   NEXT_PUBLIC_CRM_INTAKE_URL   https://app.bahnauto.kr/api/v1/public/leads
+          #   NEXT_PUBLIC_CRM_PUBLIC_KEY   반오토 환경설정 › API 관리 → 「브라우저용 공개키」 발급 (bao_pub_…)
+          NEXT_PUBLIC_CRM_INTAKE_URL: ${{ vars.NEXT_PUBLIC_CRM_INTAKE_URL }}
+          NEXT_PUBLIC_CRM_PUBLIC_KEY: ${{ vars.NEXT_PUBLIC_CRM_PUBLIC_KEY }}
         run: npm run build:static
 
       - name: 산출물 점검
