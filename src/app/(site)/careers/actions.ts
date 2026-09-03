@@ -2,6 +2,7 @@
 
 import { careersSchema } from "@/lib/careers-schema";
 import type { SubmitResult } from "@/lib/form-result";
+import { crmConfigured, postLead } from "@/lib/crm-intake";
 
 /**
  * 매장매니저 지원서 접수 — 서버 재검증 지점.
@@ -20,7 +21,9 @@ import type { SubmitResult } from "@/lib/form-result";
  * 지원서 저장소가 연결되었는가. 상담 리드(`contact/actions.ts`)와 **별도 플래그**다 —
  * 하나만 켜는 실수를 막기 위해 일부러 공유하지 않는다.
  */
-const APPLICANT_SINK_CONFIGURED = false;
+// 2026-09-05: 저장소는 반오토 영업관리 접수 API 다(lib/crm-intake.ts). 유형 careers 로 들어가
+// 상담 리드(contact)와 다른 갈래로 관리·파기된다.
+const APPLICANT_SINK_CONFIGURED = crmConfigured();
 
 export async function submitApplication(raw: unknown): Promise<SubmitResult> {
   const parsed = careersSchema.safeParse(raw);
@@ -45,8 +48,12 @@ export async function submitApplication(raw: unknown): Promise<SubmitResult> {
     return { ok: true };
   }
 
-  // TODO(저장소 연결): 지원서를 **상담 리드와 다른 저장소**에 저장한다.
-  //  · 미채택자 정보 파기 시점을 함께 기록한다
-  //  · 보유기간은 개인정보처리방침에 기재한 값과 일치시킨다
-  return { ok: true };
+  const d = parsed.data;
+  return postLead("careers", {
+    name: d.name, phone: d.phone, agreePrivacy: true,
+    homeSido: d.homeSido, homeSigungu: d.homeSigungu, workSido: d.workSido, workSigungu: d.workSigungu,
+    timeSlots: d.timeSlots, transport: d.transport,
+    experience: d.experience || undefined, message: d.message || undefined,
+    channel: "홈페이지 매니저 지원",
+  });
 }

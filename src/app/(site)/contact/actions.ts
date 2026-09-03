@@ -2,6 +2,7 @@
 
 import { contactSchema } from "@/lib/contact-schema";
 import type { SubmitResult } from "@/lib/form-result";
+import { crmConfigured, postLead } from "@/lib/crm-intake";
 
 /**
  * 상담 신청 접수 — **서버 재검증 지점**.
@@ -28,7 +29,8 @@ import type { SubmitResult } from "@/lib/form-result";
  * 띄우고 실제로는 아무 데도 저장되지 않으면 **리드가 조용히 사라지기 때문이다.**
  * 개발 환경에서는 화면 흐름을 확인해야 하므로 통과시킨다.
  */
-const LEAD_SINK_CONFIGURED = false;
+// 2026-09-05: 저장소는 반오토 영업관리 접수 API 다(lib/crm-intake.ts). 서버 환경변수가 둘 다 있을 때만 켜진다.
+const LEAD_SINK_CONFIGURED = crmConfigured();
 
 export async function submitContact(raw: unknown): Promise<SubmitResult> {
   const parsed = contactSchema.safeParse(raw);
@@ -56,10 +58,13 @@ export async function submitContact(raw: unknown): Promise<SubmitResult> {
     return { ok: true };
   }
 
-  // TODO(저장소 연결): 상담 리드를 저장한다.
-  //  · CLAUDE.md §1.2 — 상담 리드와 채용 지원 데이터는 **분리 저장**한다(보유기간 정책이 다름)
-  //  · 보유기간과 파기 시점을 개인정보처리방침에 기재한 값과 일치시킨다
-  //  · 저장 실패는 반드시 사용자에게 알린다. 조용히 삼키면 리드가 사라진다
-  //  · 알림 메일·메시지에도 개인정보 최소 원칙을 적용한다
-  return { ok: true };
+  // 반오토 영업관리(접수 API)에 유형 contact 로 저장한다 — 채용 지원(careers)과 유형이 달라 분리 관리된다.
+  // 저장 실패는 postLead 가 사용자에게 돌려준다. 조용히 삼키지 않는다.
+  const d = parsed.data;
+  return postLead("contact", {
+    name: d.name, phone: d.phone, agreePrivacy: true, agreeMarketing: d.agreeMarketing,
+    storeType: d.storeType, sido: d.sido, sigungu: d.sigungu, storeCount: d.storeCount,
+    visits: d.visits || undefined, message: d.message || undefined,
+    referrer: d.referrer || undefined, referrerDetail: d.referrerDetail || undefined,
+  });
 }
