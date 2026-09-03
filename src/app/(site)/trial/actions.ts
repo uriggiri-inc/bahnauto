@@ -2,6 +2,7 @@
 
 import { trialSchema } from "@/lib/trial-schema";
 import type { SubmitResult } from "@/lib/form-result";
+import { crmConfigured, postLead } from "@/lib/crm-intake";
 
 /**
  * 무료체험 신청 접수 — **서버 재검증 지점**.
@@ -27,7 +28,9 @@ import type { SubmitResult } from "@/lib/form-result";
  * 둘 중 하나라도 빠진 채로 접수를 열면, 방침에 없는 목적으로 개인정보를 받거나
  * 신청이 조용히 사라지는 상태가 된다.
  */
-const TRIAL_SINK_CONFIGURED = false;
+// 2026-09-05: 저장소는 반오토 영업관리 접수 API 다. 서버 환경변수 CRM_INTAKE_URL · CRM_API_KEY 가
+// 둘 다 있을 때만 켜진다(lib/crm-intake.ts). 방침 제1·2·3조에 무료체험 신청 접수를 추가했다.
+const TRIAL_SINK_CONFIGURED = crmConfigured();
 
 export async function submitTrial(raw: unknown): Promise<SubmitResult> {
   const parsed = trialSchema.safeParse(raw);
@@ -55,9 +58,14 @@ export async function submitTrial(raw: unknown): Promise<SubmitResult> {
     return { ok: true };
   }
 
-  // TODO(저장소 연결): 체험 신청을 **상담 리드·채용 지원·소개서 요청과 다른
-  //  저장소**에 저장한다.
-  //  · 보유기간과 파기 시점을 개인정보처리방침에 기재한 값과 일치시킨다
-  //  · 체험 계정 발급 안내에도 개인정보 최소 원칙을 적용한다
-  return { ok: true };
+  // 반오토 영업관리(접수 API)에 저장한다 — 유형 trial 로 들어가 상담 리드·채용 지원과 분리 관리된다.
+  // 보유기간·파기는 반오토 영업관리 화면에서 한다(개인정보처리방침 제3조).
+  const { name, phone, company } = parsed.data;
+  return postLead("trial", {
+    name,
+    phone,
+    company,
+    agreePrivacy: true,
+    channel: "홈페이지 무료체험",
+  });
 }
