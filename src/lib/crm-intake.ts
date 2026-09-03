@@ -24,7 +24,10 @@ export function crmConfigured(): boolean {
 
 export type LeadType = "trial" | "careers" | "contact";
 
-export async function postLead(type: LeadType, payload: Record<string, unknown>): Promise<SubmitResult> {
+export async function postLead(
+  type: LeadType,
+  payload: Record<string, unknown>,
+): Promise<SubmitResult> {
   const url = process.env.CRM_INTAKE_URL;
   const key = process.env.CRM_API_KEY;
   if (!url || !key) return { ok: false, message: "접수 저장소가 연결되어 있지 않습니다." };
@@ -33,7 +36,10 @@ export async function postLead(type: LeadType, payload: Record<string, unknown>)
   try {
     res = await fetch(url, {
       method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json; charset=utf-8" },
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json; charset=utf-8",
+      },
       body: JSON.stringify({ ...payload, type, submittedAt: new Date().toISOString() }),
       cache: "no-store",
       signal: AbortSignal.timeout(10_000),
@@ -47,11 +53,23 @@ export async function postLead(type: LeadType, payload: Record<string, unknown>)
   if (res.ok) return { ok: true };
 
   let body: { error?: string; fieldErrors?: Record<string, string> } = {};
-  try { body = await res.json(); } catch { /* 본문 없음 */ }
+  try {
+    body = await res.json();
+  } catch {
+    /* 본문 없음 */
+  }
   console.error(`[crm] ${type} 접수 거절 (${res.status})`); // 값은 남기지 않는다
 
   if (res.status === 400 && body.fieldErrors) {
-    return { ok: false, message: body.error ?? "입력값을 다시 확인해 주세요", fieldErrors: body.fieldErrors };
+    return {
+      ok: false,
+      message: body.error ?? "입력값을 다시 확인해 주세요",
+      fieldErrors: body.fieldErrors,
+    };
   }
-  return { ok: false, message: "접수 처리 중 문제가 생겼습니다. 잠시 후 다시 시도하거나 전화(1899-3635)로 말씀해 주세요." };
+  return {
+    ok: false,
+    message:
+      "접수 처리 중 문제가 생겼습니다. 잠시 후 다시 시도하거나 전화(1899-3635)로 말씀해 주세요.",
+  };
 }

@@ -50,10 +50,17 @@ export async function submitApplication(raw: unknown): Promise<SubmitResult> {
 
   const d = parsed.data;
   return postLead("careers", {
-    name: d.name, phone: d.phone, agreePrivacy: true,
-    homeSido: d.homeSido, homeSigungu: d.homeSigungu, workSido: d.workSido, workSigungu: d.workSigungu,
-    timeSlots: d.timeSlots, transport: d.transport,
-    experience: d.experience || undefined, message: d.message || undefined,
+    name: d.name,
+    phone: d.phone,
+    agreePrivacy: true,
+    homeSido: d.homeSido,
+    homeSigungu: d.homeSigungu,
+    workSido: d.workSido,
+    workSigungu: d.workSigungu,
+    timeSlots: d.timeSlots,
+    transport: d.transport,
+    experience: d.experience || undefined,
+    message: d.message || undefined,
     channel: "홈페이지 매니저 지원",
   });
 }

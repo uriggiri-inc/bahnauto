@@ -27,9 +27,11 @@ const KEY = process.env.NEXT_PUBLIC_CRM_PUBLIC_KEY;
 const PREVIEW_NOTICE =
   "이 화면은 검토용 미리보기라 접수가 되지 않습니다. 실제 신청은 정식 오픈 후 가능합니다.";
 const NOT_READY = {
-  trial: "지금은 체험 온라인 신청이 준비 중입니다. 전화(1899-3635)나 카카오톡으로 말씀해 주시면 담당자가 체험 계정과 사용 방법을 안내해 드리겠습니다.",
+  trial:
+    "지금은 체험 온라인 신청이 준비 중입니다. 전화(1899-3635)나 카카오톡으로 말씀해 주시면 담당자가 체험 계정과 사용 방법을 안내해 드리겠습니다.",
   careers: "지금은 온라인 지원 접수가 준비 중입니다. 전화로 연락 주시면 안내해 드리겠습니다.",
-  contact: "지금은 온라인 접수가 준비 중입니다. 전화 또는 카카오톡으로 연락 주시면 바로 도와드리겠습니다.",
+  contact:
+    "지금은 온라인 접수가 준비 중입니다. 전화 또는 카카오톡으로 연락 주시면 바로 도와드리겠습니다.",
 } as const;
 
 function fieldErrorsOf(issues: { path: PropertyKey[]; message: string }[]) {
@@ -42,17 +44,31 @@ function fieldErrorsOf(issues: { path: PropertyKey[]; message: string }[]) {
   return fieldErrors;
 }
 
-async function post(type: keyof typeof NOT_READY, payload: Record<string, unknown>): Promise<SubmitResult> {
+async function post(
+  type: keyof typeof NOT_READY,
+  payload: Record<string, unknown>,
+): Promise<SubmitResult> {
   if (!URL || !KEY) {
-    return { ok: false, message: process.env.NODE_ENV === "production" ? NOT_READY[type] : PREVIEW_NOTICE };
+    return {
+      ok: false,
+      message: process.env.NODE_ENV === "production" ? NOT_READY[type] : PREVIEW_NOTICE,
+    };
   }
   let res: Response;
   try {
     res = await fetch(URL, {
       method: "POST",
-      headers: { Authorization: `Bearer ${KEY}`, "Content-Type": "application/json; charset=utf-8" },
+      headers: {
+        Authorization: `Bearer ${KEY}`,
+        "Content-Type": "application/json; charset=utf-8",
+      },
       // website: 허니팟 — 사람은 이 칸을 채울 수 없다. 늘 비워 보낸다
-      body: JSON.stringify({ ...payload, type, website: "", submittedAt: new Date().toISOString() }),
+      body: JSON.stringify({
+        ...payload,
+        type,
+        website: "",
+        submittedAt: new Date().toISOString(),
+      }),
       signal: AbortSignal.timeout(10_000),
     });
   } catch {
@@ -62,42 +78,85 @@ async function post(type: keyof typeof NOT_READY, payload: Record<string, unknow
   if (res.ok) return { ok: true };
 
   let body: { error?: string; fieldErrors?: Record<string, string> } = {};
-  try { body = await res.json(); } catch { /* 본문 없음 */ }
-  if (res.status === 400 && body.fieldErrors) {
-    return { ok: false, message: body.error ?? "입력값을 다시 확인해 주세요", fieldErrors: body.fieldErrors };
+  try {
+    body = await res.json();
+  } catch {
+    /* 본문 없음 */
   }
-  if (res.status === 429) return { ok: false, message: "요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요." };
-  return { ok: false, message: "접수 처리 중 문제가 생겼습니다. 잠시 후 다시 시도하거나 전화(1899-3635)로 말씀해 주세요." };
+  if (res.status === 400 && body.fieldErrors) {
+    return {
+      ok: false,
+      message: body.error ?? "입력값을 다시 확인해 주세요",
+      fieldErrors: body.fieldErrors,
+    };
+  }
+  if (res.status === 429)
+    return { ok: false, message: "요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요." };
+  return {
+    ok: false,
+    message:
+      "접수 처리 중 문제가 생겼습니다. 잠시 후 다시 시도하거나 전화(1899-3635)로 말씀해 주세요.",
+  };
 }
 
 export async function submitContact(raw: unknown): Promise<SubmitResult> {
   const parsed = contactSchema.safeParse(raw);
-  if (!parsed.success) return { ok: false, message: "입력값을 다시 확인해 주세요", fieldErrors: fieldErrorsOf(parsed.error.issues) };
+  if (!parsed.success)
+    return {
+      ok: false,
+      message: "입력값을 다시 확인해 주세요",
+      fieldErrors: fieldErrorsOf(parsed.error.issues),
+    };
   const d = parsed.data;
   return post("contact", {
-    name: d.name, phone: d.phone, agreePrivacy: true, agreeMarketing: d.agreeMarketing,
-    storeType: d.storeType, sido: d.sido, sigungu: d.sigungu, storeCount: d.storeCount,
-    visits: d.visits || undefined, message: d.message || undefined,
-    referrer: d.referrer || undefined, referrerDetail: d.referrerDetail || undefined,
+    name: d.name,
+    phone: d.phone,
+    agreePrivacy: true,
+    agreeMarketing: d.agreeMarketing,
+    storeType: d.storeType,
+    sido: d.sido,
+    sigungu: d.sigungu,
+    storeCount: d.storeCount,
+    visits: d.visits || undefined,
+    message: d.message || undefined,
+    referrer: d.referrer || undefined,
+    referrerDetail: d.referrerDetail || undefined,
   });
 }
 
 export async function submitApplication(raw: unknown): Promise<SubmitResult> {
   const parsed = careersSchema.safeParse(raw);
-  if (!parsed.success) return { ok: false, message: "입력값을 다시 확인해 주세요", fieldErrors: fieldErrorsOf(parsed.error.issues) };
+  if (!parsed.success)
+    return {
+      ok: false,
+      message: "입력값을 다시 확인해 주세요",
+      fieldErrors: fieldErrorsOf(parsed.error.issues),
+    };
   const d = parsed.data;
   return post("careers", {
-    name: d.name, phone: d.phone, agreePrivacy: true,
-    homeSido: d.homeSido, homeSigungu: d.homeSigungu, workSido: d.workSido, workSigungu: d.workSigungu,
-    timeSlots: d.timeSlots, transport: d.transport,
-    experience: d.experience || undefined, message: d.message || undefined,
+    name: d.name,
+    phone: d.phone,
+    agreePrivacy: true,
+    homeSido: d.homeSido,
+    homeSigungu: d.homeSigungu,
+    workSido: d.workSido,
+    workSigungu: d.workSigungu,
+    timeSlots: d.timeSlots,
+    transport: d.transport,
+    experience: d.experience || undefined,
+    message: d.message || undefined,
     channel: "홈페이지 매니저 지원",
   });
 }
 
 export async function submitTrial(raw: unknown): Promise<SubmitResult> {
   const parsed = trialSchema.safeParse(raw);
-  if (!parsed.success) return { ok: false, message: "입력값을 다시 확인해 주세요", fieldErrors: fieldErrorsOf(parsed.error.issues) };
+  if (!parsed.success)
+    return {
+      ok: false,
+      message: "입력값을 다시 확인해 주세요",
+      fieldErrors: fieldErrorsOf(parsed.error.issues),
+    };
   const { name, phone, company } = parsed.data;
   return post("trial", { name, phone, company, agreePrivacy: true, channel: "홈페이지 무료체험" });
 }

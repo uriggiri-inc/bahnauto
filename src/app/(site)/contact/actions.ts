@@ -62,9 +62,17 @@ export async function submitContact(raw: unknown): Promise<SubmitResult> {
   // 저장 실패는 postLead 가 사용자에게 돌려준다. 조용히 삼키지 않는다.
   const d = parsed.data;
   return postLead("contact", {
-    name: d.name, phone: d.phone, agreePrivacy: true, agreeMarketing: d.agreeMarketing,
-    storeType: d.storeType, sido: d.sido, sigungu: d.sigungu, storeCount: d.storeCount,
-    visits: d.visits || undefined, message: d.message || undefined,
-    referrer: d.referrer || undefined, referrerDetail: d.referrerDetail || undefined,
+    name: d.name,
+    phone: d.phone,
+    agreePrivacy: true,
+    agreeMarketing: d.agreeMarketing,
+    storeType: d.storeType,
+    sido: d.sido,
+    sigungu: d.sigungu,
+    storeCount: d.storeCount,
+    visits: d.visits || undefined,
+    message: d.message || undefined,
+    referrer: d.referrer || undefined,
+    referrerDetail: d.referrerDetail || undefined,
   });
 }

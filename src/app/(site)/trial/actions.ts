@@ -61,5 +61,11 @@ export async function submitTrial(raw: unknown): Promise<SubmitResult> {
   // 반오토 영업관리(접수 API)에 저장한다 — 유형 trial 로 들어가 상담 리드·채용 지원과 분리 관리된다.
   // 보유기간·파기는 반오토 영업관리 화면에서 한다(개인정보처리방침 제3조).
   const { name, phone, company } = parsed.data;
-  return postLead("trial", { name, phone, company, agreePrivacy: true, channel: "홈페이지 무료체험" });
+  return postLead("trial", {
+    name,
+    phone,
+    company,
+    agreePrivacy: true,
+    channel: "홈페이지 무료체험",
+  });
 }
