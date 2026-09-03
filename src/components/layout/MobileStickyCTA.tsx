@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Phone } from "@phosphor-icons/react";
 import { cn } from "@/lib/cn";
+import { TEL_HREF } from "@/content/company";
 import { STICKY_CTA_THRESHOLD } from "./stickyCta";
 
 /**
@@ -16,10 +17,13 @@ import { STICKY_CTA_THRESHOLD } from "./stickyCta";
  * 오른쪽에 폭 56px 짜리 카카오 아이콘 버튼이 하나 더 있었다. 뺀 자리를 남은 둘이
  * 나눠 갖는다 — 비율(1 : 1.5)은 그대로라 "무료 방문 진단" 이 계속 더 크다.
  *
- * 상담 경로가 없어지는 것은 아니다. `/contact` 에 카카오톡 상담 항목이 그대로
- * 있다. 애초에 이 버튼은 **채널 주소가 확정되지 않아 눌러도 아무 일도 하지 않는
+ * 애초에 이 버튼은 **채널 주소가 확정되지 않아 눌러도 아무 일도 하지 않는
  * 상태**였다(`kakaoUrl` 기본값이 빈 문자열이고 넘겨 주는 호출부가 없었다).
  * 좁은 화면에서 56px 을 죽은 링크에 쓰고 있던 셈이다.
+ *
+ * ⚠️ 2026-09-03 `/contact` 의 `폼 작성이 번거로우시면` 상자(전화·카카오톡 상담)도
+ *    지웠다. 즉 **사이트에 카카오톡 상담 경로가 남아 있지 않다.** 채널 주소가
+ *    확정되면 어디에 되살릴지부터 정해야 한다.
  *
  * ⚠️ 되살릴 때는 `kakaoUrl` prop 과 `@icons-pack/react-simple-icons` 의
  *    `SiKakaotalk` 을 함께 되살려야 한다. 그 패키지는 이제 이 저장소에서
@@ -34,7 +38,14 @@ import { STICKY_CTA_THRESHOLD } from "./stickyCta";
 export type MobileStickyCTAProps = {
   telLabel?: string;
   ctaLabel?: string;
-  /** `[확정 필요 §13-A1]` 대표번호 */
+  /**
+   * 전화 버튼이 거는 번호. 기본값은 `content/company.ts` 의 대표번호다.
+   *
+   * 2026-09-03 사용자 확정으로 **실제 번호가 연결됐다**(그 전까지 기본값이 빈
+   * 문자열이라 눌러도 아무 일도 일어나지 않았다). 값을 여기 다시 적지 않고
+   * `TEL_HREF` 를 쓰는 이유는, 푸터에 뜨는 번호와 버튼이 거는 번호가 갈라지면
+   * 어느 쪽이 맞는지 알 수 없게 되기 때문이다.
+   */
   tel?: string;
   ctaHref?: string;
   threshold?: number;
@@ -48,7 +59,7 @@ export type MobileStickyCTAProps = {
 export function MobileStickyCTA({
   telLabel = "전화 상담",
   ctaLabel = "무료 방문 진단",
-  tel = "",
+  tel = TEL_HREF,
   ctaHref = "/contact",
   threshold = STICKY_CTA_THRESHOLD,
   previewOnDesktop = false,

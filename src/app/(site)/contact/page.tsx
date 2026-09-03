@@ -60,27 +60,14 @@ export default function ContactPage() {
             </Suspense>
           </div>
 
-          {/* ── 대안 접점 · 이후 절차 ── */}
+          {/* ── 이후 절차 ──
+              "폼 작성이 번거로우시면"(전화·카카오톡 상담) 상자는 **2026-09-03 지웠다**
+              (사용자 지시). 두 항목 모두 값이 없어 `[대표번호 확정 필요]`·`[채널 확정 필요]`
+              라는 자리표시자만 띄우고 있었다 — 누를 것이 없는 상자였다.
+
+              전화 경로가 사라지는 것은 아니다. 대표번호는 푸터에 상시 있고, 모바일에서는
+              하단 고정 바의 `전화 상담` 이 같은 날 실제 번호로 연결됐다. */}
           <aside className="flex flex-col gap-6 lg:sticky lg:top-[calc(var(--header-h)+24px)] lg:self-start">
-            <div className="border-border rounded-lg border bg-white p-6 shadow-[var(--shadow-card)]">
-              <h2 className="text-h4 text-ink mb-4">폼 작성이 번거로우시면</h2>
-              <p className="text-body-sm text-text-sub mb-5">
-                전화나 카카오톡으로 연락 주셔도 됩니다. 같은 절차로 진행됩니다.
-              </p>
-
-              <div className="flex flex-col gap-3">
-                {/* 대표번호·카카오 채널은 §13-A1 · §13-F3 확정 대기 */}
-                <div className="border-border-light flex items-center justify-between gap-3 rounded-sm border px-4 py-3">
-                  <span className="text-body-sm text-ink font-semibold">전화 상담</span>
-                  <span className="text-caption text-warning">[대표번호 확정 필요]</span>
-                </div>
-                <div className="border-border-light flex items-center justify-between gap-3 rounded-sm border px-4 py-3">
-                  <span className="text-body-sm text-ink font-semibold">카카오톡 상담</span>
-                  <span className="text-caption text-warning">[채널 확정 필요]</span>
-                </div>
-              </div>
-            </div>
-
             <div className="bg-bg-subtle border-border rounded-lg border p-6">
               <h2 className="text-h4 text-ink mb-4">신청 후 이렇게 진행됩니다</h2>
               <ol className="flex flex-col gap-4">
