@@ -16,7 +16,8 @@ import { COMPANY, TEL_HREF } from "@/content/company";
  *
  * ⚠️ 외부 도메인이므로 `rel="noopener noreferrer"` 를 붙인다. 주소 정본은
  *    `content/trial.ts` 의 `TRIAL_APP_URL` 하나다.
- * ⚠️ 체험 기간(14일·7일)은 미확정이라 어떤 문구에도 숫자를 쓰지 않는다.
+ * ⚠️ 체험 기간은 **14일로 확정됐다**(사용자 지시 2026-09-04). 이 화면에는 아직 숫자를
+ *    적지 않았다 — 신청 화면(`/trial`)에서 이미 안내했으므로 반복하지 않는다.
  *
  * 색인하지 않는다 — 검색으로 바로 들어오면 신청하지 않은 사람이 신청했다고
  * 오해한다(`/brochure/complete` 와 같은 원칙).
