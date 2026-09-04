@@ -111,6 +111,11 @@ export async function submitContact(raw: unknown): Promise<SubmitResult> {
   return post("contact", {
     name: d.name,
     phone: d.phone,
+    // ⚠️ 접수 API 가 아직 `callTime` 을 정의하지 않아 **저장되지 않는다**
+    //    (문서: "정의에 없는 키는 저장하지 않습니다"). 홈페이지를 먼저 올려두면
+    //    확인해 주기로 한 상태다(2026-09-04) — API 에 필드가 생기면 이 줄이 그대로
+    //    살아난다. 화면·검증은 지금부터 정상 동작한다.
+    callTime: d.callTime,
     agreePrivacy: true,
     agreeMarketing: d.agreeMarketing,
     storeType: d.storeType,
@@ -136,6 +141,9 @@ export async function submitApplication(raw: unknown): Promise<SubmitResult> {
   return post("careers", {
     name: d.name,
     phone: d.phone,
+    // ⚠️ `callTime`(연락 가능 시간대)은 아직 API 에 없다 — 위 contact 와 같은 사정이다.
+    //    아래 `timeSlots`(근무 가능 시간대)와 **다른 항목**이니 합치지 않는다.
+    callTime: d.callTime,
     agreePrivacy: true,
     homeSido: d.homeSido,
     homeSigungu: d.homeSigungu,
@@ -157,8 +165,21 @@ export async function submitTrial(raw: unknown): Promise<SubmitResult> {
       message: "입력값을 다시 확인해 주세요",
       fieldErrors: fieldErrorsOf(parsed.error.issues),
     };
-  const { name, phone, company } = parsed.data;
-  return post("trial", { name, phone, company, agreePrivacy: true, channel: "홈페이지 무료체험" });
+  const d = parsed.data;
+  return post("trial", {
+    name: d.name,
+    phone: d.phone,
+    // 이메일은 API **공통 필드**라 그대로 저장된다(2026-09-04 양식 통일로 추가)
+    email: d.email,
+    company: d.company,
+    agreePrivacy: true,
+    /*
+      유입 경로는 공통 필드 `channel` 로 보낸다 — `trial` 유형에는 `referrer` 가 없다.
+      `기타` 를 고르면 직접 적은 값이 더 구체적이므로 그것을 보내고, 아무것도 고르지
+      않았으면 최소한 어느 폼에서 왔는지는 남긴다.
+    */
+    channel: d.referrer === "기타" ? d.referrerDetail || "기타" : d.referrer || "홈페이지 무료체험",
+  });
 }
 
 /**

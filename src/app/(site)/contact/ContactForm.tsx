@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox, Field, Select, TextArea, TextInput } from "@/components/ui/Form";
 import { Button } from "@/components/ui/Button";
 import {
+  CALL_TIMES,
   REFERRERS,
   STORE_COUNTS,
   STORE_TYPES,
@@ -171,6 +172,25 @@ export function ContactForm() {
           // 표시용 하이픈. 저장·검증은 스키마가 숫자만 남긴다.
           value={formatPhone(phone ?? "")}
           onChange={(e) => setValue("phone", formatPhone(e.target.value))}
+        />
+      </Field>
+
+      {/* 연락처 **바로 밑**이 지정된 자리다(노션 「반오토 폼양식 수정」 2026-09-04).
+          번호를 적은 직후에 "언제 받으실 수 있나요" 를 묻는 것이 자연스럽다. */}
+      <Field
+        label="연락 가능 시간대"
+        required
+        error={errors.callTime?.message}
+        htmlFor="callTime"
+        hint="이 시간대에 맞춰 연락드립니다."
+      >
+        <Select
+          id="callTime"
+          placeholder="선택해 주세요"
+          options={CALL_TIMES}
+          invalid={Boolean(errors.callTime)}
+          aria-describedby={errors.callTime ? "callTime-desc" : undefined}
+          {...register("callTime")}
         />
       </Field>
 
