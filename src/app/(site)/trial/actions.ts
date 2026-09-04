@@ -60,12 +60,16 @@ export async function submitTrial(raw: unknown): Promise<SubmitResult> {
 
   // 반오토 영업관리(접수 API)에 저장한다 — 유형 trial 로 들어가 상담 리드·채용 지원과 분리 관리된다.
   // 보유기간·파기는 반오토 영업관리 화면에서 한다(개인정보처리방침 제3조).
-  const { name, phone, company } = parsed.data;
+  const d = parsed.data;
   return postLead("trial", {
-    name,
-    phone,
-    company,
+    name: d.name,
+    phone: d.phone,
+    // 이메일은 API 공통 필드다(2026-09-04 소개서 폼과 양식 통일하며 추가)
+    email: d.email,
+    company: d.company,
     agreePrivacy: true,
-    channel: "홈페이지 무료체험",
+    // 유입 경로는 공통 필드 `channel` 로 — `trial` 유형에는 `referrer` 가 없다.
+    // 정적 경로(`form-submit.static.ts`)와 같은 규칙을 쓴다.
+    channel: d.referrer === "기타" ? d.referrerDetail || "기타" : d.referrer || "홈페이지 무료체험",
   });
 }

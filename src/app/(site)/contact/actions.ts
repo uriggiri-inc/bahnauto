@@ -64,6 +64,9 @@ export async function submitContact(raw: unknown): Promise<SubmitResult> {
   return postLead("contact", {
     name: d.name,
     phone: d.phone,
+    // API 에 아직 없는 필드다 — `form-submit.static.ts` 의 같은 줄 주석 참조.
+    // 두 경로가 갈라지면 "미리보기에서는 되는데 배포하면 안 되는" 버그가 된다.
+    callTime: d.callTime,
     agreePrivacy: true,
     agreeMarketing: d.agreeMarketing,
     storeType: d.storeType,

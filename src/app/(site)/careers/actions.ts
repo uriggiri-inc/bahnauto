@@ -52,6 +52,9 @@ export async function submitApplication(raw: unknown): Promise<SubmitResult> {
   return postLead("careers", {
     name: d.name,
     phone: d.phone,
+    // 연락 가능 시간대. 아래 `timeSlots`(근무 가능 시간대)와 다른 항목이다.
+    // API 에 아직 없다 — `form-submit.static.ts` 의 같은 줄 주석 참조.
+    callTime: d.callTime,
     agreePrivacy: true,
     homeSido: d.homeSido,
     homeSigungu: d.homeSigungu,

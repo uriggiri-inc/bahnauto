@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { digitsOnly } from "./contact-schema";
+import { digitsOnly, CALL_TIMES } from "./contact-schema";
 import { isValidRegion } from "./regions";
 
 /**
@@ -41,8 +41,17 @@ export const careersSchema = z
     workSido: z.string().min(1, "희망 근무 시·도를 선택해 주세요"),
     workSigungu: z.string().min(1, "희망 근무 시·군·구를 선택해 주세요"),
 
-    // 복수 선택. 최소 하나는 골라야 배정이 가능하다
-    timeSlots: z.array(z.enum(TIME_SLOTS)).min(1, "가능한 시간대를 하나 이상 선택해 주세요"),
+    /*
+      연락 가능 시간대 — 연락처 바로 밑에 둔다(노션 「반오토 폼양식 수정」 2026-09-04).
+
+      ⚠️ 바로 아래 `timeSlots`(근무 가능 시간대)와 **다른 항목이다.** 이쪽은 "언제
+         전화를 받을 수 있는가", 저쪽은 "언제 매장에 나갈 수 있는가" 다. 지원 폼에는
+         둘이 나란히 있으므로 화면 라벨도 갈라 적는다(사용자 지시 2026-09-04).
+    */
+    callTime: z.enum(CALL_TIMES, { message: "연락 가능한 시간대를 선택해 주세요" }),
+
+    // 근무 가능 시간대. 복수 선택이고 최소 하나는 골라야 배정이 가능하다
+    timeSlots: z.array(z.enum(TIME_SLOTS)).min(1, "근무 가능한 시간대를 하나 이상 선택해 주세요"),
 
     transport: z.enum(TRANSPORT, { message: "이동 수단을 선택해 주세요" }),
 

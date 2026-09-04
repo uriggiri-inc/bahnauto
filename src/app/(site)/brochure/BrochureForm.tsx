@@ -42,7 +42,7 @@ export function BrochureForm() {
   } = useForm<BrochureInput>({
     resolver: zodResolver(brochureSchema),
     mode: "onBlur",
-    defaultValues: { company: "", email: "", phone: "", referrer: "", referrerDetail: "" },
+    defaultValues: { name: "", phone: "", email: "", company: "", referrer: "", referrerDetail: "" },
   });
 
   const phone = watch("phone");
@@ -73,19 +73,35 @@ export function BrochureForm() {
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6">
       <Field
-        label="회사명 또는 매장명"
+        label="성함"
         required
-        error={errors.company?.message}
-        htmlFor="company"
-        hint="운영 중이시거나 준비 중이신 매장 이름을 적어주셔도 됩니다."
+        error={errors.name?.message}
+        htmlFor="name"
       >
         <TextInput
-          id="company"
-          autoComplete="organization"
-          placeholder="우리끼리 주식회사"
-          invalid={Boolean(errors.company)}
-          aria-describedby={errors.company ? "company-desc" : undefined}
-          {...register("company")}
+          id="name"
+          autoComplete="name"
+          placeholder="홍길동"
+          invalid={Boolean(errors.name)}
+          aria-describedby={errors.name ? "name-desc" : undefined}
+          {...register("name")}
+        />
+      </Field>
+
+      <Field label="연락처" required error={errors.phone?.message} htmlFor="phone">
+        <TextInput
+          id="phone"
+          type="tel"
+          inputMode="numeric"
+          autoComplete="tel"
+          placeholder="010-0000-0000"
+          maxLength={13}
+          invalid={Boolean(errors.phone)}
+          aria-describedby={errors.phone ? "phone-desc" : undefined}
+          {...register("phone")}
+          // 표시용 하이픈. 저장·검증은 스키마가 숫자만 남긴다.
+          value={formatPhone(phone ?? "")}
+          onChange={(e) => setValue("phone", formatPhone(e.target.value))}
         />
       </Field>
 
@@ -108,20 +124,20 @@ export function BrochureForm() {
         />
       </Field>
 
-      <Field label="연락처" required error={errors.phone?.message} htmlFor="phone">
+      <Field
+        label="회사명 또는 매장명"
+        required
+        error={errors.company?.message}
+        htmlFor="company"
+        hint="운영 중이시거나 준비 중이신 매장 이름을 적어주셔도 됩니다."
+      >
         <TextInput
-          id="phone"
-          type="tel"
-          inputMode="numeric"
-          autoComplete="tel"
-          placeholder="010-0000-0000"
-          maxLength={13}
-          invalid={Boolean(errors.phone)}
-          aria-describedby={errors.phone ? "phone-desc" : undefined}
-          {...register("phone")}
-          // 표시용 하이픈. 저장·검증은 스키마가 숫자만 남긴다.
-          value={formatPhone(phone ?? "")}
-          onChange={(e) => setValue("phone", formatPhone(e.target.value))}
+          id="company"
+          autoComplete="organization"
+          placeholder="우리끼리 주식회사"
+          invalid={Boolean(errors.company)}
+          aria-describedby={errors.company ? "company-desc" : undefined}
+          {...register("company")}
         />
       </Field>
 
@@ -179,7 +195,7 @@ export function BrochureForm() {
                 <dt className="w-[68px] shrink-0 font-semibold">수집 항목</dt>
                 {/* 받는 것과 고지하는 것이 어긋나면 그 자체가 문제다 —
                     2026-08-28 에 유입 경로를 추가하면서 이 줄도 함께 고쳤다 */}
-                <dd>회사명 또는 매장명, 이메일, 연락처, 유입 경로</dd>
+                <dd>성함, 연락처, 이메일, 회사명 또는 매장명, 유입 경로</dd>
               </div>
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">이용 목적</dt>

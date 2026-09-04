@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Checkbox, Field, TextInput } from "@/components/ui/Form";
+import { Checkbox, Field, Select, TextInput } from "@/components/ui/Form";
 import { Button } from "@/components/ui/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formatPhone } from "@/lib/contact-schema";
+import { formatPhone, REFERRERS } from "@/lib/contact-schema";
 import { trialSchema, type TrialInput } from "@/lib/trial-schema";
 // 서버 액션을 직접 import 하지 않는다 — 정적 미리보기 빌드에서 교체되는 지점이다
 import { submitTrial } from "@/lib/form-submit";
@@ -19,8 +19,10 @@ import { submitTrial } from "@/lib/form-submit";
  *   · 필수 동의 3요소(수집 항목·이용 목적·보유 기간)를 체크박스와 같은 화면에 둔다
  *   · 동의 전에는 제출 버튼이 잠기고, 왜 잠겼는지 글로 알린다
  *
- * 다른 점은 **받는 항목이 셋뿐**이라는 것이다. 체험 계정을 열고 사용법을
- * 안내하는 데 필요하지 않은 항목은 받지 않는다(§1.2 최소 수집).
+ * ── 2026-09-04 소개서 폼과 양식을 통일했다 (노션 「반오토 폼양식 수정」) ──
+ * 성함 › 연락처 › 이메일 › 회사명 또는 매장명 › 어떻게 알고 오셨나요 순서다.
+ * 순서나 항목을 바꿀 때는 `BrochureForm` 도 **함께** 바꾼다 — 둘이 갈라지면
+ * 통일한 의미가 없다. 그 전에는 세 항목(성함·연락처·회사명)뿐이었다.
  *
  * 성공하면 곧장 체험 대시보드로 튕기지 않고 **완료 화면을 한 번 거친다** —
  * 외부 주소로 갑자기 이동하면 신청이 접수된 것인지 알 수 없다.
@@ -39,11 +41,12 @@ export function TrialForm() {
   } = useForm<TrialInput>({
     resolver: zodResolver(trialSchema),
     mode: "onBlur",
-    defaultValues: { name: "", phone: "", company: "" },
+    defaultValues: { name: "", phone: "", email: "", company: "", referrer: "", referrerDetail: "" },
   });
 
   const phone = watch("phone");
   const agreePrivacy = watch("agreePrivacy");
+  const referrer = watch("referrer");
 
   const onSubmit = handleSubmit(async (values) => {
     setFormError(null);
@@ -102,6 +105,26 @@ export function TrialForm() {
         />
       </Field>
 
+      {/* 소개서 폼과 **같은 순서**다 — 성함 › 연락처 › 이메일 › 회사명 › 유입경로
+          (노션 「반오토 폼양식 수정」 2026-09-04). 순서를 바꿀 때는 두 폼을 함께 바꾼다. */}
+      <Field
+        label="이메일"
+        required
+        error={errors.email?.message}
+        htmlFor="email"
+        hint="체험 계정 안내를 이 주소로도 보내드립니다."
+      >
+        <TextInput
+          id="email"
+          type="email"
+          autoComplete="email"
+          placeholder="name@company.com"
+          invalid={Boolean(errors.email)}
+          aria-describedby={errors.email ? "email-desc" : undefined}
+          {...register("email")}
+        />
+      </Field>
+
       <Field
         label="회사명 또는 매장명"
         required
@@ -118,6 +141,37 @@ export function TrialForm() {
           {...register("company")}
         />
       </Field>
+
+      <Field label="어떻게 알고 오셨나요?" htmlFor="referrer">
+        <Select
+          id="referrer"
+          placeholder="선택 안 함"
+          options={REFERRERS}
+          {...register("referrer", {
+            // "기타"에서 다른 항목으로 되돌리면 직접 입력값은 더 이상 유효하지 않다
+            onChange: (e) => {
+              if (e.target.value !== "기타") setValue("referrerDetail", "");
+            },
+          })}
+        />
+      </Field>
+
+      {referrer === "기타" && (
+        <Field
+          label="알게 되신 경로를 직접 적어주세요"
+          error={errors.referrerDetail?.message}
+          htmlFor="referrerDetail"
+        >
+          <TextInput
+            id="referrerDetail"
+            maxLength={50}
+            placeholder="예: 지역 소상공인 모임"
+            invalid={Boolean(errors.referrerDetail)}
+            aria-describedby={errors.referrerDetail ? "referrerDetail-desc" : undefined}
+            {...register("referrerDetail")}
+          />
+        </Field>
+      )}
 
       {/* ── 동의 ── */}
       <div className="border-border bg-bg-subtle rounded-lg border p-5">
@@ -136,7 +190,7 @@ export function TrialForm() {
             <dl className="grid gap-1.5">
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">수집 항목</dt>
-                <dd>성함, 연락처, 회사명 또는 매장명</dd>
+                <dd>성함, 연락처, 이메일, 회사명 또는 매장명</dd>
               </div>
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">이용 목적</dt>

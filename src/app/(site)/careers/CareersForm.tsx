@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox, Field, Select, TextArea, TextInput } from "@/components/ui/Form";
 import { Button } from "@/components/ui/Button";
-import { formatPhone } from "@/lib/contact-schema";
+import { formatPhone, CALL_TIMES } from "@/lib/contact-schema";
 import {
   EXPERIENCE,
   TIME_SLOTS,
@@ -109,6 +109,28 @@ export function CareersForm() {
         />
       </Field>
 
+      {/* 연락처 **바로 밑**이 지정된 자리다(노션 「반오토 폼양식 수정」 2026-09-04).
+
+          ⚠️ 아래 `근무 가능 시간대` 와 **다른 항목이다.** 이쪽은 "언제 전화를 받을 수
+             있는가", 저쪽은 "언제 매장에 나갈 수 있는가" 다. 한 폼에 시간대가 둘이라
+             라벨을 분명히 갈라 적는다(사용자 지시 2026-09-04). */}
+      <Field
+        label="연락 가능 시간대"
+        required
+        error={errors.callTime?.message}
+        htmlFor="c-callTime"
+        hint="지원 확인 연락을 이 시간대에 드립니다."
+      >
+        <Select
+          id="c-callTime"
+          placeholder="선택해 주세요"
+          options={CALL_TIMES}
+          invalid={Boolean(errors.callTime)}
+          aria-describedby={errors.callTime ? "c-callTime-desc" : undefined}
+          {...register("callTime")}
+        />
+      </Field>
+
       {/* 거주지와 희망 근무지를 따로 받는다 — 집 근처 배정이 이 일의 핵심 조건이다 */}
       <fieldset>
         <legend className="text-body-sm text-ink mb-3 font-semibold">
@@ -166,7 +188,7 @@ export function CareersForm() {
 
       <fieldset>
         <legend className="text-body-sm text-ink mb-1 font-semibold">
-          가능한 시간대 <span className="text-danger">*</span>
+          근무 가능 시간대 <span className="text-danger">*</span>
         </legend>
         <p className="text-caption text-text-sub mb-3">복수 선택 가능합니다.</p>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -267,7 +289,7 @@ export function CareersForm() {
             <dl className="grid gap-1.5">
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">수집 항목</dt>
-                <dd>성함, 연락처, 거주 지역, 희망 근무 지역, 가능 시간대, 이동 수단, 관련 경력</dd>
+                <dd>성함, 연락처, 연락 가능 시간대, 거주 지역, 희망 근무 지역, 근무 가능 시간대, 이동 수단, 관련 경력</dd>
               </div>
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">이용 목적</dt>
