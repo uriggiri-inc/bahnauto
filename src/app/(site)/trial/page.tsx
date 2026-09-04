@@ -106,8 +106,12 @@ export default function TrialPage() {
         {/* ── 오른쪽: 폼 ── */}
         <div className="border-border rounded-[24px] border bg-white p-6 shadow-[var(--shadow-card)] md:p-8">
           <h2 className="text-h3 text-ink mb-2">어디로 안내해 드릴까요</h2>
+          {/* ⚠️ 이 줄은 **폼의 필수 칸 수**를 말한다. 항목을 더하거나 뺄 때 반드시 함께
+              고친다 — 숫자가 화면과 어긋나면 그 자체로 신뢰를 깎는다.
+                2026-09-04  소개서 폼과 양식 통일하며 이메일·유입경로 추가 → 필수 넷
+              소개서 폼(`brochure/page.tsx`)에 같은 줄이 있다. 함께 고친다. */}
           <p className="text-body-sm text-text-sub mb-7">
-            세 가지만 남겨주시면 됩니다. 다른 정보는 받지 않습니다.
+            네 가지만 남겨주시면 됩니다. 다른 정보는 받지 않습니다.
           </p>
           <TrialForm />
         </div>
