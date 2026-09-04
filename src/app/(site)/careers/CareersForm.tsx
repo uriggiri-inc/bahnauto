@@ -289,7 +289,10 @@ export function CareersForm() {
             <dl className="grid gap-1.5">
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">수집 항목</dt>
-                <dd>성함, 연락처, 연락 가능 시간대, 거주 지역, 희망 근무 지역, 근무 가능 시간대, 이동 수단, 관련 경력</dd>
+                <dd>
+                  성함, 연락처, 연락 가능 시간대, 거주 지역, 희망 근무 지역, 근무 가능 시간대, 이동
+                  수단, 관련 경력
+                </dd>
               </div>
               <div className="flex gap-2">
                 <dt className="w-[68px] shrink-0 font-semibold">이용 목적</dt>

@@ -42,7 +42,14 @@ export function BrochureForm() {
   } = useForm<BrochureInput>({
     resolver: zodResolver(brochureSchema),
     mode: "onBlur",
-    defaultValues: { name: "", phone: "", email: "", company: "", referrer: "", referrerDetail: "" },
+    defaultValues: {
+      name: "",
+      phone: "",
+      email: "",
+      company: "",
+      referrer: "",
+      referrerDetail: "",
+    },
   });
 
   const phone = watch("phone");
@@ -72,12 +79,7 @@ export function BrochureForm() {
 
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6">
-      <Field
-        label="성함"
-        required
-        error={errors.name?.message}
-        htmlFor="name"
-      >
+      <Field label="성함" required error={errors.name?.message} htmlFor="name">
         <TextInput
           id="name"
           autoComplete="name"

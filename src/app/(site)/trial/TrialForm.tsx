@@ -41,7 +41,14 @@ export function TrialForm() {
   } = useForm<TrialInput>({
     resolver: zodResolver(trialSchema),
     mode: "onBlur",
-    defaultValues: { name: "", phone: "", email: "", company: "", referrer: "", referrerDetail: "" },
+    defaultValues: {
+      name: "",
+      phone: "",
+      email: "",
+      company: "",
+      referrer: "",
+      referrerDetail: "",
+    },
   });
 
   const phone = watch("phone");
