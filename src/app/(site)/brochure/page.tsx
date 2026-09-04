@@ -80,10 +80,12 @@ export default function BrochurePage() {
         {/* ── 오른쪽: 폼 ── */}
         <div className="border-border rounded-[24px] border bg-white p-6 shadow-[var(--shadow-card)] md:p-8">
           <h2 className="text-h3 text-ink mb-2">받으실 분 정보를 알려주세요</h2>
-          {/* 2026-08-28: 유입 경로가 추가되어 칸이 넷이 됐다. "세 가지만" 이라고 적어
-              두면 화면과 어긋난다 — 필수가 셋임을 밝히는 쪽으로 고쳤다 */}
+          {/* ⚠️ 이 줄은 **폼의 필수 칸 수**를 말한다. 항목을 더하거나 뺄 때 반드시 함께
+              고친다 — 숫자가 화면과 어긋나면 그 자체로 신뢰를 깎는다.
+                2026-08-28  유입 경로(선택) 추가 → 필수 셋
+                2026-09-04  무료체험 폼과 양식 통일하며 성함 추가 → 필수 넷 */}
           <p className="text-body-sm text-text-sub mb-7">
-            필수는 세 가지입니다. 그 밖의 정보는 받지 않습니다.
+            필수는 네 가지입니다. 그 밖의 정보는 받지 않습니다.
           </p>
           <BrochureForm />
         </div>
