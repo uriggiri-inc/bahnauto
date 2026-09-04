@@ -32,7 +32,7 @@ import { STICKY_CTA_THRESHOLD } from "./stickyCta";
  * 이 바가 올라오면 헤더의 CTA 는 사라진다(임계값 공유) — 같은 전환 경로를
  * 화면에 두 번 두지 않는다.
  *
- * 채널톡 위젯이 우하단에 뜨므로 위젯 쪽 `bottom` 을 이 바 높이만큼 올려야 한다(§9.4).
+ * 채널톡은 2026-09-04 폐기 확인 — 위젯 겹침(§9.4) 걱정은 더 이상 없다.
  */
 
 export type MobileStickyCTAProps = {
@@ -85,6 +85,9 @@ export function MobileStickyCTA({
 
   return (
     <div
+      // GA 위임 리스너가 link_location 으로 보내는 위치 식별자 — 모바일 메뉴의
+      // 같은 문구 CTA 와 구분한다(GoogleAnalytics.tsx 참고)
+      data-ga-loc="mobile_sticky_bar"
       className={cn(
         "border-border fixed inset-x-0 bottom-0 z-20 border-t bg-white/95 backdrop-blur-[10px]",
         // 데스크톱에는 헤더 CTA 가 상시 노출된다 → 하단 바는 모바일 전용

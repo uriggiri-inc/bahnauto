@@ -36,6 +36,16 @@ import { ANALYTICS_HOSTS, GA_MEASUREMENT_ID } from "@/lib/analytics";
  *
  * ⚠️ 측정 ID·허용 호스트의 정본은 `lib/analytics.ts` 하나다. 여기에 값을 직접
  *    적지 않는다 — 두 곳에 적으면 도메인을 바꿀 때 한쪽만 고쳐진다.
+ *
+ * ── 전환 이벤트 계측 (2026-09-04) ──
+ * 이벤트 이름과 GA4 등록이 짝을 이룬다 — 이름을 바꾸면 GA4 관리 화면의
+ * 키 이벤트·맞춤 측정기준도 함께 바꿔야 한다.
+ *   · phone_click / cta_click — 아래 위임 클릭 리스너
+ *   · contact_submit 등 4종 — 코드가 아니라 GA4 이벤트 생성 규칙
+ *     (완료 페이지 page_view → *_submit)이 만든다
+ *   · 매개변수: link_text(버튼 문구)·link_location(data-ga-loc 속성)·
+ *     form_id — 셋 다 이벤트 범위 맞춤 측정기준으로 등록돼 있다
+ * 카카오 상담·채널톡은 2026-09-04 폐기 확인 — 계측하지 않는다.
  */
 
 /*
@@ -55,6 +65,43 @@ const SNIPPET = `
   s.async = true;
   s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ${JSON.stringify(GA_MEASUREMENT_ID)};
   document.head.appendChild(s);
+
+  /*
+    전환 이벤트 — 위임 리스너 하나로 사이트 전체를 덮는다.
+    tel: 링크와 폼 진입 링크는 여러 컴포넌트에 흩어져 있고 앞으로도 늘어난다.
+    컴포넌트마다 onClick 을 다는 대신 문서 레벨에서 잡으면 새 링크가 생겨도
+    계측이 저절로 따라온다.
+
+    link_text 만으로는 같은 문구의 버튼(모바일 메뉴 CTA 와 하단 고정 바 CTA 가
+    둘 다 "무료 방문 진단")이 구분되지 않는다 — 그래서 가장 가까운 조상의
+    data-ga-loc 속성을 link_location 으로 함께 보낸다. 위치를 구분해야 하는
+    컨테이너에만 붙인다(하단 고정 바, 모바일 메뉴).
+  */
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    var label = (a.textContent || '').replace(/\\s+/g, ' ').trim().slice(0, 100);
+    var locEl = a.closest('[data-ga-loc]');
+    var params = { link_text: label };
+    if (locEl) params.link_location = locEl.getAttribute('data-ga-loc');
+    if (href.indexOf('tel:') === 0) {
+      params.link_url = href;
+      gtag('event', 'phone_click', params);
+      return;
+    }
+    /*
+      4대 폼 진입 클릭 — 도입 상담(/contact)·소개서(/brochure)·매니저 지원
+      (/careers)·무료체험(/trial) 페이지로 들어가는 모든 내부 링크를 잡는다.
+      완료 페이지(/contact/complete 등)로 가는 링크는 폼 진입이 아니므로
+      정확 일치·하위 경로 없는 형태만 본다.
+    */
+    var m = href.match(/^\\/(contact|brochure|careers|trial)\\/?(?:[?#]|$)/);
+    if (m) {
+      params.form_id = m[1];
+      gtag('event', 'cta_click', params);
+    }
+  }, true);
 })();
 `;
 

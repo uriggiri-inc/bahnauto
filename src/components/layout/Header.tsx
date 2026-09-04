@@ -457,7 +457,8 @@ export function Header({
             </div>
 
             {/* 헤더에서 CTA 를 뺐으므로 여기가 스크롤 400px 이전의 유일한 전환 경로다 */}
-            <div className="border-border-light border-t py-4">
+            {/* data-ga-loc: 하단 고정 바의 같은 문구 CTA 와 구분(GoogleAnalytics.tsx) */}
+            <div className="border-border-light border-t py-4" data-ga-loc="mobile_menu">
               <Link
                 href={ctaHref}
                 onClick={() => setOpen(false)}
