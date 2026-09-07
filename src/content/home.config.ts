@@ -88,15 +88,18 @@ export type SectionItem = {
 };
 
 export type HomeSection = {
-  /** DOM 앵커이자 SNB 링크. 영문 소문자·하이픈만 */
+  /**
+   * DOM 앵커. 히어로 스크롤 큐가 이 값으로 다음 섹션을 찾는다. 영문 소문자·하이픈만.
+   *
+   * 이 값이 섹션을 가리키는 **유일한 이름**이다. 예전에는 `navLabel`(한글 짧은
+   * 이름)이 함께 있었지만 홈 목차(SNB)에만 쓰이던 값이라 그 장치와 함께
+   * **2026-09-07 지웠다** — 읽는 코드가 없는 필수 필드를 남기면 새 섹션을 만들
+   * 때마다 쓰이지도 않는 값을 채우게 된다.
+   */
   id: string;
-  /** SNB 에 표시되는 짧은 이름 */
-  navLabel: string;
   kind: SectionKind;
-  /** 끄면 화면에서도 SNB 에서도 사라진다. 값은 남는다 */
+  /** 끄면 화면에서 사라진다. 값은 남는다 */
   enabled: boolean;
-  /** SNB 에 노출할지. 히어로처럼 목차에 넣을 필요 없는 섹션은 false */
-  inNav: boolean;
   text: SectionText;
   style: SectionStyle;
   /** generic 종류가 쓰는 항목들 */
@@ -117,10 +120,8 @@ export const HOME_CONFIG: HomeConfig = {
   sections: [
     {
       id: "hero",
-      navLabel: "홈",
       kind: "hero",
       enabled: true,
-      inNav: false,
       text: {
         label: "무인매장 위탁 관리",
         lead: "출퇴근확인부터 마케팅까지, 이제 반오토에 맡기세요.",
@@ -129,7 +130,6 @@ export const HOME_CONFIG: HomeConfig = {
     },
     {
       id: "problem",
-      navLabel: "문제제기",
       // 기획 확정(2026-08-14): 페인 카드 4장 → **한 화면을 꽉 채우는 문제 패널 5장**.
       // 중간에 핀 스크롤 서사를 한 판 거쳤다가 폐기했다 — 사용자 확정으로
       // **스크롤 애니메이션을 쓰지 않는다**(읽는 속도를 화면이 정하면 안 된다).
@@ -139,7 +139,6 @@ export const HOME_CONFIG: HomeConfig = {
       // `style` 은 이 종류에서 쓰이지 않는다(배경·여백을 컴포넌트가 직접 정한다).
       kind: "pains",
       enabled: true,
-      inNav: true,
       text: {
         label: "무인매장의 현실",
         title: "무인이라는 말은 손님에게만 해당됩니다",
@@ -148,13 +147,11 @@ export const HOME_CONFIG: HomeConfig = {
     },
     {
       id: "before-after",
-      navLabel: "관리 전후",
       kind: "beforeAfter",
       // 기획 확정(2026-08-14): 전면 교체 시안에 이 섹션이 없다. 다만 **삭제가 아니라
       // 보류**다 — 사진 자산이 확정되면 되살린다. 그래서 컴포넌트·문구는 그대로 두고
-      // 여기 한 줄만 내린다. 화면에서도 SNB 에서도 함께 사라진다.
+      // 여기 한 줄만 내린다. 화면에서 사라진다.
       enabled: false,
-      inNav: false,
       text: {
         label: "관리 전후",
         title: "설명보다 빠른 건 직접 보시는 겁니다",
@@ -164,10 +161,8 @@ export const HOME_CONFIG: HomeConfig = {
     },
     {
       id: "why",
-      navLabel: "출시 이유",
       kind: "why",
       enabled: true,
-      inNav: true,
       text: {
         label: "반오토를 만든 이유",
         title: "우리도 매장을 합니다",
@@ -177,10 +172,8 @@ export const HOME_CONFIG: HomeConfig = {
     },
     {
       id: "features",
-      navLabel: "주요기능",
       kind: "features",
       enabled: true,
-      inNav: true,
       text: {
         label: "주요기능",
         /* 담당자 수정안(2026-08-27) 문구 그대로. 두 줄로 적혀 있어 그대로 옮겼다 */
@@ -191,10 +184,8 @@ export const HOME_CONFIG: HomeConfig = {
     },
     {
       id: "pricing",
-      navLabel: "요금",
       kind: "pricing",
       enabled: true,
-      inNav: true,
       text: {
         label: "요금 안내",
         title: "맡기는 범위만큼만 지불하세요",
@@ -208,19 +199,15 @@ export const HOME_CONFIG: HomeConfig = {
     // 나란히 같은 색으로 붙지 않게 한다.
     {
       id: "process",
-      navLabel: "도입 절차",
       kind: "process",
       enabled: true,
-      inNav: true,
       text: { label: "도입 절차", title: "상담부터 관리 시작까지" },
       style: { titleSize: "h1", padY: "md", bg: "subtle", align: "left" },
     },
     {
       id: "reviews",
-      navLabel: "후기",
       kind: "reviews",
       enabled: true,
-      inNav: true,
       text: {
         label: "점주 후기",
         title: "먼저 쓰고 계신 분들의 이야기",
@@ -230,16 +217,27 @@ export const HOME_CONFIG: HomeConfig = {
     },
     {
       id: "contact",
-      navLabel: "상담 신청",
       kind: "contact",
       enabled: true,
-      inNav: true,
       text: {
         label: "도입 상담",
         // 기획 확정 B안. `/contact` 히어로와 **같은 문장**을 쓴다 —
-        // 두 화면에서 말이 달라지면 같은 신청인지 알 수 없다.
+        // 두 화면에서 말이 달라지면 같은 신청인지 알 수 없다. 이 규칙은 그대로다.
         title: "반오토에 맡기고 싶으시다면, 확인해드리겠습니다.",
-        lead: "전화, 카카오톡, 채널톡 어디로든 편하게 문의하실 수 있습니다. 매장 규모와 운영 상황을 알려주시면 필요한 관리 범위와 옵션 구성을 안내해 드립니다. 상담은 무료이며, 도입을 강요하지 않습니다.",
+        /*
+          리드는 2026-09-07 A안으로 교체했다(X-20). 옛 문장은 "전화, 카카오톡, 채널톡
+          어디로든" 이었는데 **카카오 채널·채널톡은 2026-09-04 폐기 확정**이라 사이트에
+          그 경로가 아예 없다. 없는 창구를 안내하면 찾아도 나오지 않는다.
+
+          그래서 실제로 있는 두 경로만 말한다:
+            ① 신청서 → 신청자가 고른 `연락 가능 시간대`(`lib/contact-schema.ts` 의
+               `callTime`)에 전화드린다
+            ② 대표번호 1899-3635 직통
+
+          ⚠️ 번호의 정본은 `content/company.ts` 의 `COMPANY.tel` 이다. 여기는 문장 안이라
+             글자로 박혀 있으니, 번호가 바뀌면 이 문장과 `/contact` 히어로를 **함께** 고친다.
+        */
+        lead: "신청서를 남기시면 고르신 시간대에 전화드립니다. 급하시면 1899-3635로 바로 걸어 주셔도 됩니다. 매장 규모와 운영 상황을 알려주시면 필요한 관리 범위와 옵션 구성을 안내해 드립니다. 상담은 무료이며, 도입을 강요하지 않습니다.",
       },
       style: { titleSize: "h1", padY: "md", bg: "tint", align: "left" },
     },
@@ -248,6 +246,3 @@ export const HOME_CONFIG: HomeConfig = {
 
 /** 켜져 있는 섹션만, 설정 순서대로 */
 export const activeSections = () => HOME_CONFIG.sections.filter((s) => s.enabled);
-
-/** SNB 에 들어갈 항목 */
-export const navSections = () => activeSections().filter((s) => s.inNav);

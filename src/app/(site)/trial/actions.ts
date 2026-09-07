@@ -48,10 +48,12 @@ export async function submitTrial(raw: unknown): Promise<SubmitResult> {
   if (!TRIAL_SINK_CONFIGURED) {
     if (process.env.NODE_ENV === "production") {
       // 신청을 받아둘 곳이 아직 없다. 받은 척하지 않고 다른 경로를 안내한다.
+      // 문구는 `lib/form-submit.static.ts` 의 `NOT_READY.trial` 과 **같아야 한다**.
+      // 2026-09-07 카카오톡을 뺐다(X-20) — 카카오 채널·채널톡 2026-09-04 폐기 확정.
       return {
         ok: false,
         message:
-          "지금은 체험 온라인 신청이 준비 중입니다. 전화(1899-3635)나 카카오톡으로 말씀해 주시면 담당자가 체험 계정과 사용 방법을 안내해 드리겠습니다.",
+          "지금은 체험 온라인 신청이 준비 중입니다. 전화(1899-3635)로 말씀해 주시면 담당자가 체험 계정과 사용 방법을 안내해 드리겠습니다.",
       };
     }
     // 개발 환경 — 화면 흐름(제출 → 완료 → 체험 대시보드) 확인용으로만 통과시킨다

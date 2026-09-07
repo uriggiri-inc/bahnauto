@@ -159,7 +159,7 @@ const PROBLEMS: readonly Problem[] = [
 const HANDOFF = "이건 남의 이야기가 아니라, 우리가 먼저 겪은 이야기입니다.";
 
 export type ProblemStoryProps = {
-  /** SNB 앵커. `home.config.ts` 의 섹션 id 를 그대로 받는다 */
+  /** DOM 앵커. `home.config.ts` 의 섹션 id 를 그대로 받는다 */
   id: string;
   label?: string;
   title?: string;

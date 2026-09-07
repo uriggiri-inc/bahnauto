@@ -98,15 +98,24 @@ app/(site)/careers/actions.ts  → const APPLICANT_SINK_CONFIGURED = false
 게이트다.
 
 ```
-content/dummy.ts ─┬─→ lib/pricing.ts        DUMMY_CONTENT 가 false 면 금액을 null 로 비운다
-                  └─→ marketing/DummyBanner  7개 페이지 상단의 "샘플 데이터" 띠
+content/dummy.ts ──→ marketing/DummyBanner   3개 페이지 상단의 "샘플 데이터" 띠
+                                             (홈 · /careers · /process)
 ```
-
-`lib/pricing.ts` 의 `estimate()` 는 값이 하나라도 없으면 계산하지 않고 `null` 을
-돌려준다. 빠진 변수를 1 로 가정하면 근거 없는 금액이 그럴듯하게 나온다.
 
 실제 값이 들어오면: `dummy.ts` 값 교체 → `DUMMY_CONTENT = false` → 배너가 한 번에
 사라진다. **개별 페이지에서 배너 조건을 바꾸지 않는다** — 가짜 값이 표시 없이 남는다.
+
+⚠️ **지금 이 띠는 실제로 화면에 뜨지 않는다.** `DummyBanner.tsx` 의 `BANNER_HIDDEN`
+이 2026-08-14 화면 확인용 임시 조치로 `true` 인 채 남아 있다(현황판 X-06). 즉
+**잠정값이 표시 없이 라이브에 올라가 있다** — 후기 5건 · 도입 소요기간 · 채용
+근무시간/횟수/정산주기. 표시광고법상 부당표시가 될 수 있어, 띠를 되살리거나 값을
+확정값으로 교체하거나 둘 중 하나가 필요하다.
+
+**여기 있던 `lib/pricing.ts` 갈래는 사실이 아니다 — 2026-09-07 지웠다.** 요금
+계산기를 폐기(2026-08-27)하면서 `pricing.ts` 에서 금액과 `estimate()` 를 전부
+없앴다. 그 파일은 이제 `DUMMY_CONTENT` 를 읽지 않고, `/contact` 가 쓰는 선택지
+라벨 대응표만 남아 있다. 사이트에 남은 공개 금액은 `content/stats.ts` 의
+`BASE_PRICE` 하나이고 그건 더미가 아니다.
 
 ### 5. 라우트 그룹 — 검증 화면은 셸 밖에 있다
 

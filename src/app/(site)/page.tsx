@@ -124,8 +124,9 @@ function NumberedCards({
  * 제목이 `<h2>` 가 아니라 타이핑 `<h1>` 이기 때문이다.
  *
  * 목차 장치(떠 있는 칩 `HeroChips`, 좌측 레일 `HomeSideNav`)는 사용자 확정
- * (2026-08-14)으로 홈에서 전부 뺐다 — 컴포넌트 파일은 되살릴 가능성이 있어
- * 남겨 두었다.
+ * (2026-08-14)으로 홈에서 뺐고, **2026-09-07 에 컴포넌트 파일까지 지웠다.**
+ * 되살릴 계획이 없는데 파일만 남으면 "있는데 안 쓰는 것"으로 오해된다.
+ * 옛 구현이 필요하면 git 이력에 있다.
  */
 function Hero({ section, firstAnchor }: { section: HomeSection; firstAnchor?: string }) {
   return (
@@ -231,8 +232,8 @@ function renderBody(s: HomeSection) {
           <div className="mt-8">
             {/*
               운영사 우리끼리(주) 홈페이지로 나간다(사용자 지시 2026-08-18).
-              푸터의 `회사 소개` 와 **같은 곳을 가리킨다** — 이전에는 푸터는 외부,
-              이 버튼은 내부 `/company` 라 같은 이름이 두 곳을 가리켰다.
+              푸터의 `회사 소개` 와 **같은 곳을 가리킨다** — 사이트 안의 회사 소개
+              페이지는 들어갈 입구가 없어져 2026-09-07 지웠다.
 
               `next/link` 가 아니라 `<a>` 다: 라우터 프리페치가 외부 주소에는
               의미가 없고, 새 창 지정도 하지 않는다. `noopener` 로 새 창이
@@ -375,12 +376,14 @@ export default function HomePage() {
       <DummyBanner what="후기" />
 
       {/* 목차 장치(좌측 레일 `HomeSideNav`, 히어로 칩 `HeroChips`)는 사용자
-          확정(2026-08-14)으로 홈에서 전부 뺐다 — SNB 는 기능별 상세 페이지
-          (`/features/[key]`)에만 붙는다. 컴포넌트 파일은 남겨 두었다. */}
+          확정(2026-08-14)으로 홈에서 뺐고, **2026-09-07 에 컴포넌트 파일과
+          설정 쪽 짝(`navSections()`·`inNav`)까지 지웠다.** 지금 사이트에 남은
+          SNB 는 기능별 상세 페이지(`/features/[key]`)의 `FeatureSideNav`
+          하나뿐이다 — 이름이 비슷하니 그쪽과 혼동하지 않는다. */}
 
       {/*
         껍데기(`SectionShell`)를 쓰지 않는 종류가 둘이다.
-          hero  — 배경 그라디언트·스크롤 큐·목차 칩이 붙고 제목이 타이핑 `<h1>` 이다
+          hero  — 배경 그라디언트·스크롤 큐가 붙고 제목이 타이핑 `<h1>` 이다
           pains — 뷰포트를 꽉 채우는 문제 패널 레이아웃이다(`ProblemStory`)
         두 경우 모두 설정의 `style`(padY·bg·titleSize)은 쓰이지 않는다.
         문구(label·title)는 그대로 설정에서 온다.
