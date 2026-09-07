@@ -32,15 +32,26 @@ export default function ContactPage() {
     <>
       <section className="from-brand-50 bg-gradient-to-b to-white">
         <div className="container-ba pt-12 pb-10 md:pt-20 md:pb-14">
-          {/* 홈 상담 섹션(`home.config.ts`)과 **같은 문장**을 쓴다 — 기획 확정 B안 */}
+          {/* 홈 상담 섹션(`home.config.ts`)과 **같은 문장**을 쓴다 — 기획 확정 B안.
+              제목·리드 **양쪽 모두** 해당한다. 한쪽만 고치면 두 화면이 갈라진다. */}
           <SectionLabel className="mb-3">도입 상담</SectionLabel>
           <h1 className="text-display text-ink mb-5 max-w-[20ch]">
             반오토에 맡기고 싶으시다면, 확인해드리겠습니다.
           </h1>
+          {/*
+            2026-09-07 A안으로 교체했다(X-20). 옛 문장은 "전화, 카카오톡, 채널톡 어디로든"
+            이었는데 **카카오 채널·채널톡은 2026-09-04 폐기 확정**이라 사이트에 그 경로가 없다.
+            이제 실재하는 두 경로만 말한다 — ① 신청서를 내면 고른 `연락 가능 시간대`(`callTime`)에
+            전화, ② 대표번호 1899-3635 직통.
+
+            줄바꿈은 prettier 가 정한 자리다. JSX 가 줄바꿈과 들여쓰기를 공백 하나로 접으므로
+            **렌더 결과는 `home.config.ts` 의 `contact` 섹션 `lead` 와 글자까지 같아야 한다.**
+            번호 정본은 `content/company.ts` 의 `COMPANY.tel` — 바뀌면 두 곳을 함께 고친다.
+          */}
           <p className="text-body-lg text-text-sub max-w-[46rem]">
-            전화, 카카오톡, 채널톡 어디로든 편하게 문의하실 수 있습니다. 매장 규모와 운영 상황을
-            알려주시면 필요한 관리 범위와 옵션 구성을 안내해 드립니다. 상담은 무료이며, 도입을
-            강요하지 않습니다.
+            신청서를 남기시면 고르신 시간대에 전화드립니다. 급하시면 1899-3635로 바로 걸어 주셔도
+            됩니다. 매장 규모와 운영 상황을 알려주시면 필요한 관리 범위와 옵션 구성을 안내해
+            드립니다. 상담은 무료이며, 도입을 강요하지 않습니다.
           </p>
         </div>
       </section>

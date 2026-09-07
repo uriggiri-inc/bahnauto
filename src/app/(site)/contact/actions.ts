@@ -48,10 +48,13 @@ export async function submitContact(raw: unknown): Promise<SubmitResult> {
   if (!LEAD_SINK_CONFIGURED) {
     if (process.env.NODE_ENV === "production") {
       // 저장할 곳이 없는데 성공이라고 답하면 리드를 잃는다. 다른 경로를 안내한다.
+      // 문구는 `lib/form-submit.static.ts` 의 `NOT_READY.contact` 와 **같아야 한다**.
+      // 2026-09-07 카카오톡을 빼고 대표번호를 넣었다(X-20) — 카카오 채널·채널톡
+      // 2026-09-04 폐기 확정이고, 전화하라면서 번호가 없는 안내였다.
       return {
         ok: false,
         message:
-          "지금은 온라인 접수가 준비 중입니다. 전화 또는 카카오톡으로 연락 주시면 바로 도와드리겠습니다.",
+          "지금은 온라인 접수가 준비 중입니다. 전화(1899-3635)로 연락 주시면 바로 도와드리겠습니다.",
       };
     }
     // 개발 환경 — 화면 흐름 확인용으로만 통과시킨다
