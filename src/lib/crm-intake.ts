@@ -1,7 +1,7 @@
 import type { SubmitResult } from "./form-result";
 
 /**
- * 반오토 영업관리 접수 API 로 신청을 보낸다 — 세 폼(무료체험·매니저 지원·도입 상담)의 **유일한 저장소**.
+ * 반오토 영업관리 접수 API 로 신청을 보낸다 — 네 폼(무료체험·소개서·매니저 지원·도입 상담)의 **유일한 저장소**.
  *
  * ⚠️ 운영(bahnauto.kr)은 GitHub Pages 정적 빌드라 이 파일(서버 액션)은 **쓰이지 않는다** —
  *    정적 빌드에서는 `form-submit.static.ts` 가 브라우저에서 공개키로 같은 API 를 부른다.
@@ -22,7 +22,8 @@ export function crmConfigured(): boolean {
   return !!(process.env.CRM_INTAKE_URL && process.env.CRM_API_KEY);
 }
 
-export type LeadType = "trial" | "careers" | "contact";
+/** 접수 API 가 정의한 유형. `brochure`(소개서)는 2026-09-08 부터 함께 보낸다 */
+export type LeadType = "trial" | "brochure" | "careers" | "contact";
 
 export async function postLead(
   type: LeadType,
