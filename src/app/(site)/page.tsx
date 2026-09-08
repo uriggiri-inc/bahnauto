@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { RingMark } from "@/components/brand/RingMark";
-import { DummyBanner } from "@/components/marketing/DummyBanner";
 import { BeforeAfter } from "@/components/marketing/BeforeAfter";
 import { FeatureGrid } from "@/components/marketing/FeatureGrid";
 import { PlanCards } from "@/components/marketing/PlanCards";
@@ -33,10 +32,11 @@ import { formatCopy } from "@/components/ui/Copy";
  * 절차처럼 구조가 고정된 데이터다. 이것들까지 설정으로 밀어 넣으면 설정이
  * 두 번째 코드베이스가 된다.
  *
- * ⚠️ 후기·요금은 잠정값이다. `DummyBanner` 가 상단에서 그 사실을 밝힌다.
- *    개별 섹션에서 배너 조건을 바꾸지 않는다.
- *    실적 수치는 2026-09-02 검증된 확정값으로 교체됐다 — 정본은
- *    `content/stats.ts` 이고 `dummy.ts` 에 있지 않다.
+ * ⚠️ **홈에는 더 이상 잠정값이 없다**(2026-09-08). 실적 수치·기본료는 2026-09-02
+ *    검증된 확정값이 됐고(`content/stats.ts`), 마지막으로 남아 있던 후기가
+ *    실제 점주 후기로 바뀌었다(`content/reviews.ts`). 그래서 상단 "샘플 데이터"
+ *    띠도 함께 뗐다. 홈에 잠정값을 다시 넣게 되면 띠부터 되살린다 —
+ *    개별 섹션에서 배너 조건을 바꾸는 방식은 쓰지 않는다.
  */
 
 /*
@@ -370,10 +370,19 @@ export default function HomePage() {
       {/* 새로고침하면 저장된 스크롤 위치 대신 맨 위 히어로부터 보인다 */}
       <ResetScrollOnReload />
 
-      {/* 실적 수치·후기·요금이 전부 샘플이다 */}
-      {/* 2026-09-02 실적 수치와 기본료가 모두 확정값이 됐다(`content/stats.ts`).
-          홈에 남은 잠정값은 후기뿐이다 */}
-      <DummyBanner what="후기" />
+      {/*
+        "샘플 데이터" 띠(`DummyBanner what="후기"`)를 **2026-09-08 뗐다.**
+
+        홈에 남아 있던 마지막 잠정값이 후기였는데(실적 수치와 기본료는 2026-09-02
+        확정값이 됐다 — `content/stats.ts`), 이날 후기가 실제 점주 후기 10건으로
+        바뀌면서 홈에 잠정값이 하나도 남지 않았다. 정본은 `content/reviews.ts` 이고
+        더미 게이트 밖이다. 잠정값이 없는 화면에 "샘플 데이터" 라고 적으면 그것도
+        사실이 아니다.
+
+        ⚠️ `/process`(도입 소요기간)와 `/careers`(근무 조건)의 띠는 **그대로 둔다** —
+           그쪽은 아직 잠정값이다. `DUMMY_CONTENT` 스위치와 `DummyBanner` 컴포넌트도
+           살아 있다. 홈에 다시 잠정값을 넣게 되면 이 줄을 되살린다.
+      */}
 
       {/* 목차 장치(좌측 레일 `HomeSideNav`, 히어로 칩 `HeroChips`)는 사용자
           확정(2026-08-14)으로 홈에서 뺐고, **2026-09-07 에 컴포넌트 파일과
