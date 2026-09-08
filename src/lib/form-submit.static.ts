@@ -2,6 +2,7 @@ import type { SubmitResult } from "./form-result";
 import { trialSchema } from "./trial-schema";
 import { careersSchema } from "./careers-schema";
 import { contactSchema } from "./contact-schema";
+import { brochureSchema } from "./brochure-schema";
 
 /**
  * 정적 내보내기 빌드용 교체본 (`next.config.ts` 의 resolveAlias 가 연결한다).
@@ -42,6 +43,9 @@ const NOT_READY = {
   careers: "지금은 온라인 지원 접수가 준비 중입니다. 전화로 연락 주시면 안내해 드리겠습니다.",
   contact:
     "지금은 온라인 접수가 준비 중입니다. 전화(1899-3635)로 연락 주시면 바로 도와드리겠습니다.",
+  /* 소개서는 이 문구를 화면에 띄우지 않는다 — 저장에 실패해도 완료 화면(다운로드)으로 보낸다.
+     `post()` 가 유형별 문구를 요구해서 대칭을 위해 둔다. */
+  brochure: "지금은 소개서 접수가 준비 중입니다. 소개서는 아래에서 바로 내려받으실 수 있습니다.",
 } as const;
 
 function fieldErrorsOf(issues: { path: PropertyKey[]; message: string }[]) {
@@ -121,10 +125,7 @@ export async function submitContact(raw: unknown): Promise<SubmitResult> {
   return post("contact", {
     name: d.name,
     phone: d.phone,
-    // ⚠️ 접수 API 가 아직 `callTime` 을 정의하지 않아 **저장되지 않는다**
-    //    (문서: "정의에 없는 키는 저장하지 않습니다"). 홈페이지를 먼저 올려두면
-    //    확인해 주기로 한 상태다(2026-09-04) — API 에 필드가 생기면 이 줄이 그대로
-    //    살아난다. 화면·검증은 지금부터 정상 동작한다.
+    // 연락 가능 시간대 — 접수 API 에 필드가 생겨 **저장된다**(2026-09-08 확인, 이슈 #36 해소)
     callTime: d.callTime,
     agreePrivacy: true,
     agreeMarketing: d.agreeMarketing,
@@ -151,8 +152,8 @@ export async function submitApplication(raw: unknown): Promise<SubmitResult> {
   return post("careers", {
     name: d.name,
     phone: d.phone,
-    // ⚠️ `callTime`(연락 가능 시간대)은 아직 API 에 없다 — 위 contact 와 같은 사정이다.
-    //    아래 `timeSlots`(근무 가능 시간대)와 **다른 항목**이니 합치지 않는다.
+    // 연락 가능 시간대 — 접수 API 에 저장된다(2026-09-08 확인). 아래 `timeSlots`
+    // (근무 가능 시간대)와 **다른 항목**이니 합치지 않는다.
     callTime: d.callTime,
     agreePrivacy: true,
     homeSido: d.homeSido,
@@ -179,10 +180,8 @@ export async function submitTrial(raw: unknown): Promise<SubmitResult> {
   return post("trial", {
     name: d.name,
     phone: d.phone,
-    // ⚠️ 접수 API 가 아직 `callTime` 을 정의하지 않아 **저장되지 않는다**
-    //    (문서: "정의에 없는 키는 저장하지 않습니다" — 이슈 #36). 위 contact·careers 와
-    //    같은 사정이다. API 에 필드가 생기면 이 줄이 그대로 살아난다(2026-09-08 추가).
-    //    화면·검증은 지금부터 정상 동작한다.
+    // 연락 가능 시간대 — 반오토가 trial 에도 필드를 열어 **저장된다**(2026-09-08 확인).
+    // 실제 접수(T-0009)로 값이 들어가는 것까지 확인했다.
     callTime: d.callTime,
     // 이메일은 API **공통 필드**라 그대로 저장된다(2026-09-04 양식 통일로 추가)
     email: d.email,
@@ -198,16 +197,36 @@ export async function submitTrial(raw: unknown): Promise<SubmitResult> {
 }
 
 /**
- * 소개서만 **성공으로 통과시킨다** (사용자 지시 2026-08-28).
+ * 소개서 — 접수 API 로 보내되, **실패해도 완료 화면으로 통과시킨다**.
  *
  * 다른 셋과 성격이 다르다. 상담·지원·체험 신청은 "사람이 연락을 줄 것" 을 약속하므로
- * 저장소 없이 성공 화면을 띄우면 안 되지만(위 post 가 그래서 env 없으면 막는다),
- * 소개서는 **약속이 아니라 파일**이다. 방문자가 받으려는 것(PDF)은 정적 사이트가
- * 그 자체로 내려줄 수 있다. 검증을 통과한 제출은 완료 화면으로 보내고 거기서 파일을 내려준다.
+ * 저장에 실패하면 성공 화면을 띄우면 안 되지만(위 post 가 그래서 막는다), 소개서가 약속한
+ * 것은 **파일**이다. 접수 서버가 잠깐 죽었다고 방문자가 PDF 를 못 받는 것이 더 나쁘다.
+ * 그래서 저장은 시도하되 그 결과로 화면을 막지 않는다 — 검증을 통과했으면 완료 화면(다운로드)이다.
  *
- * ⚠️ 입력값은 어디에도 전송·저장되지 않는다 — 접수 API 에 brochure 유형이 없고,
- *    개인정보처리방침 수집 항목에 이메일이 없다(`lib/brochure-schema.ts` 경고). 둘이 갖춰지기 전에는 켜지 않는다.
+ * ── 2026-09-08 접수를 열었다 (사용자 지시) ──
+ * 그동안 보내지 않던 이유(접수 API 에 brochure 유형 없음 · 보낼 파일 없음)가 둘 다 해소됐다.
+ * 반오토에는 「소개서신청」 유형(접수번호 B-…)이 있고, 소개서 PDF 는 `public/brochure/` 에 있다.
+ * 남은 것은 개인정보처리방침 제2조의 이메일 수집 표기(X-02)뿐이다 — 서버 경로
+ * (`app/(site)/brochure/actions.ts`)에 같은 설명이 있다. 함께 고친다.
  */
-export async function submitBrochure(): Promise<SubmitResult> {
+export async function submitBrochure(raw: unknown): Promise<SubmitResult> {
+  const parsed = brochureSchema.safeParse(raw);
+  if (!parsed.success)
+    return {
+      ok: false,
+      message: "입력값을 다시 확인해 주세요",
+      fieldErrors: fieldErrorsOf(parsed.error.issues),
+    };
+  const d = parsed.data;
+  // 유입 경로는 공통 필드 `channel` 로 — `brochure` 유형에는 `referrer` 가 없다(무료체험과 같은 규칙)
+  await post("brochure", {
+    name: d.name,
+    phone: d.phone,
+    email: d.email,
+    company: d.company,
+    agreePrivacy: true,
+    channel: d.referrer === "기타" ? d.referrerDetail || "기타" : d.referrer || "홈페이지 소개서",
+  }).catch(() => undefined);
   return { ok: true };
 }
