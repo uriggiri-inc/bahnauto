@@ -105,9 +105,13 @@ export default function CareersPage() {
               <br />
               앱이 항목까지 알려드립니다
             </h1>
+            {/* 히어로 리드 — `formatCopy` 로 문장마다 줄을 나눈다(2026-08-18 확정 규칙).
+                순수 문자열로 유지한다. 첫 문장은 「체크리스트대로.」로 끝나는 의도된
+                단문이라 그 뒤에서 줄이 바뀐다 */}
             <p className="text-body-lg text-text-sub mb-8 max-w-[34rem]">
-              집 근처 무인매장을, 정해진 시간에, 체크리스트대로. 교육 → 매뉴얼 → 앱 기록으로
-              이어지므로 처음이어도 기준대로 하실 수 있습니다.
+              {formatCopy(
+                "집 근처 무인매장을, 정해진 시간에, 체크리스트대로. 교육 → 매뉴얼 → 앱 기록으로 이어지므로 처음이어도 기준대로 하실 수 있습니다.",
+              )}
             </p>
             <a
               href="#apply"
@@ -281,7 +285,10 @@ export default function CareersPage() {
                       <path d="m6 9 6 6 6-6" />
                     </svg>
                   </summary>
-                  <p className="text-body-sm text-text-sub px-5 pb-5">{f.a}</p>
+                  {/* `FaqList`(=`/faq`·`/pricing` 의 같은 아코디언)가 답변에 `formatCopy` 를
+                      쓰는데 이 페이지는 아코디언을 직접 그려서 빠져 있었다 — 같은 종류의
+                      문장이 화면마다 다르게 조판되지 않게 맞춘다(2026-09-08) */}
+                  <p className="text-body-sm text-text-sub px-5 pb-5">{formatCopy(f.a)}</p>
                 </details>
               ))}
             </div>

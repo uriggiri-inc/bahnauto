@@ -58,7 +58,7 @@ export default function FaqPage() {
         <div className="container-ba text-center">
           <h2 className="text-h1 mx-auto mb-4 max-w-[24ch]">찾으시는 답이 없었다면</h2>
           <p className="text-body-lg mx-auto mb-8 max-w-[46rem] text-white/80">
-            상담에서 바로 여쭤보세요. 매장 조건에 맞춰 구체적으로 답변드립니다.
+            {formatCopy("상담에서 바로 여쭤보세요. 매장 조건에 맞춰 구체적으로 답변드립니다.")}
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/contact" className={buttonClasses({ variant: "onDark", size: "lg" })}>

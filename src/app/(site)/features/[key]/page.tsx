@@ -205,8 +205,9 @@ export default async function FeatureDetailPage({ params }: { params: Promise<{ 
             어디까지 맡기실지부터 정하시면 됩니다
           </h2>
           <p className="text-body-lg mx-auto mb-8 max-w-[46rem] text-white/80">
-            매장 상황을 알려주시면 필요한 관리 범위와 옵션 구성을 안내해 드립니다. 상담은
-            무료입니다.
+            {formatCopy(
+              "매장 상황을 알려주시면 필요한 관리 범위와 옵션 구성을 안내해 드립니다. 상담은 무료입니다.",
+            )}
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <Link

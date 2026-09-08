@@ -4,6 +4,7 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { PlanCards } from "@/components/marketing/PlanCards";
 import { PlanCompositionTable } from "@/components/marketing/PlanCompositionTable";
 import { Mark } from "@/components/ui/Mark";
+import { formatCopy } from "@/components/ui/Copy";
 import { Reveal } from "@/components/ui/Reveal";
 import { FaqList } from "@/components/marketing/FaqList";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -153,8 +154,9 @@ export default function PricingPage() {
               어떤 옵션이 필요할지 함께 정해드립니다
             </h2>
             <p className="text-body-lg mx-auto mb-8 max-w-[46rem] text-white/80">
-              매장 규모와 운영 상황을 알려주시면 필요한 옵션 구성과 조합 요금을 안내해 드립니다.
-              상담은 무료이며, 도입을 강요하지 않습니다.
+              {formatCopy(
+                "매장 규모와 운영 상황을 알려주시면 필요한 옵션 구성과 조합 요금을 안내해 드립니다. 상담은 무료이며, 도입을 강요하지 않습니다.",
+              )}
             </p>
             <div className="flex flex-col justify-center gap-3 sm:flex-row">
               <Link href="/contact" className={buttonClasses({ variant: "onDark", size: "lg" })}>
