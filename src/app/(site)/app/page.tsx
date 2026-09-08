@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { buttonClasses } from "@/components/ui/Button";
+import { formatCopy } from "@/components/ui/Copy";
 
 /**
  * `/app` — 앱 안내 (PRD §7.9).
@@ -80,9 +81,12 @@ export default function AppPage() {
             계약 점주 · 매니저 전용
           </Badge>
           <h1 className="text-h3 text-ink mb-3">앱 다운로드</h1>
+          {/* 히어로가 없어 이 문단이 페이지의 유일한 리드다 — `formatCopy` 로 문장마다
+              줄을 나눈다(2026-08-18 확정 규칙). 순수 문자열로 유지한다 */}
           <p className="text-body text-text-sub mb-6">
-            계약 체결 후 계정이 발급됩니다. 계정이 없으면 로그인할 수 없습니다. PC 에서는 웹
-            대시보드로, 모바일에서는 iOS·Android 앱으로 같은 기록을 보십니다.
+            {formatCopy(
+              "계약 체결 후 계정이 발급됩니다. 계정이 없으면 로그인할 수 없습니다. PC 에서는 웹 대시보드로, 모바일에서는 iOS·Android 앱으로 같은 기록을 보십니다.",
+            )}
           </p>
 
           <div className="flex flex-col justify-center gap-3 sm:flex-row">

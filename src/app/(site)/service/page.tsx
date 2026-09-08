@@ -5,6 +5,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { buttonClasses } from "@/components/ui/Button";
+import { formatCopy } from "@/components/ui/Copy";
 import { FaqTeaser } from "@/components/marketing/FaqTeaser";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { serviceJsonLd } from "@/lib/structured-data";
@@ -117,9 +118,12 @@ export default function ServicePage() {
           <h1 className="text-display text-ink mb-5 max-w-[22ch]">
             여섯 영역을 하나의 기준으로 묶습니다
           </h1>
+          {/* 히어로 리드 — `formatCopy` 로 문장마다 줄을 나눈다(2026-08-18 확정 규칙).
+              순수 문자열로 유지한다(JSX 가 섞이면 통과돼 줄바꿈이 사라진다) */}
           <p className="text-body-lg text-text-sub max-w-[46rem]">
-            청소만 하고 오는 것이 아닙니다. 재고·응대·행정까지 같은 체크리스트 체계 안에서 처리되고,
-            결과는 매일 같은 형식의 리포트로 정리됩니다.
+            {formatCopy(
+              "청소만 하고 오는 것이 아닙니다. 재고·응대·행정까지 같은 체크리스트 체계 안에서 처리되고, 결과는 매일 같은 형식의 리포트로 정리됩니다.",
+            )}
           </p>
         </div>
       </section>
@@ -197,8 +201,9 @@ export default function ServicePage() {
               어디까지 맡길지는 매장을 보고 정합니다
             </h2>
             <p className="text-body-lg mx-auto mb-8 max-w-[46rem] text-white/80">
-              여섯 영역을 전부 맡기실 필요는 없습니다. 방문 진단에서 지금 가장 손이 많이 가는 것부터
-              정리해 드립니다.
+              {formatCopy(
+                "여섯 영역을 전부 맡기실 필요는 없습니다. 방문 진단에서 지금 가장 손이 많이 가는 것부터 정리해 드립니다.",
+              )}
             </p>
             <div className="flex flex-col justify-center gap-3 sm:flex-row">
               <Link href="/contact" className={buttonClasses({ variant: "onDark", size: "lg" })}>

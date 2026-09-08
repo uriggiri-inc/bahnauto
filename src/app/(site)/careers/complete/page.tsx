@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RingMark } from "@/components/brand/RingMark";
 import { buttonClasses } from "@/components/ui/Button";
+import { formatCopy } from "@/components/ui/Copy";
 
 /**
  * 지원서 접수 완료.
@@ -21,9 +22,15 @@ export default function CareersCompletePage() {
         <RingMark size={88} label="반오토" />
 
         <h1 className="text-h1 text-ink mt-8 mb-4 max-w-[22ch]">지원서가 접수되었습니다</h1>
+        {/*
+          `formatCopy` 로 문장마다 줄을 나눈다(2026-08-18 사용자 확정 규칙). 문자열만
+          조판되므로 리드는 **순수 문자열**로 유지한다 — `<strong>` 이나 링크를 넣으면
+          줄바꿈이 조용히 사라진다. `<br />` 을 손으로 박지도 않는다(원문이 정본이다).
+        */}
         <p className="text-body-lg text-text-sub mb-10 max-w-[42rem]">
-          서류를 확인한 뒤 연락드리겠습니다. 희망 근무 지역에 배정 가능한 매장이 생기면 우선
-          안내드립니다.
+          {formatCopy(
+            "서류를 확인한 뒤 연락드리겠습니다. 희망 근무 지역에 배정 가능한 매장이 생기면 우선 안내드립니다.",
+          )}
         </p>
 
         <div className="border-border w-full max-w-[520px] rounded-lg border bg-white p-6 text-left shadow-[var(--shadow-card)]">

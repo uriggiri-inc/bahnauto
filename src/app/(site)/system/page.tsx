@@ -7,6 +7,7 @@ import { ZigzagFeature } from "@/components/marketing/ZigzagFeature";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { buttonClasses } from "@/components/ui/Button";
+import { formatCopy } from "@/components/ui/Copy";
 import { FaqTeaser } from "@/components/marketing/FaqTeaser";
 
 /**
@@ -52,9 +53,12 @@ export default function SystemPage() {
               <br />
               매일 기록으로 확인하세요
             </h1>
+            {/* 히어로 리드 — `formatCopy` 로 문장마다 줄을 나눈다(2026-08-18 확정 규칙).
+                순수 문자열로 유지한다. 조판은 서버에서 계산돼 JS 는 늘지 않는다(LCP) */}
             <p className="text-body-lg text-text-sub mb-8 max-w-[34rem]">
-              반오토 매니저는 매장 전용 체크리스트대로 일합니다. 무엇을 언제 했는지 사진과 시각이
-              함께 남고, 그 기록이 매일 사장님께 발송됩니다.
+              {formatCopy(
+                "반오토 매니저는 매장 전용 체크리스트대로 일합니다. 무엇을 언제 했는지 사진과 시각이 함께 남고, 그 기록이 매일 사장님께 발송됩니다.",
+              )}
             </p>
 
             <div className="flex flex-col gap-3 sm:flex-row">
@@ -233,8 +237,9 @@ export default function SystemPage() {
           <Reveal>
             <h2 className="text-h1 mx-auto mb-4 max-w-[24ch]">직접 보시는 게 가장 빠릅니다</h2>
             <p className="text-body-lg mx-auto mb-8 max-w-[46rem] text-white/80">
-              방문 진단 때 실제 앱 화면과 리포트 샘플을 그대로 보여드립니다. 진단까지는 비용이
-              발생하지 않습니다.
+              {formatCopy(
+                "방문 진단 때 실제 앱 화면과 리포트 샘플을 그대로 보여드립니다. 진단까지는 비용이 발생하지 않습니다.",
+              )}
             </p>
             <div className="flex flex-col justify-center gap-3 sm:flex-row">
               <Link href="/contact" className={buttonClasses({ variant: "onDark", size: "lg" })}>

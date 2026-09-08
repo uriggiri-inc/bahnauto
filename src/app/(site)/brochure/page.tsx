@@ -41,9 +41,12 @@ export default function BrochurePage() {
           <h1 className="text-display text-ink mb-5 max-w-[18ch]">
             먼저 자료로 확인해 보셔도 됩니다
           </h1>
+          {/* 히어로 리드 — `formatCopy` 로 문장마다 줄을 나눈다(2026-08-18 확정 규칙).
+              순수 문자열로 유지한다 */}
           <p className="text-body-lg text-text-sub mb-4 max-w-[34rem]">
-            상담 전에 어떤 서비스인지 먼저 보고 싶으시다면 소개서를 확인해 보세요. 아래에 정보를
-            남기시면 다음 화면에서 바로 받으실 수 있습니다.
+            {formatCopy(
+              "상담 전에 어떤 서비스인지 먼저 보고 싶으시다면 소개서를 확인해 보세요. 아래에 정보를 남기시면 다음 화면에서 바로 받으실 수 있습니다.",
+            )}
           </p>
           <p className="text-caption text-text-sub mb-10">
             PDF · {BROCHURE_FILE.pages}페이지 · {BROCHURE_FILE.size}

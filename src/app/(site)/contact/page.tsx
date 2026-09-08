@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { formatCopy } from "@/components/ui/Copy";
 import { ContactForm } from "./ContactForm";
 
 /**
@@ -44,14 +45,20 @@ export default function ContactPage() {
             이제 실재하는 두 경로만 말한다 — ① 신청서를 내면 고른 `연락 가능 시간대`(`callTime`)에
             전화, ② 대표번호 1899-3635 직통.
 
-            줄바꿈은 prettier 가 정한 자리다. JSX 가 줄바꿈과 들여쓰기를 공백 하나로 접으므로
-            **렌더 결과는 `home.config.ts` 의 `contact` 섹션 `lead` 와 글자까지 같아야 한다.**
+            **렌더 텍스트는 `home.config.ts` 의 `contact` 섹션 `lead` 와 글자까지 같아야 한다.**
             번호 정본은 `content/company.ts` 의 `COMPANY.tel` — 바뀌면 두 곳을 함께 고친다.
+
+            2026-09-08 `formatCopy` 를 걸었다(사용자 지시). 홈 상담 섹션은 `SectionShell` 을
+            거쳐 이미 문장마다 줄이 나뉘는데 이 히어로만 한 줄로 흘러 **같은 문장이 두 화면에서
+            다르게 조판되고 있었다.** "같은 문장" 규칙은 원문·렌더 텍스트 기준이고 마크업이
+            아니므로, 조판을 맞추는 것이 규칙을 지키는 쪽이다. 문자열은 한 글자도 바꾸지 않았다.
+            ⚠️ 리드를 **순수 문자열**로 유지한다 — JSX 가 섞이면 `formatCopy` 가 그대로
+               통과시켜 줄바꿈이 조용히 사라진다(`components/ui/Copy.tsx` 주석).
           */}
           <p className="text-body-lg text-text-sub max-w-[46rem]">
-            신청서를 남기시면 고르신 시간대에 전화드립니다. 급하시면 1899-3635로 바로 걸어 주셔도
-            됩니다. 매장 규모와 운영 상황을 알려주시면 필요한 관리 범위와 옵션 구성을 안내해
-            드립니다. 상담은 무료이며, 도입을 강요하지 않습니다.
+            {formatCopy(
+              "신청서를 남기시면 고르신 시간대에 전화드립니다. 급하시면 1899-3635로 바로 걸어 주셔도 됩니다. 매장 규모와 운영 상황을 알려주시면 필요한 관리 범위와 옵션 구성을 안내해 드립니다. 상담은 무료이며, 도입을 강요하지 않습니다.",
+            )}
           </p>
         </div>
       </section>

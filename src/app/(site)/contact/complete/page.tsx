@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RingMark } from "@/components/brand/RingMark";
 import { buttonClasses } from "@/components/ui/Button";
+import { formatCopy } from "@/components/ui/Copy";
 
 /**
  * 상담 신청 완료 (PRD §7.6 AC — 제출 성공 시 이동하는 화면).
@@ -30,12 +31,16 @@ export default function ContactCompletePage() {
         <h1 className="text-h1 text-ink mt-8 mb-4 max-w-[22ch]">신청이 접수되었습니다</h1>
         {/* 문장이 끝나면 줄을 바꾼다(사용자 지시 2026-09-04). 한 덩어리로 흐르면 두 문장이
             한 문장처럼 읽히고, 화면 폭에 따라 끊기는 자리가 매번 달라진다.
+
+            2026-09-08 손으로 박아 둔 `<br />` 을 `formatCopy` 로 옮겼다 — 줄바꿈은
+            렌더 층이 계산한다(2026-08-18 확정 규칙). 원문에 표시를 박아 두면 카피 검수·
+            법무 대조가 안 되고, 리드는 **순수 문자열**이어야 조판이 걸린다.
             ⚠️ 방문 진단은 **필수가 아니다**(2026-09-04 확정) — "필요하면" 을 붙여
                반드시 방문한다고 읽히지 않게 했다. */}
         <p className="text-body-lg text-text-sub mb-10 max-w-[42rem]">
-          담당자가 확인 후 연락드리겠습니다.
-          <br />
-          매장 상황을 먼저 여쭙고, 필요하면 방문 진단 일정을 함께 정하겠습니다.
+          {formatCopy(
+            "담당자가 확인 후 연락드리겠습니다. 매장 상황을 먼저 여쭙고, 필요하면 방문 진단 일정을 함께 정하겠습니다.",
+          )}
         </p>
 
         <div className="border-border w-full max-w-[520px] rounded-lg border bg-white p-6 text-left shadow-[var(--shadow-card)]">
