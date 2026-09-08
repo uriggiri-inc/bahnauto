@@ -51,5 +51,10 @@ export const SITE_STATS: readonly SiteStat[] = [
  *
  * ⚠️ 금액을 바꾸면 `content/faq.ts` 의 요금 문항과 `content/plans.ts` 의 안내
  *    문장(VAT 별도 · 옵션 조합은 상담)이 함께 맞는지 확인한다.
+ *
+ * ⚠️ **점주 후기 하나가 이 금액을 말한다.** `content/reviews.ts` 의 `r-1` 에
+ *    "월 2만 얼마" 가 들어 있다. 요금이 바뀌면 그 후기가 틀린 말이 된다 —
+ *    후기는 남의 말이라 임의로 고칠 수 없으므로, 금액을 바꿀 때는 그 문장을
+ *    **점주에게 재확인받거나 후기를 내려야 한다.** 반대쪽에도 같은 경고가 있다.
  */
 export const BASE_PRICE = 24_900;
