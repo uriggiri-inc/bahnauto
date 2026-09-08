@@ -179,6 +179,11 @@ export async function submitTrial(raw: unknown): Promise<SubmitResult> {
   return post("trial", {
     name: d.name,
     phone: d.phone,
+    // ⚠️ 접수 API 가 아직 `callTime` 을 정의하지 않아 **저장되지 않는다**
+    //    (문서: "정의에 없는 키는 저장하지 않습니다" — 이슈 #36). 위 contact·careers 와
+    //    같은 사정이다. API 에 필드가 생기면 이 줄이 그대로 살아난다(2026-09-08 추가).
+    //    화면·검증은 지금부터 정상 동작한다.
+    callTime: d.callTime,
     // 이메일은 API **공통 필드**라 그대로 저장된다(2026-09-04 양식 통일로 추가)
     email: d.email,
     company: d.company,

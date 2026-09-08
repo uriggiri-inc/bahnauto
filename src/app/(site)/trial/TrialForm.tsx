@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { Checkbox, Field, Select, TextInput } from "@/components/ui/Form";
 import { Button } from "@/components/ui/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formatPhone, REFERRERS } from "@/lib/contact-schema";
+import { formatPhone, CALL_TIMES, REFERRERS } from "@/lib/contact-schema";
 import { trialSchema, type TrialInput } from "@/lib/trial-schema";
 // 서버 액션을 직접 import 하지 않는다 — 정적 미리보기 빌드에서 교체되는 지점이다
 import { submitTrial } from "@/lib/form-submit";
@@ -20,9 +20,17 @@ import { submitTrial } from "@/lib/form-submit";
  *   · 동의 전에는 제출 버튼이 잠기고, 왜 잠겼는지 글로 알린다
  *
  * ── 2026-09-04 소개서 폼과 양식을 통일했다 (노션 「반오토 폼양식 수정」) ──
- * 성함 › 연락처 › 이메일 › 회사명 또는 매장명 › 어떻게 알고 오셨나요 순서다.
- * 순서나 항목을 바꿀 때는 `BrochureForm` 도 **함께** 바꾼다 — 둘이 갈라지면
- * 통일한 의미가 없다. 그 전에는 세 항목(성함·연락처·회사명)뿐이었다.
+ * 그때는 성함 › 연락처 › 이메일 › 회사명 또는 매장명 › 어떻게 알고 오셨나요 순서로 두
+ * 폼이 같은 모양이었다. 그 전에는 세 항목(성함·연락처·회사명)뿐이었다.
+ *
+ * ── 2026-09-08 `연락 가능 시간대` 가 여기에만 들어왔다 (사용자 확정) ──
+ * 연락처 바로 밑, 필수다. 소개서에는 넣지 않는다 — 사용자가 "소개서에는 추가 안 해도
+ * 된다, 무료체험에만 넣자" 로 정정했다. 지금 순서는 성함 › 연락처 ›
+ * **연락 가능 시간대** › 이메일 › 회사명 또는 매장명 › 어떻게 알고 오셨나요 다.
+ *
+ * ⚠️ **`BrochureForm` 과 항상 같게 유지하는 규칙은 없어졌다.** 함께 맞추는 범위는
+ *    나머지 다섯 칸(성함·연락처·이메일·회사명 또는 매장명·유입 경로)의 순서와 라벨뿐이다.
+ *    그 다섯 개를 고칠 때만 `BrochureForm` 을 함께 본다.
  *
  * 성공하면 곧장 체험 대시보드로 튕기지 않고 **완료 화면을 한 번 거친다** —
  * 외부 주소로 갑자기 이동하면 신청이 접수된 것인지 알 수 없다.
@@ -112,8 +120,30 @@ export function TrialForm() {
         />
       </Field>
 
-      {/* 소개서 폼과 **같은 순서**다 — 성함 › 연락처 › 이메일 › 회사명 › 유입경로
-          (노션 「반오토 폼양식 수정」 2026-09-04). 순서를 바꿀 때는 두 폼을 함께 바꾼다. */}
+      {/* 연락처 **바로 밑**이 지정된 자리다(사용자 지시 2026-09-08). 번호를 적은 직후에
+          "언제 받으실 수 있나요" 를 묻는 것이 자연스럽다. 라벨·힌트·선택지를 상담 폼
+          (`ContactForm`)과 같게 맞췄다 — 같은 것을 묻는 칸이 폼마다 다르게 보이면 안 된다.
+          소개서 폼에는 이 칸이 **없다**(위 머리 주석 참조). */}
+      <Field
+        label="연락 가능 시간대"
+        required
+        error={errors.callTime?.message}
+        htmlFor="callTime"
+        hint="이 시간대에 맞춰 연락드립니다."
+      >
+        <Select
+          id="callTime"
+          placeholder="선택해 주세요"
+          options={CALL_TIMES}
+          invalid={Boolean(errors.callTime)}
+          aria-describedby={errors.callTime ? "callTime-desc" : undefined}
+          {...register("callTime")}
+        />
+      </Field>
+
+      {/* 여기부터 세 칸은 소개서 폼과 **같은 순서**다 — 이메일 › 회사명 › 유입경로
+          (노션 「반오토 폼양식 수정」 2026-09-04). 이 세 칸의 순서·라벨을 바꿀 때는
+          `BrochureForm` 도 함께 바꾼다. */}
       <Field
         label="이메일"
         required
@@ -193,6 +223,10 @@ export function TrialForm() {
               ⚠️ 이름·연락처 항목 자체는 방침 제2조에 있지만 **"무료체험 신청 접수"
                  라는 목적이 없다.** 방침 개정 전에는 접수가 열리지 않는다
                  (actions.ts 주석 참조).
+
+              ⚠️ 아래 `수집 항목` 에 **연락 가능 시간대와 유입 경로가 빠져 있다.**
+                 상담·지원 폼도 같은 상태여서 표기를 맞춰 둔 것이지, 받는 것과 고지가
+                 일치한다는 뜻은 아니다. 방침 개정(X-02) 때 네 폼의 이 줄을 함께 손본다.
             */
             <dl className="grid gap-1.5">
               <div className="flex gap-2">

@@ -4,6 +4,7 @@ import { RingMark } from "@/components/brand/RingMark";
 import { buttonClasses } from "@/components/ui/Button";
 import { TRIAL_APP_URL } from "@/content/trial";
 import { COMPANY, TEL_HREF } from "@/content/company";
+import { formatCopy } from "@/components/ui/Copy";
 
 /**
  * 무료체험 신청 완료.
@@ -16,8 +17,14 @@ import { COMPANY, TEL_HREF } from "@/content/company";
  *
  * ⚠️ 외부 도메인이므로 `rel="noopener noreferrer"` 를 붙인다. 주소 정본은
  *    `content/trial.ts` 의 `TRIAL_APP_URL` 하나다.
- * ⚠️ 체험 기간은 **14일로 확정됐다**(사용자 지시 2026-09-04). 이 화면에는 아직 숫자를
- *    적지 않았다 — 신청 화면(`/trial`)에서 이미 안내했으므로 반복하지 않는다.
+ * ⚠️ 체험 기간은 **14일로 확정됐다**(사용자 지시 2026-09-04). 이 화면에는 숫자를 적지
+ *    않는다 — 신청 화면(`/trial`)에서 이미 안내했으므로 반복하지 않는다. 아래 순차 연락
+ *    안내에도 기간·일수를 넣지 않았다(2026-09-08). 그 판단을 유지한다.
+ *
+ * ── 2026-09-08 순차 연락 안내를 넣었다 (사용자 지시) ──
+ * "무료체험 문의가 많아 순차적으로 연락드리겠습니다." 연락이 늦어질 수 있음을 **미리**
+ * 알리는 문장이다. 기다리는 분이 방치됐다고 느끼지 않게 하는 것이 목적이라 리드의
+ * **마지막 문장**에 둔다 — 연락 안내 바로 다음에 와야 이어 읽힌다.
  *
  * 색인하지 않는다 — 검색으로 바로 들어오면 신청하지 않은 사람이 신청했다고
  * 오해한다(`/brochure/complete` 와 같은 원칙).
@@ -35,10 +42,19 @@ export default function TrialCompletePage() {
         <RingMark size={88} label="반오토" />
 
         <h1 className="text-h1 text-ink mt-8 mb-4 max-w-[22ch]">신청이 접수되었습니다</h1>
-        {/* 이동 전에 무엇을 하러 가는지 한 줄로 밝힌다 */}
+        {/*
+          이동 전에 무엇을 하러 가는지 밝힌다.
+
+          ⚠️ 리드를 **순수 문자열**로 유지한다. `formatCopy` 는 문자열만 문장 단위로 줄을
+             나누고(2026-08-18 사용자 확정 규칙), JSX 가 섞이면 그대로 통과시킨다
+             (`components/ui/Copy.tsx` 주석). 여기에 `<strong>` 이나 링크를 넣으면 줄바꿈이
+             조용히 사라진다. `<br />` 을 손으로 박지도 않는다 — 원문이 정본으로 남아야
+             카피 검수가 된다.
+        */}
         <p className="text-body-lg text-text-sub mb-10 max-w-[42rem]">
-          아래 버튼으로 반오토 웹버전 대시보드를 바로 열어보실 수 있습니다. 체험 계정과 사용 방법은
-          담당자가 남겨주신 연락처로 안내해 드립니다.
+          {formatCopy(
+            "아래 버튼으로 반오토 웹버전 대시보드를 바로 열어보실 수 있습니다. 체험 계정과 사용 방법은 담당자가 남겨주신 연락처로 안내해 드립니다. 무료체험 문의가 많아 순차적으로 연락드리겠습니다.",
+          )}
         </p>
 
         <div className="border-border w-full max-w-[520px] rounded-lg border bg-white p-6 text-left shadow-[var(--shadow-card)]">
