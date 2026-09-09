@@ -46,18 +46,18 @@ export default function ContactCompletePage() {
         <div className="border-border w-full max-w-[520px] rounded-lg border bg-white p-6 text-left shadow-[var(--shadow-card)]">
           <p className="text-h4 text-ink mb-4">기다리시는 동안</p>
           <ul className="flex flex-col gap-3">
+            {/* 2026-09-09 이 목록에도 손 `<br />` 이 남아 있었다. 리드와 같이 `formatCopy` 로
+                옮긴다 — 보이는 줄바꿈 자리는 그대로이고, 조판 규칙(어구 묶기)이 함께 걸린다. */}
             <li className="text-body-sm text-text-sub">
-              연락은 신청하신 번호로 드립니다.
-              <br />
-              모르는 번호로 표시될 수 있습니다.
+              {formatCopy("연락은 신청하신 번호로 드립니다. 모르는 번호로 표시될 수 있습니다.")}
             </li>
             {/* 이 자리에 있던 `방문 진단에 사장님이 동석하지 않으셔도 진행됩니다.` 는
                 2026-09-04 뺐다(사용자 지시). 방문 진단은 **정말 필요할 때만** 하는 것이라
                 반드시 방문한다는 전제를 깔면 안 된다. 대신 들어온 문장이 아래다(A안 확정). */}
             <li className="text-body-sm text-text-sub">
-              통화 전에 준비하실 것은 없습니다.
-              <br />
-              매장 상황만 편하게 말씀해 주시면 됩니다.
+              {formatCopy(
+                "통화 전에 준비하실 것은 없습니다. 매장 상황만 편하게 말씀해 주시면 됩니다.",
+              )}
             </li>
             {/* `진단까지는` → `상담과 진단에는` — 방문 진단을 안 할 수도 있는데
                 "진단까지" 라고 하면 진단이 반드시 있는 것처럼 읽힌다 */}
