@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { cn } from "@/lib/cn";
+import { splitSegmentLines, type TextSegment } from "@/lib/typography";
 
 /**
  * 문제제기(홈 H-02) — 한 화면에 꽉 차는 문제 패널 5장.
@@ -46,8 +47,11 @@ import { cn } from "@/lib/cn";
  * 전환 시간은 `--dur-menu` 토큰이라 모션 축소 설정에서 1ms 로 내려간다.
  */
 
-/** 스토리 문장 조각. `hl` 이 있으면 하이라이터가 칠해진다 */
-type StorySeg = string | { hl: string };
+/**
+ * 스토리 문장 조각. `hl` 이 있으면 하이라이터가 칠해진다.
+ * 정의는 `lib/typography.ts` 에 둔다 — 조판 함수와 같은 타입이어야 한다.
+ */
+type StorySeg = TextSegment;
 
 type Problem = {
   key: string;
@@ -279,20 +283,34 @@ export function ProblemStory({ id, label, title }: ProblemStoryProps) {
                     <div className="px-5 pb-6 md:px-6">
                       <div className="border-brand-200 border-l-2 py-1 pl-4">
                         <p className="text-label text-brand">이런 하루, 익숙하지 않으신가요</p>
+                        {/*
+                          문장이 끝나면 줄을 바꾼다(2026-09-09) — 사이트 공통 규칙이다.
+                          다른 문단은 `formatCopy` 가 처리하는데, 여기는 형광펜 때문에
+                          **조각 배열**이라 문자열용 조판이 걸리지 않았다. 조각을 이어 붙여
+                          문장 경계를 찾고 그 자리를 조각으로 되돌리는 `splitSegmentLines`
+                          가 그 일을 한다 — 형광펜 `<span>` 은 손대지 않는다.
+                          글자는 하나도 바뀌지 않는다(경계의 공백만 줄바꿈으로 바뀐다).
+                        */}
                         <p className="text-body lg:text-body-lg text-ink mt-2 leading-[1.9]">
-                          {p.story.map((seg, s) =>
-                            typeof seg === "string" ? (
-                              seg
-                            ) : (
-                              // 형광펜 — 줄이 바뀌어도 칠이 이어지도록 box-decoration-clone
-                              <span
-                                key={s}
-                                className="bg-brand-100 text-ink rounded-[4px] box-decoration-clone px-1 py-0.5 font-semibold"
-                              >
-                                {seg.hl}
-                              </span>
-                            ),
-                          )}
+                          {splitSegmentLines(p.story).map((line, l) => (
+                            // 문장 순서가 키다 — 카피는 모듈 상수라 자리가 바뀌지 않는다
+                            <Fragment key={l}>
+                              {l > 0 && <br />}
+                              {line.map((seg, s) =>
+                                typeof seg === "string" ? (
+                                  seg
+                                ) : (
+                                  // 형광펜 — 줄이 바뀌어도 칠이 이어지도록 box-decoration-clone
+                                  <span
+                                    key={`${l}-${s}`}
+                                    className="bg-brand-100 text-ink rounded-[4px] box-decoration-clone px-1 py-0.5 font-semibold"
+                                  >
+                                    {seg.hl}
+                                  </span>
+                                ),
+                              )}
+                            </Fragment>
+                          ))}
                         </p>
                       </div>
                     </div>
