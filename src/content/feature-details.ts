@@ -32,7 +32,7 @@
  * | ② ③ ⑤ ⑥ | 내가 문서에서 옮겨 쓴 카피 | **전부 HTML 문장으로 교체** |
  * | ③ 그룹 | 둘(온라인 채널·월간 리포트) | **하나** — `KEY FEATURES` 에 카드 7장 |
  * | ④ 칩 | 24시간 챗봇·9 to 9 | **매장 이용고객 전용 채널·오전 9시 ~ 오후 9시 운영·방문관리서비스 연계** (2026-09-08 에 다시 바뀌었다 — 아래 "고객센터 운영 시간") |
- * | ⑤ ⑥ 눈썹 | FIELD OPERATION · VISIT CARE | **ON-SITE OPERATION SUPPORT · ON-SITE VISIT SERVICE** |
+ * | ⑤ ⑥ 눈썹 | FIELD OPERATION · VISIT CARE | **ON-SITE OPERATION SUPPORT · ON-SITE VISIT SERVICE** (⑤ 는 2026-09-14 개칭에 맞춰 **STORE OPERATION OUTSOURCING** 으로) |
  * | ⑥ 오픈 예정 띠 | 있었다(2026년 11월) | **없다** — HTML 에 그 블록이 없다 |
  * | ⑦ | 준비 중 | **오픈 예정** · 전용 CTA(오픈 알림 받기 / 다른 기능 보기) |
  *
@@ -404,12 +404,12 @@ export const FEATURE_DETAILS: readonly FeatureDetail[] = [
     },
   },
 
-  /* ═══ ⑤ 현장 운영 지원 ═════════════════════════════════════════ */
+  /* ═══ ⑤ 매장 위탁 운영 서비스 ═════════════════════════════════════════ */
   {
     key: "field-ops",
-    eyebrow: "ON-SITE OPERATION SUPPORT",
+    eyebrow: "STORE OPERATION OUTSOURCING",
     headline: ["사람 뽑는 일도,", "물건 채우는 일도 대신합니다"],
-    sub: "매니저 채용부터 배치·근태 관리, 발주서 작성과 정산까지 현장 운영 전반을 지원합니다.",
+    sub: "매니저 채용부터 배치·근태 관리, 발주서 작성과 정산까지 매장 운영 전반을 맡아 처리합니다.",
     chips: ["매니저 채용·운영 지원", "발주 관리", "발주서 작성"],
     groups: [
       {

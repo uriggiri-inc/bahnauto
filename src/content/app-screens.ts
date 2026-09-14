@@ -286,7 +286,7 @@ export const FEATURE_CAROUSELS: Record<string, readonly CarouselSlide[]> = {
     },
   ],
 
-  /* ⑤ 현장 운영 지원 — 발주 대행과 실비 정산이 여기 온다 */
+  /* ⑤ 매장 위탁 운영 서비스 — 발주 대행과 실비 정산이 여기 온다 */
   "field-ops": [
     {
       id: "ops-order",
